@@ -78,4 +78,76 @@ public class Profile {
         this.location = location;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getSpecialities() {
+        return specialities;
+    }
+
+    public String getAvatarFilename() {
+        return avatarFilename;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setSpecialities(String specialities) {
+        this.specialities = specialities;
+    }
+
+    public void setAvatarFilename(String avatarFilename) {
+        this.avatarFilename = avatarFilename;
+    }
+
 }
