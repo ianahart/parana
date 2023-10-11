@@ -119,7 +119,8 @@ public class User implements UserDetails {
             String fullName,
             Role role,
             Boolean loggedIn,
-            Profile profile) {
+            Profile profile,
+            String password) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -127,6 +128,7 @@ public class User implements UserDetails {
         this.role = role;
         this.loggedIn = loggedIn;
         this.profile = profile;
+        this.password = password;
     }
 
     public String getAbbreviation() {
