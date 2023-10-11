@@ -112,3 +112,4 @@ public class Token {
     public void setTokenType(TokenType tokenType) {
         this.tokenType = tokenType;
     }
+}
