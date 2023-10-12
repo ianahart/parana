@@ -8,13 +8,14 @@ interface Props {
 }
 
 const RequireGuest: React.FC<Props> = ({ children }) => {
+  const { user } = useContext(UserContext) as IUserContext;
+
   const location = useLocation();
   const guestRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password'];
   const storage = retreiveTokens();
   if (storage === undefined && guestRoutes.includes(location.pathname)) {
     return children;
   } else {
-    const { user } = useContext(UserContext) as IUserContext;
     if (user.id !== 0) {
       return <Navigate to="/" replace state={{ path: location.pathname }} />;
     }
