@@ -1,3 +1,18 @@
+export interface IFormField {
+  name: string;
+  value: string;
+  error: string;
+  type: string;
+}
+
+export interface IRegisterForm {
+  firstName: IFormField;
+  lastName: IFormField;
+  email: IFormField;
+  password: IFormField;
+  confirmPassword: IFormField;
+}
+
 export interface IUser {
   abbreviation: string;
   email: string;
