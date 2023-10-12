@@ -8,9 +8,14 @@ export const colors = {
     secondary: '#200F21',
     tertiary: '#242222',
   },
+
+  error: {
+    primary: '#cc0000',
+  },
+
   text: {
     primary: '#718096',
-    secondary: '#444447',
+    secondary: '#94b8a3',
   },
   bg: {
     primary: '#282E32',
@@ -25,6 +30,6 @@ export const colors = {
     primary: 'rgba(188, 188, 188, 0.6)',
   },
   border: {
-    primary: '#d9dbde',
+    primary: '#303133',
   },
 };
