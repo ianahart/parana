@@ -13,6 +13,11 @@ export interface IRegisterForm {
   confirmPassword: IFormField;
 }
 
+export interface ILoginForm {
+  email: IFormField;
+  password: IFormField;
+}
+
 export interface IUser {
   abbreviation: string;
   email: string;

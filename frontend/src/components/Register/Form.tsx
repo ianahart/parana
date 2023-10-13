@@ -26,7 +26,7 @@ interface ServerError<T> {
 }
 
 const Form = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const radioOptions = ['teacher', 'user'];
   const [role, setRole] = useState('user');
   const [form, setForm] = useState(registerFormState);
