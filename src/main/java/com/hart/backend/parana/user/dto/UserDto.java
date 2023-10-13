@@ -12,13 +12,14 @@ public class UserDto {
     private Boolean loggedIn;
     private Long profileId;
     private String avatarUrl;
+    private String fullName;
 
     public UserDto() {
 
     }
 
     public UserDto(Long id, String email, String firstName, String lastName, Role role, String abbreviation,
-            Boolean loggedIn, Long profileId, String avatarUrl) {
+            Boolean loggedIn, Long profileId, String avatarUrl, String fullName) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -28,10 +29,15 @@ public class UserDto {
         this.loggedIn = loggedIn;
         this.profileId = profileId;
         this.avatarUrl = avatarUrl;
+        this.fullName = fullName;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getAvatarUrl() {
@@ -100,6 +106,10 @@ public class UserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
 }

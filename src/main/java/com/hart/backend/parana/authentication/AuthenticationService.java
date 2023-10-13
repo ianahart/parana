@@ -123,7 +123,8 @@ public class AuthenticationService {
                 user.getAbbreviation(),
                 user.getLoggedIn(),
                 user.getProfile().getId(),
-                user.getProfile().getAvatarUrl());
+                user.getProfile().getAvatarUrl(),
+                user.getFullName());
 
     }
 
