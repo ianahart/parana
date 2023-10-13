@@ -72,7 +72,8 @@ public class UserService {
                 user.getAbbreviation(),
                 user.getLoggedIn(),
                 user.getProfile().getId(),
-                user.getProfile().getAvatarUrl());
+                user.getProfile().getAvatarUrl(),
+                user.getFullName());
 
     }
 }

@@ -15,6 +15,7 @@ import AboutRoute from './routes/AboutRoute';
 import { useEffect, useRef } from 'react';
 import { retreiveTokens } from './util';
 import { Client } from './util/client';
+import AuthNavbar from './components/Navbar/AuthNavbar';
 
 function App() {
   const shouldRun = useRef(true);
@@ -23,12 +24,11 @@ function App() {
   const syncUser = useCallback(() => {
     Client.syncUser(retreiveTokens()?.token)
       .then((res) => {
-        console.log(res);
         updateUser(res.data.data);
         stowTokens(retreiveTokens());
       })
       .catch((err) => {
-        console.log(err);
+        throw new Error(err.response.data.message);
       });
   }, []);
 
@@ -44,6 +44,7 @@ function App() {
     <Box className="app">
       <Router>
         {!user.loggedIn && <Navbar />}
+        {user.loggedIn && <AuthNavbar />}
         <Box className="content" minH="100vh">
           <WithAxios>
             <Routes>

@@ -28,6 +28,7 @@ export interface IUser {
   role: string;
   profileId: number;
   avatarUrl: string;
+  fullName: string;
 }
 
 export interface ITokens {

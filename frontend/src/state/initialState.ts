@@ -8,6 +8,7 @@ export const userState = {
   role: '',
   profileId: 0,
   avatarUrl: '',
+  fullName: '',
 };
 
 export const tokenState = {
