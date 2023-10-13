@@ -13,6 +13,10 @@ public class UserDto {
     private Long profileId;
     private String avatarUrl;
 
+    public UserDto() {
+
+    }
+
     public UserDto(Long id, String email, String firstName, String lastName, Role role, String abbreviation,
             Boolean loggedIn, Long profileId, String avatarUrl) {
         this.id = id;
