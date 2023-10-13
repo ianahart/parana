@@ -22,7 +22,7 @@ const Hero = () => {
           <Heading mb="0.5rem" as="h2">
             Discover New Experiences
           </Heading>
-          <Text width="70%" lineHeight="1.8">
+          <Text textAlign="center" width="70%" lineHeight="1.8">
             Our goal is to match you with a snowboard instructor that fits your learning
             style. If you're a snowboard instructor we want to be able to help you earn a
             little extra cash while helping someone fulfill their goals.

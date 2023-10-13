@@ -39,6 +39,7 @@ const Navbar = () => {
             'rgba(0,0,0,0.16) 0px 1px 4px',
             'none',
           ]}
+          zIndex={10}
           background={['primary.dark', 'primary.dark', 'unset']}
           position={['absolute', 'absolute', 'relative']}
           display={[mobile ? 'flex' : 'none', mobile ? 'flex' : 'none', 'flex']}

@@ -22,3 +22,8 @@ export const registerFormState = {
   password: { name: 'password', error: '', value: '', type: 'password' },
   confirmPassword: { name: 'confirmPassword', error: '', value: '', type: 'password' },
 };
+
+export const loginFormState = {
+  email: { name: 'email', error: '', value: '', type: 'email' },
+  password: { name: 'password', error: '', value: '', type: 'password' },
+};
