@@ -1,4 +1,4 @@
-import { Button, Box, Flex, useOutsideClick, UnorderedList } from '@chakra-ui/react';
+import { Box, Flex, useOutsideClick, UnorderedList } from '@chakra-ui/react';
 import { useRef } from 'react';
 import UserMenuHeader from './UserMenuHeader';
 import NavLink from './NavLink';
@@ -6,7 +6,7 @@ import { AiOutlineEdit, AiOutlineUser } from 'react-icons/ai';
 import { MdOutlineFeed } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { IoSettingsOutline } from 'react-icons/io5';
-import { AiOutlineLogout } from 'react-icons/ai';
+import LogoutButton from '../Auth/LogoutButton';
 
 interface IUserMenuProps {
   closeUserMenu: () => void;
@@ -70,22 +70,7 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
             mobile={true}
           />
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
-
-          <Flex align="center" px="0.5rem" mx="0.5rem">
-            <Box fontSize="1.2rem">
-              <AiOutlineLogout />
-            </Box>
-            <Button
-                            mx="0.25rem"
-              p="0"
-              fontSize="0.9rem"
-              _hover={{ background: 'transparent' }}
-              background="transparent"
-              color="text.secondary"
-            >
-              Log out
-            </Button>
-          </Flex>
+          <LogoutButton />
         </UnorderedList>
       </Box>
     </Box>
