@@ -16,6 +16,7 @@ import { useEffect, useRef } from 'react';
 import { retreiveTokens } from './util';
 import { Client } from './util/client';
 import AuthNavbar from './components/Navbar/AuthNavbar';
+import ForgotPasswordRoute from './routes/ForgotPasswordRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -62,6 +63,14 @@ function App() {
                 element={
                   <RequireGuest>
                     <RegisterRoute />
+                  </RequireGuest>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <RequireGuest>
+                    <ForgotPasswordRoute />
                   </RequireGuest>
                 }
               />

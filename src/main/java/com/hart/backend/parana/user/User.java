@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.token.Token;
 
@@ -83,6 +84,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> refreshTokens;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PasswordReset> passwordResets;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -139,6 +143,10 @@ public class User implements UserDetails {
         return id;
     }
 
+    public List<PasswordReset> getPasswordResets() {
+        return passwordResets;
+    }
+
     public List<Token> getRefreshTokens() {
         return refreshTokens;
     }
@@ -189,6 +197,10 @@ public class User implements UserDetails {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public void setPasswordResets(List<PasswordReset> passwordResets) {
+        this.passwordResets = passwordResets;
     }
 
     public void setRefreshTokens(List<Token> refreshTokens) {
