@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  logout(refreshToken: string) {
+    return http.post('/auth/logout', { refreshToken });
+  },
+
   login(form: ILoginForm) {
     return http.post('/auth/login', {
       email: form.email.value,
