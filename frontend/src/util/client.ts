@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  uploadProfilePhoto(file: File | null, endpoint: string, action?: string) {
+    const formData = new FormData();
+    if (file !== null) {
+      formData.append('file', file);
+    }
+    formData.append('action', action ?? '');
+
+    return http.patch(endpoint, formData);
+  },
+
   resetPassword(
     password: string,
     confirmPassword: string,
