@@ -5,6 +5,11 @@ export interface IFormField {
   type: string;
 }
 
+export interface IPasswordResetForm {
+  password: IFormField;
+  confirmPassword: IFormField;
+}
+
 export interface IRegisterForm {
   firstName: IFormField;
   lastName: IFormField;

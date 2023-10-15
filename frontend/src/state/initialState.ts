@@ -28,3 +28,8 @@ export const loginFormState = {
   email: { name: 'email', error: '', value: '', type: 'email' },
   password: { name: 'password', error: '', value: '', type: 'password' },
 };
+
+export const passwordResetState = {
+  password: { name: 'password', error: '', value: '', type: 'password' },
+  confirmPassword: { name: 'confirmPassword', error: '', value: '', type: 'password' },
+};

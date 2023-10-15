@@ -3,6 +3,7 @@ package com.hart.backend.parana.authentication;
 import java.io.IOException;
 
 import com.hart.backend.parana.passwordreset.request.ForgotPasswordRequest;
+import com.hart.backend.parana.passwordreset.request.ResetPasswordRequest;
 import com.hart.backend.parana.authentication.request.LoginRequest;
 import com.hart.backend.parana.authentication.request.RegisterRequest;
 import com.hart.backend.parana.authentication.response.LoginResponse;
@@ -10,6 +11,7 @@ import com.hart.backend.parana.authentication.response.RegisterResponse;
 import com.hart.backend.parana.config.JwtService;
 import com.hart.backend.parana.passwordreset.PasswordResetService;
 import com.hart.backend.parana.passwordreset.response.ForgotPasswordResponse;
+import com.hart.backend.parana.passwordreset.response.ResetPasswordResponse;
 import com.hart.backend.parana.refreshtoken.RefreshToken;
 import com.hart.backend.parana.refreshtoken.RefreshTokenService;
 import com.hart.backend.parana.refreshtoken.request.RefreshTokenRequest;
@@ -88,8 +90,18 @@ public class AuthenticationController {
 
         this.passwordResetService.deleteUserPasswordResetsById(user.getId());
         return ResponseEntity
-                .status(200)
+                .status(HttpStatus.OK)
                 .body(this.passwordResetService.sendForgotPasswordEmail(request));
 
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ResetPasswordResponse> resetPassword(@RequestBody ResetPasswordRequest request) {
+        this.passwordResetService.resetPassword(
+                request.getPassword(),
+                request.getConfirmPassword(),
+                request.getPassCode(),
+                request.getToken());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResetPasswordResponse("success"));
     }
 }

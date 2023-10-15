@@ -1,7 +1,5 @@
 package com.hart.backend.parana.authentication;
 
-import java.util.Optional;
-
 import com.hart.backend.parana.authentication.request.LoginRequest;
 import com.hart.backend.parana.authentication.request.RegisterRequest;
 import com.hart.backend.parana.authentication.response.LoginResponse;
@@ -9,7 +7,6 @@ import com.hart.backend.parana.authentication.response.RegisterResponse;
 import com.hart.backend.parana.config.JwtService;
 import com.hart.backend.parana.profile.ProfileService;
 import com.hart.backend.parana.refreshtoken.RefreshToken;
-import com.hart.backend.parana.refreshtoken.RefreshTokenRepository;
 import com.hart.backend.parana.refreshtoken.RefreshTokenService;
 import com.hart.backend.parana.token.Token;
 import com.hart.backend.parana.token.TokenRepository;
