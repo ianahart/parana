@@ -12,6 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface PasswordResetRepository extends JpaRepository<PasswordReset, Long> {
 
+    @Query(value = """
+             SELECT pw FROM PasswordReset pw
+             INNER JOIN pw.user u
+            WHERE u.id = :userId
+            """)
+    PasswordReset getPasswordResetByUserId(@Param("userId") Long userId);
+
     Optional<PasswordReset> findByToken(String token);
 
     @Modifying

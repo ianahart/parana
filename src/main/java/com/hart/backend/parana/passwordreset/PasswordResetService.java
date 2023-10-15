@@ -2,36 +2,50 @@ package com.hart.backend.parana.passwordreset;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.config.JwtService;
 import com.hart.backend.parana.passwordreset.request.ForgotPasswordRequest;
 import com.hart.backend.parana.passwordreset.response.ForgotPasswordResponse;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserRepository;
+import com.hart.backend.parana.user.UserService;
+import com.hart.backend.parana.util.MyUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class PasswordResetService {
 
+    @Value("${secretkey}")
+    private String secretKey;
+
     private final JwtService jwtService;
     private final Configuration configuration;
     private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     private final PasswordResetRepository passwordResetRepository;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public PasswordResetService(
@@ -39,13 +53,17 @@ public class PasswordResetService {
             Configuration configuration,
             JavaMailSender javaMailSender,
             UserRepository userRepository,
-            PasswordResetRepository passwordResetRepository) {
+            PasswordResetRepository passwordResetRepository,
+            UserService userService,
+            PasswordEncoder passwordEncoder) {
 
         this.jwtService = jwtService;
         this.configuration = configuration;
         this.javaMailSender = javaMailSender;
         this.userRepository = userRepository;
         this.passwordResetRepository = passwordResetRepository;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Value("${emailsender}")
@@ -93,4 +111,58 @@ public class PasswordResetService {
         this.configuration.getTemplate("forgot-password-email.ftlh").process(model, stringWriter);
         return stringWriter.getBuffer().toString();
     }
+
+    private PasswordReset getPasswordReset(String token) {
+        Claims claims = extractUserIdFromToken(token);
+        User user = this.userService.getUserByEmail(claims.getSubject());
+        return this.passwordResetRepository.getPasswordResetByUserId(user.getId());
+
+    }
+
+    public void resetPassword(String password, String confirmPassword, String passCode, String token) {
+
+        if (checkPasswordResetExpired(token)) {
+            throw new BadRequestException("The password reset link has expired");
+        }
+
+        if (!MyUtil.validatePassword(password)) {
+            throw new BadRequestException("Password must include 1 uppercase, 1 lowercase, 1 digit and 1 special char");
+        }
+
+        if (!password.equals(confirmPassword)) {
+            throw new BadRequestException("Passwords do not match");
+        }
+
+        PasswordReset passwordReset = getPasswordReset(token);
+
+        if (!passwordReset.getCode().equals(passCode)) {
+            throw new BadRequestException("Your pass code is incorrect. Please check email.");
+        }
+
+        User user = passwordReset.getUser();
+
+        user.setPassword(this.passwordEncoder.encode(password));
+
+        deleteUserPasswordResetsById(user.getId());
+    }
+
+    public boolean checkPasswordResetExpired(String token) {
+        return this.jwtService.tokenElapsedDay(token);
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Claims extractUserIdFromToken(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+    }
+
 }

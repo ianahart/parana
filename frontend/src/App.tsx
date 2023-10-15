@@ -17,6 +17,7 @@ import { retreiveTokens } from './util';
 import { Client } from './util/client';
 import AuthNavbar from './components/Navbar/AuthNavbar';
 import ForgotPasswordRoute from './routes/ForgotPasswordRoute';
+import ResetPasswordRoute from './routes/ResetPasswordRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -71,6 +72,14 @@ function App() {
                 element={
                   <RequireGuest>
                     <ForgotPasswordRoute />
+                  </RequireGuest>
+                }
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <RequireGuest>
+                    <ResetPasswordRoute />
                   </RequireGuest>
                 }
               />
