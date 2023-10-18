@@ -1,6 +1,9 @@
 package com.hart.backend.parana.profile.dto;
 
+import com.hart.backend.parana.user.Role;
+
 public class UserProfileDto {
+    private Role role;
     private Long userId;
     private Long id;
     private String bio;
@@ -18,6 +21,7 @@ public class UserProfileDto {
     }
 
     public UserProfileDto(
+            Role role,
             Long userId,
             Long id,
             String bio,
@@ -29,6 +33,7 @@ public class UserProfileDto {
             String travelUpTo,
             Integer yearsSnowboarding,
             String avatarUrl) {
+        this.role = role;
         this.userId = userId;
         this.id = id;
         this.bio = bio;
@@ -68,6 +73,10 @@ public class UserProfileDto {
 
     public String getTerrain() {
         return terrain;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public String getAvatarUrl() {
@@ -128,5 +137,9 @@ public class UserProfileDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
