@@ -27,6 +27,22 @@ body {
   animation: fade-in-element 0.5s;
 }
 
+.slide-in {
+  animation: slide-in-element 0.35s;
+}
+
+@keyframes slide-in-element {
+  from {
+    opacity: 0;
+    transform: translateY(150px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes fade-in-element {
   from {
     opacity: 0;

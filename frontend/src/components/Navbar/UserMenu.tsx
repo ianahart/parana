@@ -1,5 +1,5 @@
 import { Box, Flex, useOutsideClick, UnorderedList } from '@chakra-ui/react';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import UserMenuHeader from './UserMenuHeader';
 import NavLink from './NavLink';
 import { AiOutlineEdit, AiOutlineUser } from 'react-icons/ai';
@@ -7,12 +7,16 @@ import { MdOutlineFeed } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { IoSettingsOutline } from 'react-icons/io5';
 import LogoutButton from '../Auth/LogoutButton';
+import { UserContext } from '../../context/user';
+import { IUserContext } from '../../interfaces';
 
 interface IUserMenuProps {
   closeUserMenu: () => void;
 }
 
 const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
+  const { user } = useContext(UserContext) as IUserContext;
+
   const menuRef = useRef<HTMLDivElement>(null);
 
   useOutsideClick({
@@ -50,7 +54,7 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
           />
           <NavLink
             icon={<AiOutlineEdit />}
-            link="/edit"
+            link={`/profiles/${user.id}/edit`}
             linkText="Edit Profile"
             mobile={true}
           />

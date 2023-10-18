@@ -9,6 +9,8 @@ import com.hart.backend.parana.advice.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -75,5 +77,17 @@ public class UserService {
                 user.getProfile().getAvatarUrl(),
                 user.getFullName());
 
+    }
+
+    public User getCurrentlyLoggedInUser() {
+        Object principal = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        String username = ((UserDetails) principal).getUsername();
+        User user = this.userRepository.findByEmail(username)
+                .orElseThrow(() -> new NotFoundException("Current user was not found"));
+        return user;
     }
 }

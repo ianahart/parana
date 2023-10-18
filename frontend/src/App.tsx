@@ -18,6 +18,8 @@ import { Client } from './util/client';
 import AuthNavbar from './components/Navbar/AuthNavbar';
 import ForgotPasswordRoute from './routes/ForgotPasswordRoute';
 import ResetPasswordRoute from './routes/ResetPasswordRoute';
+import RequireAuth from './components/Guard/RequireAuth';
+import EditProfileRoute from './routes/EditProfileRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -97,6 +99,14 @@ function App() {
                   <RequireGuest>
                     <AboutRoute />
                   </RequireGuest>
+                }
+              />
+              <Route
+                path="/profiles/:id/edit"
+                element={
+                  <RequireAuth>
+                    <EditProfileRoute />
+                  </RequireAuth>
                 }
               />
             </Routes>
