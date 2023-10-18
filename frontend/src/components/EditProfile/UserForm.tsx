@@ -37,6 +37,15 @@ const UserForm = () => {
   const [uploadError, setUploadError] = useState('');
   const [terrain, setTerrain] = useState<string[]>(terrainState);
   const [cities, setCities] = useState<string[]>([]);
+  const updateTerrain = (selectedTerrain: string[]) => {
+    setTerrain(
+      terrain.filter((t) => {
+        if (!selectedTerrain.includes(t)) {
+          return t;
+        }
+      })
+    );
+  };
 
   const syncForm = <T extends IObject>(data: T) => {
     const exclude = ['id', 'avatarUrl'];
@@ -46,6 +55,7 @@ const UserForm = () => {
         continue;
       }
       if (transform.includes(key)) {
+        updateTerrain(data['terrain'].split(','));
         updateField(key, data[key] === null ? [] : data[key].split(','), 'value');
       } else {
         const name = key as keyof IEditUserProfileForm;
@@ -227,7 +237,7 @@ const UserForm = () => {
             placeHolder="How long have you been snowboarding?"
           />
           <Flex
-            flexDir={['column', 'row', 'row']}
+            flexDir={['column', 'column', 'row']}
             my="1.5rem"
             justify="space-between"
             width="100%"
