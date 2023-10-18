@@ -53,7 +53,7 @@ const TeacherForm = () => {
         updateField(key, data[key] === null ? [] : data[key].split(','), 'value');
       } else {
         const name = key as keyof IEditTeacherProfileForm;
-        const value = form[name].value ? form[name].value : data[key] ? data[key] : '';
+        const value = data[key] ? data[key] : form[name].value ? form[name].value : '';
         updateField(key, value, 'value');
       }
     }
@@ -80,14 +80,16 @@ const TeacherForm = () => {
     const endpoint = 'https://countriesnow.space/api/v0.1/countries/state/cities';
     const response = await axios.post(endpoint, { country: 'United States', state });
     setCities(response.data.data);
-    setForm((prevState) => ({
-      ...prevState,
-      city: {
-        ...prevState['city' as keyof IEditTeacherProfileForm],
-        value: response.data.data[0],
-      },
-    }));
   };
+
+  useEffect(() => {
+    if (cities.length > 0 && !form.city.value.length) {
+      setForm((prevState) => ({
+        ...prevState,
+        city: { ...prevState['city' as keyof IEditTeacherProfileForm], value: cities[0] },
+      }));
+    }
+  });
 
   const isNotANumber = (value: string) => {
     return /^-?[0-9]+$/.test(value + '');

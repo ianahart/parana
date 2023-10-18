@@ -32,6 +32,7 @@ const FormSelect = ({
   });
 
   const handleOnClick = (option: string) => {
+    console.log('click');
     updateField(name, option, 'value');
     setDropdownOpen(false);
   };
@@ -79,8 +80,8 @@ const FormSelect = ({
                 key={nanoid()}
                 onClick={() => handleOnClick(option)}
                 cursor="pointer"
-                p="0.25rem"
-                _hover={{ background: 'blackAlpha.300' }}
+                p="0.5rem"
+                _hover={{ background: 'primary.light' }}
                 my="0.5rem"
               >
                 {value === option && (
