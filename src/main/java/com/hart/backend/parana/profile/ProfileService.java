@@ -4,8 +4,13 @@ import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.amazon.AmazonService;
+import com.hart.backend.parana.profile.dto.TeacherProfileDto;
+import com.hart.backend.parana.profile.dto.UserProfileDto;
+import com.hart.backend.parana.profile.request.UpdateProfileRequest;
 
 import java.util.Map;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.ForbiddenException;
@@ -89,4 +94,48 @@ public class ProfileService {
         }
     }
 
+    public void updateTeacher(UpdateProfileRequest request, Profile profile) {
+
+        profile.setBio(Jsoup.clean(request.getBio(), Safelist.none()));
+        profile.setCity(Jsoup.clean(request.getCity(), Safelist.none()));
+        profile.setFirstLessonFree(request.getFirstLessonFree());
+        profile.setHomeMountain(Jsoup.clean(request.getHomeMountain(), Safelist.none()));
+        profile.setPerHour(Jsoup.clean(request.getPerHour(), Safelist.none()));
+        profile.setStance(request.getStance());
+        profile.setState(request.getState());
+        profile.setTags(Jsoup.clean(request.getTags(), Safelist.none()));
+        profile.setTerrain(Jsoup.clean(request.getTerrain(), Safelist.none()));
+        profile.setYearsSnowboarding(request.getYearsSnowboarding());
+        profile.setTravelUpTo(Jsoup.clean(request.getTravelUpTo(), Safelist.none()));
+
+        this.profileRepository.save(profile);
+    }
+
+    public void updateUser(UpdateProfileRequest request, Profile profile) {
+        System.out.println("Updating user...");
+    }
+
+    private boolean profileBelongsTo(Long profileId) {
+        return this.userService.getCurrentlyLoggedInUser().getProfile().getId() == profileId;
+    }
+
+    public void updateProfile(UpdateProfileRequest request, Long profileId) {
+        if (!profileBelongsTo(profileId)) {
+            throw new ForbiddenException("Cannot update another user's profile");
+        }
+        Profile profile = getProfileById(profileId);
+        if (request.getFormType().equalsIgnoreCase("TEACHER")) {
+            updateTeacher(request, profile);
+        } else {
+            updateUser(request, profile);
+        }
+    }
+
+    public TeacherProfileDto retrieveTeacher(Long profileId) {
+        return this.profileRepository.retrieveTeacher(profileId);
+    }
+
+    public UserProfileDto retrieveUser(Long profileId) {
+        return this.profileRepository.retrieveUser(profileId);
+    }
 }

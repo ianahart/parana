@@ -5,6 +5,32 @@ export interface IFormField {
   type: string;
 }
 
+export interface IEditUserProfileForm {
+  bio: IFormField;
+  yearsSnowboarding: IFormField;
+  city: IFormField;
+  state: IFormField;
+  stance: IFormField;
+  homeMountain: IFormField;
+  perHour: IFormField;
+  travelUpTo: IFormField;
+  terrain: { name: string; error: string; value: string[]; type: 'text' };
+}
+
+export interface IEditTeacherProfileForm {
+  bio: IFormField;
+  yearsSnowboarding: IFormField;
+  city: IFormField;
+  state: IFormField;
+  stance: IFormField;
+  homeMountain: IFormField;
+  terrain: { name: string; error: string; value: string[]; type: string };
+  firstLessonFree: { name: string; error: string; value: boolean; type: string };
+  perHour: IFormField;
+  travelUpTo: IFormField;
+  tags: { name: string; error: string; value: string[]; type: string };
+}
+
 export interface IPasswordResetForm {
   password: IFormField;
   confirmPassword: IFormField;

@@ -45,11 +45,35 @@ public class Profile {
     @Column(name = "bio", length = 400)
     private String bio;
 
-    @Column(name = "specialities", length = 400)
-    private String specialities;
+    @Column(name = "city")
+    private String city;
 
-    @Column(name = "location", length = 300)
-    private String location;
+    @Column(name = "first_lesson_free")
+    private Boolean firstLessonFree;
+
+    @Column(name = "home_mountain")
+    private String homeMountain;
+
+    @Column(name = "per_hour")
+    private String perHour;
+
+    @Column(name = "stance")
+    private String stance;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "tags")
+    private String tags;
+
+    @Column(name = "terrain")
+    private String terrain;
+
+    @Column(name = "travel_up_to")
+    private String travelUpTo;
+
+    @Column(name = "years_snowboarding")
+    private Integer yearsSnowboarding;
 
     @JsonIgnore
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
@@ -66,16 +90,32 @@ public class Profile {
             String avatarFilename,
             String avatarUrl,
             String bio,
-            String specialities,
-            String location) {
+            String city,
+            Boolean firstLessonFree,
+            String homeMountain,
+            String perHour,
+            String stance,
+            String state,
+            String tags,
+            String terrain,
+            String travelUpTo,
+            Integer yearsSnowboarding) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.avatarFilename = avatarFilename;
         this.avatarUrl = avatarUrl;
         this.bio = bio;
-        this.specialities = specialities;
-        this.location = location;
+        this.city = city;
+        this.firstLessonFree = firstLessonFree;
+        this.homeMountain = homeMountain;
+        this.perHour = perHour;
+        this.stance = stance;
+        this.state = state;
+        this.tags = tags;
+        this.terrain = terrain;
+        this.travelUpTo = travelUpTo;
+        this.yearsSnowboarding = yearsSnowboarding;
     }
 
     public Long getId() {
@@ -90,10 +130,6 @@ public class Profile {
         return user;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -106,12 +142,88 @@ public class Profile {
         return updatedAt;
     }
 
-    public String getSpecialities() {
-        return specialities;
-    }
-
     public String getAvatarFilename() {
         return avatarFilename;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getStance() {
+        return stance;
+    }
+
+    public String getPerHour() {
+        return perHour;
+    }
+
+    public String getTravelUpTo() {
+        return travelUpTo;
+    }
+
+    public String getTerrain() {
+        return terrain;
+    }
+
+    public Boolean getFirstLessonFree() {
+        return firstLessonFree;
+    }
+
+    public String getHomeMountain() {
+        return homeMountain;
+    }
+
+    public Integer getYearsSnowboarding() {
+        return yearsSnowboarding;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setStance(String stance) {
+        this.stance = stance;
+    }
+
+    public void setPerHour(String perHour) {
+        this.perHour = perHour;
+    }
+
+    public void setTerrain(String terrain) {
+        this.terrain = terrain;
+    }
+
+    public void setTravelUpTo(String travelUpTo) {
+        this.travelUpTo = travelUpTo;
+    }
+
+    public void setHomeMountain(String homeMountain) {
+        this.homeMountain = homeMountain;
+    }
+
+    public void setFirstLessonFree(Boolean firstLessonFree) {
+        this.firstLessonFree = firstLessonFree;
+    }
+
+    public void setYearsSnowboarding(Integer yearsSnowboarding) {
+        this.yearsSnowboarding = yearsSnowboarding;
     }
 
     public void setId(Long id) {
@@ -126,10 +238,6 @@ public class Profile {
         this.user = user;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
@@ -140,10 +248,6 @@ public class Profile {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public void setSpecialities(String specialities) {
-        this.specialities = specialities;
     }
 
     public void setAvatarFilename(String avatarFilename) {

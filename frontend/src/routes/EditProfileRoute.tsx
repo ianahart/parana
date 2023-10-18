@@ -7,8 +7,8 @@ import UserForm from '../components/EditProfile/UserForm';
 const EditProfileRoute = () => {
   const { user } = useContext(UserContext) as IUserContext;
   return (
-    <Box minH="100vh">
-      <Flex justify="center" mt="5rem" align="center" flexDir="column">
+    <Box minH="100vh" pos="relative">
+      <Flex minH="100vh" justify="center" mt="5rem" align="center" flexDir="column">
         {user.role === 'TEACHER' ? <TeacherForm /> : <UserForm />}
       </Flex>
     </Box>

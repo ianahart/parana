@@ -6,6 +6,14 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getProfile(profileId: number, role: string) {
+    return http.get(`/profiles/${profileId}?role=${role}`);
+  },
+
+  updateProfile<T>(form: T, profileId: number) {
+    return http.patch(`/profiles/${profileId}`, form);
+  },
+
   uploadProfilePhoto(file: File | null, endpoint: string, action?: string) {
     const formData = new FormData();
     if (file !== null) {
