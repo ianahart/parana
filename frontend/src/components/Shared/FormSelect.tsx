@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Text, useOutsideClick } from '@chakra-ui/react';
+import { Box, Flex, FormLabel, Input, Text, useOutsideClick } from '@chakra-ui/react';
 import { BsChevronDown } from 'react-icons/bs';
 import { nanoid } from 'nanoid';
 import { useRef, useState } from 'react';
@@ -24,6 +24,8 @@ const FormSelect = ({
   label,
 }: IFormSelectProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [filteredOptions, setFilteredOptions] = useState<string[]>([...options]);
+  const [searchValue, setSearchValue] = useState('');
 
   const ref = useRef<HTMLDivElement>(null);
   useOutsideClick({
@@ -32,9 +34,19 @@ const FormSelect = ({
   });
 
   const handleOnClick = (option: string) => {
-    console.log('click');
     updateField(name, option, 'value');
     setDropdownOpen(false);
+  };
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setSearchValue(value);
+    const filtered = options.filter((option) => {
+      if (option.toLowerCase().includes(searchValue.toLowerCase())) {
+        return option;
+      }
+    });
+    setFilteredOptions(filtered);
   };
 
   return (
@@ -72,7 +84,16 @@ const FormSelect = ({
           top="70px"
           width="100%"
         >
-          {options.map((option) => {
+          <Input
+            value={searchValue}
+            onChange={handleOnChange}
+            placeholder="Search..."
+            border="none"
+            borderBottom="1px solid"
+            borderRadius={0}
+            borderColor="border.primary"
+          />
+          {filteredOptions.map((option) => {
             return (
               <Flex
                 bg={option === value ? 'primary.light' : 'transparent'}

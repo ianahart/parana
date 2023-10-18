@@ -42,6 +42,16 @@ const TeacherForm = () => {
   const [terrain, setTerrain] = useState<string[]>(terrainState);
   const [cities, setCities] = useState<string[]>([]);
 
+  const updateTerrain = (selectedTerrain: string[]) => {
+    setTerrain(
+      terrain.filter((t) => {
+        if (!selectedTerrain.includes(t)) {
+          return t;
+        }
+      })
+    );
+  };
+
   const syncForm = <T extends IObject>(data: T) => {
     const exclude = ['id', 'avatarUrl'];
     const transform = ['tags', 'terrain'];
@@ -50,6 +60,7 @@ const TeacherForm = () => {
         continue;
       }
       if (transform.includes(key)) {
+        updateTerrain(data['terrain'].split(','));
         updateField(key, data[key] === null ? [] : data[key].split(','), 'value');
       } else {
         const name = key as keyof IEditTeacherProfileForm;
@@ -261,7 +272,7 @@ const TeacherForm = () => {
             placeHolder="How long have you been snowboarding?"
           />
           <Flex
-            flexDir={['column', 'row', 'row']}
+            flexDir={['column', 'column', 'row']}
             my="1.5rem"
             justify="space-between"
             width="100%"
