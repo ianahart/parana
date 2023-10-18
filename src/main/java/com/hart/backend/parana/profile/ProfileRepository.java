@@ -13,11 +13,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query(value = """
                 SELECT new com.hart.backend.parana.profile.dto.UserProfileDto(
-                  p.id AS id, p.bio AS bio, p.city AS city,
+                 u.id AS userId, p.id AS id, p.bio AS bio, p.city AS city,
                  p.homeMountain AS homeMountain, p.stance AS stance,
                  p.state AS state, p.terrain AS terrain, p.travelUpTo AS travelUpTo,
                 p.yearsSnowboarding AS yearsSnowboarding, p.avatarUrl AS avatarUrl
                 ) FROM Profile p
+                INNER JOIN p.user u
                 WHERE p.id = :profileId
             """)
 
@@ -25,11 +26,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query(value = """
                 SELECT new com.hart.backend.parana.profile.dto.TeacherProfileDto(
-                  p.id AS id, p.bio AS bio, p.city AS city, p.firstLessonFree AS firstLessonFree,
+                 u.id AS userId, p.id AS id, p.bio AS bio, p.city AS city, p.firstLessonFree AS firstLessonFree,
                  p.homeMountain AS homeMountain, p.perHour AS perHour, p.stance AS stance,
                  p.state AS state, p.tags AS tags, p.terrain AS terrain, p.travelUpTo AS travelUpTo,
                 p.yearsSnowboarding AS yearsSnowboarding, p.avatarUrl AS avatarUrl
                 ) FROM Profile p
+                INNER JOIN p.user u
                 WHERE p.id = :profileId
             """)
 

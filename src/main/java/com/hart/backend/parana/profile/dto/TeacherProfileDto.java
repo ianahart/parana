@@ -2,6 +2,7 @@ package com.hart.backend.parana.profile.dto;
 
 public class TeacherProfileDto {
 
+    private Long userId;
     private Long id;
     private String bio;
     private String city;
@@ -21,6 +22,7 @@ public class TeacherProfileDto {
     }
 
     public TeacherProfileDto(
+        Long userId,
             Long id,
             String bio,
             String city,
@@ -34,6 +36,7 @@ public class TeacherProfileDto {
             String travelUpTo,
             Integer yearsSnowboarding,
             String avatarUrl) {
+        this.userId = userId;
         this.id = id;
         this.bio = bio;
         this.city = city;
@@ -49,6 +52,10 @@ public class TeacherProfileDto {
         this.avatarUrl = avatarUrl;
     }
 
+
+    public Long getUserId() {
+        return userId;
+    }
     public Long getId() {
         return id;
     }
@@ -151,5 +158,9 @@ public class TeacherProfileDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

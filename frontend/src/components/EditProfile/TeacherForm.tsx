@@ -53,7 +53,7 @@ const TeacherForm = () => {
   };
 
   const syncForm = <T extends IObject>(data: T) => {
-    const exclude = ['id', 'avatarUrl'];
+    const exclude = ['id', 'avatarUrl', 'userId'];
     const transform = ['tags', 'terrain'];
     for (const key of Object.keys(data)) {
       if (exclude.includes(key)) {
