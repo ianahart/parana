@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query(value = """
-                SELECT new com.hart.backend.parana.profile.dto.TeacherProfileDto(
+                SELECT new com.hart.backend.parana.profile.dto.UserProfileDto(
                   p.id AS id, p.bio AS bio, p.city AS city,
                  p.homeMountain AS homeMountain, p.stance AS stance,
                  p.state AS state, p.terrain AS terrain, p.travelUpTo AS travelUpTo,

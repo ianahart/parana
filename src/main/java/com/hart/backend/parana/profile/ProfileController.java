@@ -59,7 +59,10 @@ public class ProfileController {
                             this.profileService.retrieveTeacher(profileId)));
 
         }
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new GetProfileResponse<UserProfileDto>("success", this.profileService.retrieveUser(profileId)));
+                .body(new GetProfileResponse<UserProfileDto>("success",
+                        this.profileService.retrieveUser(profileId)));
+
     }
 }

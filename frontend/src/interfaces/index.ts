@@ -12,9 +12,8 @@ export interface IEditUserProfileForm {
   state: IFormField;
   stance: IFormField;
   homeMountain: IFormField;
-  perHour: IFormField;
   travelUpTo: IFormField;
-  terrain: { name: string; error: string; value: string[]; type: 'text' };
+  terrain: { name: string; error: string; value: string[]; type: string };
 }
 
 export interface IEditTeacherProfileForm {

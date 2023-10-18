@@ -112,7 +112,17 @@ public class ProfileService {
     }
 
     public void updateUser(UpdateProfileRequest request, Profile profile) {
-        System.out.println("Updating user...");
+
+        profile.setBio(Jsoup.clean(request.getBio(), Safelist.none()));
+        profile.setYearsSnowboarding(request.getYearsSnowboarding());
+        profile.setCity(Jsoup.clean(request.getCity(), Safelist.none()));
+        profile.setState(Jsoup.clean(request.getState(), Safelist.none()));
+        profile.setStance(Jsoup.clean(request.getStance(), Safelist.none()));
+        profile.setHomeMountain(Jsoup.clean(request.getHomeMountain(), Safelist.none()));
+        profile.setTravelUpTo(Jsoup.clean(request.getTravelUpTo(), Safelist.none()));
+        profile.setTerrain(Jsoup.clean(request.getTerrain(), Safelist.none()));
+
+        this.profileRepository.save(profile);
     }
 
     private boolean profileBelongsTo(Long profileId) {

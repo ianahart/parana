@@ -50,13 +50,13 @@ const TeacherForm = () => {
         continue;
       }
       if (transform.includes(key)) {
-        updateField(key, data[key].split(','), 'value');
+        updateField(key, data[key] === null ? [] : data[key].split(','), 'value');
       } else {
-        console.log(key);
-        updateField(key, data[key], 'value');
+        const name = key as keyof IEditTeacherProfileForm;
+        const value = form[name].value ? form[name].value : data[key] ? data[key] : '';
+        updateField(key, value, 'value');
       }
     }
-    console.log(data);
   };
 
   const fetchProfile = () => {

@@ -1,6 +1,7 @@
 package com.hart.backend.parana.profile.dto;
 
 public class UserProfileDto {
+    private Long id;
     private String bio;
     private String city;
     private String homeMountain;
@@ -16,6 +17,7 @@ public class UserProfileDto {
     }
 
     public UserProfileDto(
+            Long id,
             String bio,
             String city,
             String homeMountain,
@@ -25,6 +27,7 @@ public class UserProfileDto {
             String travelUpTo,
             Integer yearsSnowboarding,
             String avatarUrl) {
+        this.id = id;
         this.bio = bio;
         this.city = city;
         this.homeMountain = homeMountain;
@@ -34,6 +37,10 @@ public class UserProfileDto {
         this.travelUpTo = travelUpTo;
         this.yearsSnowboarding = yearsSnowboarding;
         this.avatarUrl = avatarUrl;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getBio() {
@@ -106,5 +113,9 @@ public class UserProfileDto {
 
     public void setYearsSnowboarding(Integer yearsSnowboarding) {
         this.yearsSnowboarding = yearsSnowboarding;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
