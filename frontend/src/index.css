@@ -73,6 +73,24 @@ body {
   width: 1280px;
 }
 
+.profile-container {
+  max-width: 1130px;
+  width: 1130px;
+}
+
+@media (max-width: 968px) {
+  .teacher-profile-container,
+  .user-profile-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 1150px) {
+  .profile-container {
+    width: 100%;
+  }
+}
+
 @media (max-width: 1280px) {
   .register-route-container,
   .login-route-container {

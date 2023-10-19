@@ -97,6 +97,7 @@ public class ProfileService {
     public void updateTeacher(UpdateProfileRequest request, Profile profile) {
 
         profile.setBio(Jsoup.clean(request.getBio(), Safelist.none()));
+        profile.setAboutLesson(Jsoup.clean(request.getAboutLesson(), Safelist.none()));
         profile.setCity(Jsoup.clean(request.getCity(), Safelist.none()));
         profile.setFirstLessonFree(request.getFirstLessonFree());
         profile.setHomeMountain(Jsoup.clean(request.getHomeMountain(), Safelist.none()));

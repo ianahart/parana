@@ -45,6 +45,9 @@ public class Profile {
     @Column(name = "bio", length = 400)
     private String bio;
 
+    @Column(name = "about_lesson", length = 400)
+    private String aboutLesson;
+
     @Column(name = "city")
     private String city;
 
@@ -90,6 +93,7 @@ public class Profile {
             String avatarFilename,
             String avatarUrl,
             String bio,
+            String aboutLesson,
             String city,
             Boolean firstLessonFree,
             String homeMountain,
@@ -106,6 +110,7 @@ public class Profile {
         this.avatarFilename = avatarFilename;
         this.avatarUrl = avatarUrl;
         this.bio = bio;
+        this.aboutLesson = aboutLesson;
         this.city = city;
         this.firstLessonFree = firstLessonFree;
         this.homeMountain = homeMountain;
@@ -120,6 +125,10 @@ public class Profile {
 
     public Long getId() {
         return id;
+    }
+
+    public String getAboutLesson() {
+        return aboutLesson;
     }
 
     public String getBio() {
@@ -252,6 +261,10 @@ public class Profile {
 
     public void setAvatarFilename(String avatarFilename) {
         this.avatarFilename = avatarFilename;
+    }
+
+    public void setAboutLesson(String aboutLesson) {
+        this.aboutLesson = aboutLesson;
     }
 
 }

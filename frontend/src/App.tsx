@@ -20,6 +20,8 @@ import ForgotPasswordRoute from './routes/ForgotPasswordRoute';
 import ResetPasswordRoute from './routes/ResetPasswordRoute';
 import RequireAuth from './components/Guard/RequireAuth';
 import EditProfileRoute from './routes/EditProfileRoute';
+import ProfileRoute from './routes/ProfileRoute';
+import NotFoundRoute from './routes/NotFoundRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -109,6 +111,16 @@ function App() {
                   </RequireAuth>
                 }
               />
+              <Route
+                path="/profiles/:id"
+                element={
+                  <RequireAuth>
+                    <ProfileRoute />
+                  </RequireAuth>
+                }
+              />
+              <Route path="not-found" element={<NotFoundRoute />} />
+              <Route path="*" element={<NotFoundRoute />} />
             </Routes>
           </WithAxios>
         </Box>

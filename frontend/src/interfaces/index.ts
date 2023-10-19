@@ -1,3 +1,24 @@
+export interface IProfile {
+  avatarUrl: string;
+  bio: string;
+  city: string;
+  firstLessonFree: boolean;
+  homeMountain: string;
+  id: number;
+  perHour: string;
+  role: string;
+  stance: string;
+  state: string;
+  tags: string;
+  terrain: string;
+  travelUpTo: string;
+  userId: number;
+  yearsSnowboarding: number;
+  fullName: string;
+  firstName: string;
+  aboutLesson: string;
+}
+
 export interface IFormField {
   name: string;
   value: string;
@@ -18,6 +39,7 @@ export interface IEditUserProfileForm {
 
 export interface IEditTeacherProfileForm {
   bio: IFormField;
+  aboutLesson: IFormField;
   yearsSnowboarding: IFormField;
   city: IFormField;
   state: IFormField;

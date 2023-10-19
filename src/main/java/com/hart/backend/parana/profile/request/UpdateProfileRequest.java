@@ -7,6 +7,9 @@ public class UpdateProfileRequest {
     @Size(min = 0, max = 400, message = "Bio should be between 1 and 400 characters")
     private String bio;
 
+    @Size(min = 0, max = 400, message = "About lesson should be between 1 and 400 characters")
+    private String aboutLesson;
+
     @Size(min = 0, max = 200, message = "City should be between 1 and 200 characters")
     private String city;
 
@@ -43,6 +46,7 @@ public class UpdateProfileRequest {
 
     public UpdateProfileRequest(
             String bio,
+            String aboutLesson,
             String city,
             Boolean firstLessonFree,
             String homeMountain,
@@ -58,6 +62,7 @@ public class UpdateProfileRequest {
     ) {
 
         this.bio = bio;
+        this.aboutLesson = aboutLesson;
         this.city = city;
         this.firstLessonFree = firstLessonFree;
         this.homeMountain = homeMountain;
@@ -69,6 +74,10 @@ public class UpdateProfileRequest {
         this.travelUpTo = travelUpTo;
         this.yearsSnowboarding = yearsSnowboarding;
         this.formType = formType;
+    }
+
+    public String getAboutLesson() {
+        return aboutLesson;
     }
 
     public String getBio() {
@@ -165,5 +174,9 @@ public class UpdateProfileRequest {
 
     public void setYearsSnowboarding(Integer yearsSnowboarding) {
         this.yearsSnowboarding = yearsSnowboarding;
+    }
+
+    public void setAboutLesson(String aboutLesson) {
+        this.aboutLesson = aboutLesson;
     }
 }

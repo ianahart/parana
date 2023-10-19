@@ -71,7 +71,7 @@ const TeacherForm = () => {
   };
 
   const fetchProfile = () => {
-    Client.getProfile(user.profileId, user.role)
+    Client.getProfile(user.profileId)
       .then((res) => {
         const { data } = res.data;
         syncForm(data);
@@ -189,6 +189,7 @@ const TeacherForm = () => {
   const packageFormData = (form: IEditTeacherProfileForm) => {
     return {
       bio: form.bio.value,
+      aboutLesson: form.aboutLesson.value,
       city: form.city.value,
       firstLessonFree: form.firstLessonFree.value,
       homeMountain: form.homeMountain.value,
@@ -259,6 +260,16 @@ const TeacherForm = () => {
             id="bio"
             errorField="Bio"
             placeHolder="Please tell us about yourself..."
+          />
+          <FormTextarea
+            updateField={updateField}
+            name={form.aboutLesson.name}
+            value={form.aboutLesson.value}
+            error={form.aboutLesson.error}
+            label="About Lesson"
+            id="aboutLesson"
+            errorField="About lesson"
+            placeHolder="Please tell us about the lesson..."
           />
           <FormField
             updateField={updateField}
