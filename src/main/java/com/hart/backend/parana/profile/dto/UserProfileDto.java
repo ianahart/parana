@@ -3,6 +3,9 @@ package com.hart.backend.parana.profile.dto;
 import com.hart.backend.parana.user.Role;
 
 public class UserProfileDto {
+    private String aboutLesson;
+    private String firstName;
+    private String fullName;
     private Role role;
     private Long userId;
     private Long id;
@@ -21,6 +24,9 @@ public class UserProfileDto {
     }
 
     public UserProfileDto(
+            String aboutLesson,
+            String firstName,
+            String fullName,
             Role role,
             Long userId,
             Long id,
@@ -33,6 +39,9 @@ public class UserProfileDto {
             String travelUpTo,
             Integer yearsSnowboarding,
             String avatarUrl) {
+        this.aboutLesson = aboutLesson;
+        this.firstName = firstName;
+        this.fullName = fullName;
         this.role = role;
         this.userId = userId;
         this.id = id;
@@ -45,6 +54,18 @@ public class UserProfileDto {
         this.travelUpTo = travelUpTo;
         this.yearsSnowboarding = yearsSnowboarding;
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getAboutLesson() {
+        return aboutLesson;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public Long getUserId() {
@@ -141,5 +162,17 @@ public class UserProfileDto {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setAboutLesson(String aboutLesson) {
+        this.aboutLesson = aboutLesson;
     }
 }

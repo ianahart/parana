@@ -36,6 +36,7 @@ export const passwordResetState = {
 
 export const editTeacherProfileFormState = {
   bio: { name: 'bio', error: '', value: '', type: 'text' },
+  aboutLesson: { name: 'aboutLesson', error: '', value: '', type: 'text' },
   yearsSnowboarding: { name: 'yearsSnowboarding', error: '', value: '', type: 'text' },
   city: { name: 'city', error: '', value: '', type: 'text' },
   state: { name: 'state', error: '', value: 'Alabama', type: 'text' },
@@ -123,3 +124,24 @@ export const terrainState = [
   'Backcountry',
   'Terrain Parks',
 ];
+
+export const profileState = {
+  avatarUrl: '',
+  bio: '',
+  city: '',
+  firstLessonFree: false,
+  homeMountain: '',
+  id: 0,
+  perHour: '',
+  role: '',
+  stance: '',
+  state: '',
+  tags: '',
+  terrain: '',
+  travelUpTo: '',
+  userId: 0,
+  yearsSnowboarding: 0,
+  fullName: '',
+  firstName: '',
+  aboutLesson: '',
+};

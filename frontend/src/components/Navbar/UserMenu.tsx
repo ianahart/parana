@@ -48,13 +48,13 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
         <UnorderedList color="light.primary" margin="0" fontSize="0.9rem">
           <NavLink
             icon={<AiOutlineUser />}
-            link="/profile"
+            link={`/profiles/${user.profileId}`}
             linkText="Profile"
             mobile={true}
           />
           <NavLink
             icon={<AiOutlineEdit />}
-            link={`/profiles/${user.id}/edit`}
+            link={`/profiles/${user.profileId}/edit`}
             linkText="Edit Profile"
             mobile={true}
           />

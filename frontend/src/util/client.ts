@@ -6,8 +6,8 @@ export const http = axios.create({
 });
 
 export const Client = {
-  getProfile(profileId: number, role: string) {
-    return http.get(`/profiles/${profileId}?role=${role}`);
+  getProfile(profileId: number) {
+    return http.get(`/profiles/${profileId}`);
   },
 
   updateProfile<T>(form: T, profileId: number) {

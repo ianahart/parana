@@ -7,6 +7,7 @@ import com.hart.backend.parana.profile.request.UpdateProfileRequest;
 import com.hart.backend.parana.profile.response.GetProfileResponse;
 import com.hart.backend.parana.profile.response.ProfilePhotoResponse;
 import com.hart.backend.parana.profile.response.UpdateProfileResponse;
+import com.hart.backend.parana.user.Role;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,10 +51,10 @@ public class ProfileController {
     }
 
     @GetMapping("/{profileId}")
-    public ResponseEntity<GetProfileResponse<?>> getProfile(@PathVariable("profileId") Long profileId,
-            @RequestParam("role") String role) {
+    public ResponseEntity<GetProfileResponse<?>> getProfile(@PathVariable("profileId") Long profileId) {
+        Profile profile = this.profileService.getProfileById(profileId);
 
-        if (role.equalsIgnoreCase("TEACHER")) {
+        if (profile.getUser().getRole() == Role.TEACHER) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new GetProfileResponse<TeacherProfileDto>("success",
                             this.profileService.retrieveTeacher(profileId)));

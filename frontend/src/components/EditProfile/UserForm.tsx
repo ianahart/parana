@@ -66,7 +66,7 @@ const UserForm = () => {
   };
 
   const fetchProfile = () => {
-    Client.getProfile(user.profileId, user.role)
+    Client.getProfile(user.profileId)
       .then((res) => {
         const { data } = res.data;
         syncForm(data);
