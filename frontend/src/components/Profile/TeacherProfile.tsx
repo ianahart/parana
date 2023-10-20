@@ -7,13 +7,13 @@ import AboutLesson from './AboutLesson';
 import Tags from './Tags';
 import TeacherHero from './TeacherHero';
 import { IoRibbonOutline } from 'react-icons/io5';
+import HomeMountain from './HomeMountain';
 
 interface ITeacherProfileProps {
   profile: IProfile;
 }
 
 const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
-  console.log(profile);
   return (
     <Flex className="teacher-profile-container" color="text.secondary">
       <Flex p="0.5rem" flexDir="column" flexGrow={2} minH="100vh">
@@ -24,6 +24,7 @@ const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
           travelUpTo={profile.travelUpTo}
         />
         <Biography firstName={profile.firstName} bio={profile.bio} />
+        <HomeMountain firstName={profile.firstName} homeMountain={profile.homeMountain} />
         <AboutLesson level="All Levels" lang="English" about={profile.aboutLesson} />
         {profile.firstLessonFree && (
           <Box my="1rem" width="200px">
