@@ -22,6 +22,7 @@ import RequireAuth from './components/Guard/RequireAuth';
 import EditProfileRoute from './routes/EditProfileRoute';
 import ProfileRoute from './routes/ProfileRoute';
 import NotFoundRoute from './routes/NotFoundRoute';
+import ExplorerRoute from './routes/ExplorerRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -101,6 +102,14 @@ function App() {
                   <RequireGuest>
                     <AboutRoute />
                   </RequireGuest>
+                }
+              />
+              <Route
+                path="/explore"
+                element={
+                  <RequireAuth>
+                    <ExplorerRoute />
+                  </RequireAuth>
                 }
               />
               <Route

@@ -40,7 +40,7 @@ const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
               <Box mx="0.25rem">
                 <IoRibbonOutline />
               </Box>
-              <Text fontWeight="bold">First lesson free</Text>
+              <Text fontWeight="bold">1st lesson free</Text>
             </Flex>
           </Box>
         )}

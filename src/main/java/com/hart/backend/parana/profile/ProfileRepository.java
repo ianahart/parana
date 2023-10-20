@@ -13,7 +13,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query(value = """
                 SELECT new com.hart.backend.parana.profile.dto.UserProfileDto(
-               p.aboutLesson AS aboutLesson, u.firstName AS firstName,  u.fullName as fullName, u.role AS role, u.id AS userId, p.id AS id, p.bio AS bio, p.city AS city,
+                 p.aboutLesson AS aboutLesson, u.firstName AS firstName,  u.fullName as fullName, u.role AS role, u.id AS userId, p.id AS id, p.bio AS bio, p.city AS city,
                  p.homeMountain AS homeMountain, p.stance AS stance,
                  p.state AS state, p.terrain AS terrain, p.travelUpTo AS travelUpTo,
                 p.yearsSnowboarding AS yearsSnowboarding, p.avatarUrl AS avatarUrl

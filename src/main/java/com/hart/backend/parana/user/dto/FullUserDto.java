@@ -1,0 +1,115 @@
+package com.hart.backend.parana.user.dto;
+
+import com.hart.backend.parana.user.Role;
+
+public class FullUserDto {
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Role role;
+    private String abbreviation;
+    private Boolean loggedIn;
+    private Long profileId;
+    private String avatarUrl;
+    private String fullName;
+
+    public FullUserDto() {
+
+    }
+
+    public FullUserDto(Long id, String email, String firstName, String lastName, Role role, String abbreviation,
+            Boolean loggedIn, Long profileId, String avatarUrl, String fullName) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.abbreviation = abbreviation;
+        this.loggedIn = loggedIn;
+        this.profileId = profileId;
+        this.avatarUrl = avatarUrl;
+        this.fullName = fullName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public Long getProfileId() {
+        return profileId;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public Boolean getLoggedIn() {
+        return loggedIn;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setProfileId(Long profileId) {
+        this.profileId = profileId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+}

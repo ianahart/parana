@@ -1,31 +1,40 @@
 package com.hart.backend.parana.user.dto;
 
-public class UserDto {
+public class TeacherDto {
 
+    private Boolean firstLessonFree;
     private String avatarUrl;
     private String bio;
     private Long userId;
     private Long profileId;
+    private String perHour;
     private String firstName;
     private String city;
     private String state;
 
-    public UserDto(
+    public TeacherDto(
+            Boolean firstLessonFree,
             String avatarUrl,
             String bio,
             Long userId,
             Long profileId,
+            String perHour,
             String firstName,
             String city,
             String state) {
-
+        this.firstLessonFree = firstLessonFree;
         this.avatarUrl = avatarUrl;
         this.bio = bio;
         this.userId = userId;
         this.profileId = profileId;
+        this.perHour = perHour;
         this.firstName = firstName;
         this.city = city;
         this.state = state;
+    }
+
+    public Boolean getFirstLessonFree() {
+        return firstLessonFree;
     }
 
     public String getAvatarUrl() {
@@ -46,6 +55,10 @@ public class UserDto {
 
     public Long getUserId() {
         return userId;
+    }
+
+    public String getPerHour() {
+        return perHour;
     }
 
     public String getFirstName() {
@@ -72,6 +85,10 @@ public class UserDto {
         this.userId = userId;
     }
 
+    public void setPerHour(String perHour) {
+        this.perHour = perHour;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -82,5 +99,9 @@ public class UserDto {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public void setFirstLessonFree(Boolean firstLessonFree) {
+        this.firstLessonFree = firstLessonFree;
     }
 }

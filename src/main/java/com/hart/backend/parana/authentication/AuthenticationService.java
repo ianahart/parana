@@ -16,7 +16,7 @@ import com.hart.backend.parana.user.Role;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserRepository;
 import com.hart.backend.parana.user.UserService;
-import com.hart.backend.parana.user.dto.UserDto;
+import com.hart.backend.parana.user.dto.FullUserDto;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.ForbiddenException;
@@ -104,14 +104,14 @@ public class AuthenticationService {
 
     }
 
-    private UserDto updateAuthUser(User user, String jwtToken) {
+    private FullUserDto updateAuthUser(User user, String jwtToken) {
 
         user.setLoggedIn(true);
 
         this.userRepository.save(user);
         this.saveTokenWithUser(jwtToken, user);
 
-        return new UserDto(
+        return new FullUserDto(
                 user.getId(),
                 user.getEmail(),
                 user.getFirstName(),
@@ -143,7 +143,7 @@ public class AuthenticationService {
         String jwtToken = this.jwtService.generateToken(user);
 
         this.tokenService.revokeAllUserTokens(user);
-        UserDto userDto = this.updateAuthUser(user, jwtToken);
+        FullUserDto userDto = this.updateAuthUser(user, jwtToken);
         RefreshToken refreshToken = this.refreshTokenService.generateRefreshToken(user.getId());
 
         return new LoginResponse(userDto, jwtToken, refreshToken.getRefreshToken());
