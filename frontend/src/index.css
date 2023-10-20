@@ -78,6 +78,15 @@ body {
   width: 1130px;
 }
 
+.explorer-container {
+  max-width: 1130px;
+  width: 1130px;
+}
+
+.teachers-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 @media (max-width: 968px) {
   .teacher-profile-container,
   .user-profile-container {
@@ -85,8 +94,23 @@ body {
   }
 }
 
+@media (max-width: 1050px) and (min-width: 601px) {
+  .teachers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .teachers-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
 @media (max-width: 1150px) {
   .profile-container {
+    width: 100%;
+  }
+  .explorer-container {
     width: 100%;
   }
 }

@@ -1,22 +1,22 @@
 package com.hart.backend.parana.user.response;
 
-import com.hart.backend.parana.user.dto.UserDto;
+import com.hart.backend.parana.user.dto.FullUserDto;
 
 public class SyncUserResponse {
 
-    private UserDto data;
+    private FullUserDto data;
     private String message;
 
     public SyncUserResponse() {
 
     }
 
-    public SyncUserResponse(String message, UserDto data) {
+    public SyncUserResponse(String message, FullUserDto data) {
         this.message = message;
         this.data = data;
     }
 
-    public UserDto getData() {
+    public FullUserDto getData() {
         return data;
     }
 
@@ -24,7 +24,7 @@ public class SyncUserResponse {
         return message;
     }
 
-    public void setData(UserDto data) {
+    public void setData(FullUserDto data) {
         this.data = data;
     }
 

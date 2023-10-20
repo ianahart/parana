@@ -1,10 +1,10 @@
 package com.hart.backend.parana.authentication.response;
 
-import com.hart.backend.parana.user.dto.UserDto;
+import com.hart.backend.parana.user.dto.FullUserDto;
 
 public class LoginResponse {
 
-    private UserDto user;
+    private FullUserDto user;
     private String token;
     private String refreshToken;
 
@@ -12,13 +12,13 @@ public class LoginResponse {
 
     }
 
-    public LoginResponse(UserDto user, String token, String refreshToken) {
+    public LoginResponse(FullUserDto user, String token, String refreshToken) {
         this.user = user;
         this.token = token;
         this.refreshToken = refreshToken;
     }
 
-    public UserDto getUser() {
+    public FullUserDto getUser() {
         return user;
     }
 
@@ -30,7 +30,7 @@ public class LoginResponse {
         return token;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(FullUserDto user) {
         this.user = user;
     }
 

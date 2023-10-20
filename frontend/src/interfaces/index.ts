@@ -19,6 +19,18 @@ export interface IProfile {
   aboutLesson: string;
 }
 
+export interface ITeacher {
+  avatarUrl: string;
+  bio: string;
+  city: string;
+  firstName: string;
+  perHour: string;
+  profileId: number;
+  state: string;
+  userId: number;
+  firstLessonFree: boolean;
+}
+
 export interface IFormField {
   name: string;
   value: string;

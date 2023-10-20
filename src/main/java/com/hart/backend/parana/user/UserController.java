@@ -1,5 +1,9 @@
 package com.hart.backend.parana.user;
 
+import com.hart.backend.parana.user.dto.TeacherDto;
+import com.hart.backend.parana.user.dto.UserDto;
+import com.hart.backend.parana.user.dto.UserPaginationDto;
+import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SyncUserResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,5 +31,32 @@ public class UserController {
     public ResponseEntity<SyncUserResponse> syncUser(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SyncUserResponse("success", this.userService.syncUser(request)));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<GetUsersResponse<?>> getUsers(
+            @RequestParam("role") String role,
+            @RequestParam("page") int page,
+            @RequestParam("direction") String direction,
+            @RequestParam("pageSize") int pageSize) {
+
+        switch (role) {
+            case "TEACHER":
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new GetUsersResponse<UserPaginationDto<TeacherDto>>("success",
+                                this.userService.retrieveTeachers(page, pageSize, direction)));
+
+            case "USER":
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new GetUsersResponse<UserPaginationDto<UserDto>>("success",
+                                this.userService.retrieveUsers(page, pageSize, direction)));
+
+            default:
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new GetUsersResponse<UserPaginationDto<TeacherDto>>("success",
+                                this.userService.retrieveTeachers(page, pageSize, direction)));
+
+        }
+
     }
 }
