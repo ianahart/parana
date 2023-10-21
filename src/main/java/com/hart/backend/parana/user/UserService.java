@@ -99,10 +99,11 @@ public class UserService {
         return user;
     }
 
-    public UserPaginationDto<TeacherDto> retrieveTeachers(int page, int pageSize, String direction) {
+    public UserPaginationDto<TeacherDto> retrieveTeachers(int page, int pageSize, String direction, int rateParam) {
         int currentPage = MyUtil.paginate(page, direction);
+        Integer rate = rateParam == 1 ? null : rateParam;
         Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
-        Page<TeacherDto> result = this.userRepository.retrieveTeachers(paging);
+        Page<TeacherDto> result = this.userRepository.retrieveTeachers(paging, rate);
 
         return new UserPaginationDto<TeacherDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
                 direction);
