@@ -1,6 +1,7 @@
 package com.hart.backend.parana.user;
 
 import java.security.Key;
+import java.util.Map;
 import java.util.Optional;
 
 import com.hart.backend.parana.user.dto.FullUserDto;
@@ -10,6 +11,7 @@ import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.geocode.GeocodeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +35,12 @@ public class UserService {
     private String secretKey;
 
     private final UserRepository userRepository;
+    private final GeocodeService geocodeService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, GeocodeService geocodeService) {
         this.userRepository = userRepository;
+        this.geocodeService = geocodeService;
     }
 
     public boolean userExistsByEmail(String email) {
@@ -99,11 +103,24 @@ public class UserService {
         return user;
     }
 
-    public UserPaginationDto<TeacherDto> retrieveTeachers(int page, int pageSize, String direction, int rateParam) {
+    private Map<String, Double> getUserLocation() {
+        User user = getCurrentlyLoggedInUser();
+        return this.geocodeService.geocode(user.getProfile().getCity(), user.getProfile().getState());
+    }
+
+    public UserPaginationDto<TeacherDto> retrieveTeachers(int page, int pageSize, String direction, int rateParam,
+            Double distanceParam) {
         int currentPage = MyUtil.paginate(page, direction);
+
         Integer rate = rateParam == 1 ? null : rateParam;
+        Double distance = distanceParam == 1 ? null : distanceParam;
+
         Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
-        Page<TeacherDto> result = this.userRepository.retrieveTeachers(paging, rate);
+        Map<String, Double> coords = getUserLocation();
+        Page<TeacherDto> result = distance != null
+                ? this.userRepository.findTeachersWithinDistance(coords.get("latitude"), coords.get("longitude"),
+                        distance,rate, paging)
+                : this.userRepository.retrieveTeachers(paging, rate);
 
         return new UserPaginationDto<TeacherDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
                 direction, result.getTotalElements());

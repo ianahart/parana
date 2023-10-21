@@ -39,13 +39,14 @@ public class UserController {
             @RequestParam("page") int page,
             @RequestParam("direction") String direction,
             @RequestParam("pageSize") int pageSize,
-            @RequestParam("rate") int rate) {
+            @RequestParam("rate") int rate,
+            @RequestParam("distance") Double distance) {
 
         switch (role) {
             case "TEACHER":
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new GetUsersResponse<UserPaginationDto<TeacherDto>>("success",
-                                this.userService.retrieveTeachers(page, pageSize, direction, rate)));
+                                this.userService.retrieveTeachers(page, pageSize, direction, rate, distance)));
 
             case "USER":
                 return ResponseEntity.status(HttpStatus.OK)
@@ -55,7 +56,7 @@ public class UserController {
             default:
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(new GetUsersResponse<UserPaginationDto<TeacherDto>>("success",
-                                this.userService.retrieveTeachers(page, pageSize, direction, rate)));
+                                this.userService.retrieveTeachers(page, pageSize, direction, rate, distance)));
 
         }
 

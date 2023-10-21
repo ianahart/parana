@@ -5,12 +5,14 @@ import Teachers from '../components/Explorer/Teachers';
 import { ITeacher } from '../interfaces';
 import BasicSpinner from '../components/Shared/BasicSpinner';
 import RateFilter from '../components/Explorer/RateFilter';
+import DistanceFilter from '../components/Explorer/DistanceFilter';
 
 const ExplorerRoute = () => {
   const shouldRun = useRef(true);
   const [teachers, setTeachers] = useState<ITeacher[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rate, setRate] = useState(1);
+  const [distance, setDistance] = useState(1);
   const [pagination, setPagination] = useState({
     page: 0,
     direction: 'next',
@@ -25,9 +27,10 @@ const ExplorerRoute = () => {
     pageNum: number,
     direction: string,
     pageSize: number,
-    rate: number
+    rate: number,
+    distance: number
   ) => {
-    Client.getTeachers(role, pageNum, direction, pageSize, rate)
+    Client.getTeachers(role, pageNum, direction, pageSize, rate, distance)
       .then((res) => {
         const { users, page, pageSize, totalPages, direction, totalElements } =
           res.data.data;
@@ -66,7 +69,7 @@ const ExplorerRoute = () => {
     const pageNum = paginate ? pagination.page : -1;
     const { direction, pageSize } = pagination;
     setIsLoading(true);
-    getTeachers(ROLE, pageNum, direction, pageSize, rate);
+    getTeachers(ROLE, pageNum, direction, pageSize, rate, distance);
   };
   useEffect(() => {
     if (shouldRun.current) {
@@ -81,11 +84,17 @@ const ExplorerRoute = () => {
     }
   }, [rate]);
 
-  const resetRateFilter = () => {
+  useEffect(() => {
+    if (distance > 1) {
+      retrieveTeachers(false);
+    }
+  }, [distance]);
+
+  const resetFilter = () => {
     resetTeachers();
     const { direction, pageSize } = pagination;
     setIsLoading(true);
-    getTeachers(ROLE, -1, direction, pageSize, 1);
+    getTeachers(ROLE, -1, direction, pageSize, 1, 1);
   };
 
   return (
@@ -100,7 +109,12 @@ const ExplorerRoute = () => {
           </Flex>
         )}
         <Flex justify="flex-start" align="center" m="1.5rem">
-          <RateFilter rate={rate} setRate={setRate} resetRateFilter={resetRateFilter} />
+          <RateFilter rate={rate} setRate={setRate} resetRateFilter={resetFilter} />
+          <DistanceFilter
+            distance={distance}
+            setDistance={setDistance}
+            resetFilter={resetFilter}
+          />
         </Flex>
         <Box fontSize="0.9rem" color="text.secondary" fontWeight="bold" mx="1.5rem">
           {pagination.totalElements} teachers available
