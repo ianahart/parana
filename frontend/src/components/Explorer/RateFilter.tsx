@@ -75,7 +75,7 @@ const RateFilter = ({ rate, setRate, resetRateFilter }: IRateFilterProps) => {
             Average price $40
           </Text>
           <Text fontWeight="bold" mt="0.5rem" fontSize="0.9rem">
-            Your maximum budget $100+
+            Your maximum budget {sliderValue ? `$${sliderValue}` : '$100'}
           </Text>
           <Slider
             mt="4rem"
