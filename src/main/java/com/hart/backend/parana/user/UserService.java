@@ -106,7 +106,7 @@ public class UserService {
         Page<TeacherDto> result = this.userRepository.retrieveTeachers(paging, rate);
 
         return new UserPaginationDto<TeacherDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
-                direction);
+                direction, result.getTotalElements());
 
     }
 
@@ -116,7 +116,7 @@ public class UserService {
         Page<UserDto> result = this.userRepository.retrieveUsers(paging);
 
         return new UserPaginationDto<UserDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
-                direction);
+                direction, result.getTotalElements());
 
     }
 }

@@ -16,6 +16,7 @@ const ExplorerRoute = () => {
     direction: 'next',
     totalPages: 0,
     pageSize: 6,
+    totalElements: 0,
   });
   const ROLE = 'TEACHER';
 
@@ -28,12 +29,14 @@ const ExplorerRoute = () => {
   ) => {
     Client.getTeachers(role, pageNum, direction, pageSize, rate)
       .then((res) => {
-        const { users, page, pageSize, totalPages, direction } = res.data.data;
+        const { users, page, pageSize, totalPages, direction, totalElements } =
+          res.data.data;
         setTeachers((prevState) => [...prevState, ...users]);
         setPagination((prevState) => ({
           ...prevState,
           direction,
           totalPages,
+          totalElements,
           pageSize,
           page,
         }));
@@ -52,6 +55,7 @@ const ExplorerRoute = () => {
       direction: 'next',
       totalPages: 0,
       pageSize: 6,
+      totalElements: 0,
     });
   };
 
@@ -99,7 +103,7 @@ const ExplorerRoute = () => {
           <RateFilter rate={rate} setRate={setRate} resetRateFilter={resetRateFilter} />
         </Flex>
         <Box fontSize="0.9rem" color="text.secondary" fontWeight="bold" mx="1.5rem">
-          {pagination.pageSize * pagination.totalPages} teachers available
+          {pagination.totalElements} teachers available
         </Box>
         <Teachers teachers={teachers} />
         {pagination.page < pagination.totalPages - 1 && (
