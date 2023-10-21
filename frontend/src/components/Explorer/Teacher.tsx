@@ -22,7 +22,7 @@ const Teacher = ({ data }: ITeacherProps) => {
   return (
     <Card onClick={goToProfile} bg="blackAlpha.500" cursor="pointer">
       <CardBody>
-        <Box pos="relative">
+        <Box position="relative">
           <HeroImage firstName={data.firstName} avatarUrl={data.avatarUrl} />
           <FavoriteButton />
           <TeacherInformation

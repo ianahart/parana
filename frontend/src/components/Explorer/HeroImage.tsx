@@ -7,7 +7,13 @@ interface IHeroImageProps {
 
 const HeroImage = ({ firstName, avatarUrl }: IHeroImageProps) => {
   return (
-    <Flex borderRadius={20} display="inline-block" overflow="hidden" justify="center">
+    <Flex
+      width="100%"
+      borderRadius={20}
+      display="inline-block"
+      overflow="hidden"
+      justify="center"
+    >
       {avatarUrl ? (
         <Image
           transition="transform .2s"

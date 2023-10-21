@@ -8,6 +8,7 @@ public class UserPaginationDto<T> {
     private int pageSize;
     private int totalPages;
     private String direction;
+    private long totalElements;
 
     public UserPaginationDto() {
 
@@ -18,13 +19,15 @@ public class UserPaginationDto<T> {
             int page,
             int pageSize,
             int totalPages,
-            String direction) {
+            String direction,
+            long totalElements) {
 
         this.users = users;
         this.page = page;
         this.pageSize = pageSize;
         this.totalPages = totalPages;
         this.direction = direction;
+        this.totalElements = totalElements;
     }
 
     public int getPage() {
@@ -47,6 +50,10 @@ public class UserPaginationDto<T> {
         return totalPages;
     }
 
+    public long getTotalElements() {
+        return totalElements;
+    }
+
     public void setPage(int page) {
         this.page = page;
     }
@@ -65,5 +72,9 @@ public class UserPaginationDto<T> {
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public void setTotalElements(long totalElements) {
+        this.totalElements = totalElements;
     }
 }

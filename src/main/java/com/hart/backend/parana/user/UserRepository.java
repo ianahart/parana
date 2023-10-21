@@ -22,11 +22,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
              ) FROM User u
              INNER JOIN u.profile p
              WHERE u.role = 'TEACHER'
+             AND (:rate IS NULL OR CAST (p.perHour AS integer) <= :rate)
             """)
-    Page<TeacherDto> retrieveTeachers(@Param("paging") Pageable paging);
+    Page<TeacherDto> retrieveTeachers(@Param("paging") Pageable paging, @Param("rate") Integer rate);
 
     @Query(value = """
-             SELECT new com.hart.backend.parana.user.dto.TeacherDto(
+             SELECT new com.hart.backend.parana.user.dto.UserDto(
               p.avatarUrl AS avatarUrl, p.bio AS bio, u.id AS userId, p.id AS profileId,
               u.firstName AS firstName, p.city AS city, p.state AS state
              ) FROM User u

@@ -6,9 +6,15 @@ export const http = axios.create({
 });
 
 export const Client = {
-  getTeachers(role = '', page: number, direction: string, pageSize: number) {
+  getTeachers(
+    role = '',
+    page: number,
+    direction: string,
+    pageSize: number,
+    rate: number
+  ) {
     return http.get(
-      `/users?role=${role}&page=${page}&direction=${direction}&pageSize=${pageSize}`
+      `/users?role=${role}&page=${page}&direction=${direction}&pageSize=${pageSize}&rate=${rate}`
     );
   },
 
