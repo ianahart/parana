@@ -48,8 +48,9 @@ const UserForm = () => {
   };
 
   const syncForm = <T extends IObject>(data: T) => {
-    const exclude = ['id', 'avatarUrl', 'userId', 'role'];
-    const transform = ['tags', 'terrain'];
+    const exclude = ['id', 'avatarUrl', 'userId', 'role', 'tags', 'aboutLesson'];
+    const transform = ['terrain'];
+    console.log('test', data);
     for (const key of Object.keys(data)) {
       if (exclude.includes(key)) {
         continue;
@@ -59,8 +60,10 @@ const UserForm = () => {
         updateField(key, data[key] === null ? [] : data[key].split(','), 'value');
       } else {
         const name = key as keyof IEditUserProfileForm;
-        const value = data[key] ? data[key] : form[name].value ? form[name].value : '';
-        updateField(key, value, 'value');
+        if (name !== null) {
+          const value = data[key] ? data[key] : form[name].value ? form[name].value : '';
+          updateField(key, value, 'value');
+        }
       }
     }
   };

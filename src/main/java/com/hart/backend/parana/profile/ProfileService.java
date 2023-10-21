@@ -4,6 +4,7 @@ import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.amazon.AmazonService;
+import com.hart.backend.parana.geocode.GeocodeService;
 import com.hart.backend.parana.profile.dto.TeacherProfileDto;
 import com.hart.backend.parana.profile.dto.UserProfileDto;
 import com.hart.backend.parana.profile.request.UpdateProfileRequest;
@@ -26,15 +27,18 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserService userService;
     private final AmazonService amazonService;
+    private final GeocodeService geocodeService;
 
     @Autowired
     public ProfileService(
             ProfileRepository profileRepository,
             UserService userService,
-            AmazonService amazonService) {
+            AmazonService amazonService,
+            GeocodeService geocodeService) {
         this.profileRepository = profileRepository;
         this.userService = userService;
         this.amazonService = amazonService;
+        this.geocodeService = geocodeService;
     }
 
     public Profile createProfile() {
@@ -96,18 +100,24 @@ public class ProfileService {
 
     public void updateTeacher(UpdateProfileRequest request, Profile profile) {
 
+        String city = Jsoup.clean(request.getCity(), Safelist.none());
+        String state = Jsoup.clean(request.getState(), Safelist.none());
+        Map<String, Double> coords = this.geocodeService.geocode(city, state);
+
         profile.setBio(Jsoup.clean(request.getBio(), Safelist.none()));
         profile.setAboutLesson(Jsoup.clean(request.getAboutLesson(), Safelist.none()));
-        profile.setCity(Jsoup.clean(request.getCity(), Safelist.none()));
+        profile.setCity(city);
         profile.setFirstLessonFree(request.getFirstLessonFree());
         profile.setHomeMountain(Jsoup.clean(request.getHomeMountain(), Safelist.none()));
         profile.setPerHour(Jsoup.clean(request.getPerHour(), Safelist.none()));
         profile.setStance(request.getStance());
-        profile.setState(request.getState());
+        profile.setState(state);
         profile.setTags(Jsoup.clean(request.getTags(), Safelist.none()));
         profile.setTerrain(Jsoup.clean(request.getTerrain(), Safelist.none()));
         profile.setYearsSnowboarding(request.getYearsSnowboarding());
         profile.setTravelUpTo(Jsoup.clean(request.getTravelUpTo(), Safelist.none()));
+        profile.setLatitude(coords.get("latitude"));
+        profile.setLongitude(coords.get("longitude"));
 
         this.profileRepository.save(profile);
     }

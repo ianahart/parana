@@ -78,6 +78,12 @@ public class Profile {
     @Column(name = "years_snowboarding")
     private Integer yearsSnowboarding;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @JsonIgnore
     @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     private User user;
@@ -103,7 +109,9 @@ public class Profile {
             String tags,
             String terrain,
             String travelUpTo,
-            Integer yearsSnowboarding) {
+            Integer yearsSnowboarding,
+            Double latitude,
+            Double longitude) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -121,6 +129,16 @@ public class Profile {
         this.terrain = terrain;
         this.travelUpTo = travelUpTo;
         this.yearsSnowboarding = yearsSnowboarding;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
     }
 
     public Long getId() {
@@ -265,6 +283,15 @@ public class Profile {
 
     public void setAboutLesson(String aboutLesson) {
         this.aboutLesson = aboutLesson;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
 }

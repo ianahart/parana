@@ -11,10 +11,11 @@ export const Client = {
     page: number,
     direction: string,
     pageSize: number,
-    rate: number
+    rate: number,
+    distance: number
   ) {
     return http.get(
-      `/users?role=${role}&page=${page}&direction=${direction}&pageSize=${pageSize}&rate=${rate}`
+      `/users?role=${role}&page=${page}&direction=${direction}&pageSize=${pageSize}&rate=${rate}&distance=${distance}`
     );
   },
 
