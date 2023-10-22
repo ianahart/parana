@@ -6,6 +6,14 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getConnectionStatus(senderId: number, receiverId: number) {
+    return http.get(`/connections/status?senderId=${senderId}&receiverId=${receiverId}`);
+  },
+
+  createConnectionRequest(senderId: number, receiverId: number) {
+    return http.post(`/connections`, { senderId, receiverId });
+  },
+
   getTeachers(
     role = '',
     page: number,
