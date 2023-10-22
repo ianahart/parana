@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.token.Token;
@@ -87,6 +88,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordReset> passwordResets;
 
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> senderConnections;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> receiverConnections;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -143,6 +150,14 @@ public class User implements UserDetails {
         return id;
     }
 
+    public List<Connection> getSenderConnections() {
+        return senderConnections;
+    }
+
+    public List<Connection> getReceiverConnections() {
+        return receiverConnections;
+    }
+
     public List<PasswordReset> getPasswordResets() {
         return passwordResets;
     }
@@ -197,6 +212,14 @@ public class User implements UserDetails {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public void setSenderConnections(List<Connection> senderConnections) {
+        this.senderConnections = senderConnections;
+    }
+
+    public void setReceiverConnections(List<Connection> receiverConnections) {
+        this.receiverConnections = receiverConnections;
     }
 
     public void setPasswordResets(List<PasswordReset> passwordResets) {

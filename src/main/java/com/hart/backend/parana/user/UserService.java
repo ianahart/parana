@@ -13,6 +13,8 @@ import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.geocode.GeocodeService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class UserService {
+
+    Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Value("${secretkey}")
     private String secretKey;
 
@@ -51,6 +56,15 @@ public class UserService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public User getUserById(Long userId) {
+        String error = String.format("User with id %d is not found", userId);
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    logger.info(error);
+                    return new NotFoundException(error);
+                });
     }
 
     private Claims extractUserIdFromToken(String token) {
@@ -119,7 +133,7 @@ public class UserService {
         Map<String, Double> coords = getUserLocation();
         Page<TeacherDto> result = distance != null
                 ? this.userRepository.findTeachersWithinDistance(coords.get("latitude"), coords.get("longitude"),
-                        distance,rate, paging)
+                        distance, rate, paging)
                 : this.userRepository.retrieveTeachers(paging, rate);
 
         return new UserPaginationDto<TeacherDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
