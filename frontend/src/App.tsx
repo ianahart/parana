@@ -23,6 +23,10 @@ import EditProfileRoute from './routes/EditProfileRoute';
 import ProfileRoute from './routes/ProfileRoute';
 import NotFoundRoute from './routes/NotFoundRoute';
 import ExplorerRoute from './routes/ExplorerRoute';
+import ConnectionRoute from './routes/ConnectionRoute';
+import ConnectionRequests from './components/Connection/ConnectionRequests';
+import Connections from './components/Connection/Connections';
+import Suggestions from './components/Connection/Suggestions';
 
 function App() {
   const shouldRun = useRef(true);
@@ -112,6 +116,41 @@ function App() {
                   </RequireAuth>
                 }
               />
+              <Route
+                path="/connections"
+                element={
+                  <RequireAuth>
+                    <ConnectionRoute />
+                  </RequireAuth>
+                }
+              >
+                <Route
+                  path="requests"
+                  element={
+                    <RequireAuth>
+                      <ConnectionRequests />
+                    </RequireAuth>
+                  }
+                />
+
+                <Route
+                  path="all"
+                  element={
+                    <RequireAuth>
+                      <Connections />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="suggestions"
+                  element={
+                    <RequireAuth>
+                      <Suggestions />
+                    </RequireAuth>
+                  }
+                />
+              </Route>
+
               <Route
                 path="/profiles/:id/edit"
                 element={

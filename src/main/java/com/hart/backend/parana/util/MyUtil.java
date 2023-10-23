@@ -1,7 +1,8 @@
 package com.hart.backend.parana.util;
 
-import java.util.Arrays;
 import java.util.List;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 
 public final class MyUtil {
@@ -64,5 +65,36 @@ public final class MyUtil {
             }
         }
         return String.join("", list);
+    }
+
+    public static String constructReadableDate(Timestamp timestamp) {
+        long createdAtInSeconds = (timestamp.getTime() / 1000L);
+        long nowInSeconds = Instant.now().getEpochSecond();
+        long elapsedInSeconds = nowInSeconds - createdAtInSeconds;
+        String readableDate = "";
+
+        if (elapsedInSeconds < 60) {
+
+            readableDate = String.format("%d seconds ago", elapsedInSeconds);
+        } else if (elapsedInSeconds > 60 && elapsedInSeconds < 60 * 60) {
+
+            int minutes = Math.round(elapsedInSeconds / 60);
+            readableDate = String.format("%d minutes ago", minutes);
+        } else if (elapsedInSeconds >= 60 * 60 && elapsedInSeconds < 60 * 60 * 24) {
+
+            int hours = Math.round(elapsedInSeconds / (60 * 60));
+            readableDate = String.format("%d hours ago", hours);
+        } else if (elapsedInSeconds >= 60 * 60 * 24 && elapsedInSeconds < 60 * 60 * 24 * 7) {
+
+            int days = Math.round(elapsedInSeconds / (60 * 60 * 24));
+            readableDate = String.format("%d days ago", days);
+        } else if (elapsedInSeconds >= 60 * 60 * 24 * 7 && elapsedInSeconds < 60 * 60 * 24 * 30) {
+
+            int weeks = Math.round(elapsedInSeconds / (60 * 60 * 24 * 7));
+            readableDate = String.format("%d weeks ago", weeks);
+        }
+
+        return readableDate;
+
     }
 }

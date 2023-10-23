@@ -6,6 +6,26 @@ export const http = axios.create({
 });
 
 export const Client = {
+  confirmConnectionRequest(connectionId: number, currentUserId: number) {
+    return http.patch(`/connections/${connectionId}`, { currentUserId });
+  },
+
+  removeConnectionRequest(connectionId: number) {
+    return http.delete(`/connections/${connectionId}`);
+  },
+
+  getConnectionRequests(
+    userId: number,
+    role: string,
+    page: number,
+    pageSize: number,
+    direction: string
+  ) {
+    return http.get(
+      `/connections/requests?userId=${userId}&role=${role}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   getConnectionStatus(senderId: number, receiverId: number) {
     return http.get(`/connections/status?senderId=${senderId}&receiverId=${receiverId}`);
   },
