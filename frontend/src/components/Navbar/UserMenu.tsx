@@ -62,7 +62,7 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
           <NavLink icon={<MdOutlineFeed />} link="/feed" linkText="Feed" mobile={true} />
           <NavLink
             icon={<HiOutlineUsers />}
-            link="/connections"
+            link="/connections/all"
             linkText="Connections"
             mobile={true}
           />

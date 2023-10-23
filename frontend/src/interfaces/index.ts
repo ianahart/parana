@@ -19,6 +19,18 @@ export interface IProfile {
   aboutLesson: string;
 }
 
+export interface IConnectionRequest {
+  avatarUrl: string;
+  createdAt: Date;
+  fullName: string;
+  id: number;
+  readableDate: string;
+  userId: number;
+  profileId: number;
+}
+
+export interface IConnection extends IConnectionRequest {}
+
 export interface ITeacher {
   avatarUrl: string;
   bio: string;

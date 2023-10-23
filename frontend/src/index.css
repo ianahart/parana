@@ -94,6 +94,11 @@ body {
   }
 }
 
+.connection-container {
+  display: flex;
+  flex-direction: row;
+}
+
 @media (max-width: 1050px) and (min-width: 601px) {
   .teachers-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -107,6 +112,10 @@ body {
 }
 
 @media (max-width: 1150px) {
+  .connection-container {
+    flex-direction: column;
+  }
+
   .profile-container {
     width: 100%;
   }
