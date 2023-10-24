@@ -59,7 +59,7 @@ public class ConnectionController {
             @RequestParam("pageSize") int pageSize,
             @RequestParam("direction") String direction) {
         return ResponseEntity.status(HttpStatus.OK).body(new GetConnectionRequestResponse("success",
-                this.connectionService.getConnectionRequests(userId, role, page, pageSize, direction)));
+                this.connectionService.getConnectionRequests(userId, role, page, pageSize, direction, "")));
     }
 
     @DeleteMapping("/{connectionId}")
@@ -82,9 +82,10 @@ public class ConnectionController {
             @RequestParam("userId") Long userId,
             @RequestParam("page") int page,
             @RequestParam("pageSize") int pageSize,
-            @RequestParam("direction") String direction) {
+            @RequestParam("direction") String direction,
+            @RequestParam("searchTerm") String searchTerm) {
 
         return ResponseEntity.status(HttpStatus.OK).body(new GetConnectionResponse("success",
-                this.connectionService.getConnections(userId, page, pageSize, direction)));
+                this.connectionService.getConnections(userId, page, pageSize, direction, searchTerm)));
     }
 }

@@ -100,17 +100,20 @@ public class ConnectionService {
     }
 
     public ConnectionPaginationDto<ConnectionDto> getConnectionRequests(Long userId, Role role, int page,
-            int pageSize, String direction) {
+            int pageSize, String direction, String searchTerm) {
         if (userId == null || role == null) {
             throw new BadRequestException("userId and role must be present in the query string");
         }
+
+        String query = searchTerm.length() == 0 ? null : searchTerm;
+
         int currentPage = MyUtil.paginate(page, direction);
 
         Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
 
         Page<ConnectionDto> result = Role.USER == role
-                ? this.connectionRepository.getUserConnections(userId, false, paging)
-                : this.connectionRepository.getTeacherConnections(userId, false, paging);
+                ? this.connectionRepository.getUserConnections(userId, false, query, paging)
+                : this.connectionRepository.getTeacherConnections(userId, false, query, paging);
 
         List<ConnectionDto> connectionRequests = packageConnectionRequests(result.getContent());
 
@@ -156,15 +159,17 @@ public class ConnectionService {
     }
 
     public ConnectionPaginationDto<ConnectionDto> getConnections(Long userId, int page, int pageSize,
-            String direction) {
+            String direction, String searchTerm) {
         User currentUser = this.userService.getUserById(userId);
         int currentPage = MyUtil.paginate(page, direction);
+
+        String query = searchTerm.length() == 0 ? null : searchTerm.toLowerCase();
 
         Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
 
         Page<ConnectionDto> result = Role.USER == currentUser.getRole()
-                ? this.connectionRepository.getUserConnections(userId, true, paging)
-                : this.connectionRepository.getTeacherConnections(userId, true, paging);
+                ? this.connectionRepository.getUserConnections(userId, true, query, paging)
+                : this.connectionRepository.getTeacherConnections(userId, true, query, paging);
 
         return new ConnectionPaginationDto<ConnectionDto>(
                 result.getContent(),
