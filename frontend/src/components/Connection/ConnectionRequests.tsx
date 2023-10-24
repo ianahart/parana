@@ -58,7 +58,7 @@ const ConnectionRequests = () => {
 
   const removeConnectionRequest = (connectionId: number) => {
     setServerError('');
-    Client.removeConnectionRequest(connectionId)
+    Client.removeConnection(connectionId)
       .then(() => {
         setConnectionRequests((prevState) =>
           prevState.filter((cr) => cr.id !== connectionId)

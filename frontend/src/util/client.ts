@@ -6,11 +6,17 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getConnections(userId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/connections?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   confirmConnectionRequest(connectionId: number, currentUserId: number) {
     return http.patch(`/connections/${connectionId}`, { currentUserId });
   },
 
-  removeConnectionRequest(connectionId: number) {
+  removeConnection(connectionId: number) {
     return http.delete(`/connections/${connectionId}`);
   },
 

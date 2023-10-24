@@ -1,6 +1,6 @@
 package com.hart.backend.parana.connection;
 
-import com.hart.backend.parana.connection.dto.ConnectionRequestDto;
+import com.hart.backend.parana.connection.dto.ConnectionDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     @Query(value = """
-            SELECT new com.hart.backend.parana.connection.dto.ConnectionRequestDto(
+            SELECT new com.hart.backend.parana.connection.dto.ConnectionDto(
              s.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
              s.id AS userId, c.id AS id, p.id AS profileId
             ) FROM Connection c
@@ -21,13 +21,16 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
             INNER JOIN c.sender s
             INNER JOIN c.sender.profile p
             WHERE r.id = :userId
-            AND accepted = false
+            AND accepted = :accepted
                 """)
 
-    Page<ConnectionRequestDto> getTeacherConnectionRequests(@Param("userId") Long userId, Pageable pageable);
+    Page<ConnectionDto> getTeacherConnections(
+            @Param("userId") Long userId,
+            @Param("accepted") Boolean accepted,
+            Pageable pageable);
 
     @Query(value = """
-            SELECT new com.hart.backend.parana.connection.dto.ConnectionRequestDto(
+            SELECT new com.hart.backend.parana.connection.dto.ConnectionDto(
              r.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
              r.id AS userId, c.id AS id, p.id AS profileId
             ) FROM Connection c
@@ -35,10 +38,13 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
             INNER JOIN c.receiver r
             INNER JOIN c.receiver.profile p
             WHERE s.id = :userId
-            AND accepted = false
+            AND accepted = :accepted
                 """)
 
-    Page<ConnectionRequestDto> getUserConnectionRequests(@Param("userId") Long userId, Pageable pageable);
+    Page<ConnectionDto> getUserConnections(
+            @Param("userId") Long userId,
+            @Param("accepted") Boolean accepted,
+            Pageable pageable);
 
     @Query(value = """
             SELECT EXISTS(SELECT 1 FROM Connection c
