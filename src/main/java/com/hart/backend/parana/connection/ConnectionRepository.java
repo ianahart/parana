@@ -22,11 +22,13 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
             INNER JOIN c.sender.profile p
             WHERE r.id = :userId
             AND accepted = :accepted
+            AND (:query IS NULL OR LOWER(s.fullName) LIKE %:query%)
                 """)
 
     Page<ConnectionDto> getTeacherConnections(
             @Param("userId") Long userId,
             @Param("accepted") Boolean accepted,
+            @Param("query") String query,
             Pageable pageable);
 
     @Query(value = """
@@ -39,11 +41,13 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
             INNER JOIN c.receiver.profile p
             WHERE s.id = :userId
             AND accepted = :accepted
+            AND (:query IS NULL OR LOWER(r.fullName) LIKE %:query%)
                 """)
 
     Page<ConnectionDto> getUserConnections(
             @Param("userId") Long userId,
             @Param("accepted") Boolean accepted,
+            @Param("query") String query,
             Pageable pageable);
 
     @Query(value = """

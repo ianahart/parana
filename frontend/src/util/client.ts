@@ -6,9 +6,15 @@ export const http = axios.create({
 });
 
 export const Client = {
-  getConnections(userId: number, page: number, pageSize: number, direction: string) {
+  getConnections(
+    userId: number,
+    page: number,
+    pageSize: number,
+    direction: string,
+    searchTerm: string
+  ) {
     return http.get(
-      `/connections?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+      `/connections?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}&searchTerm=${searchTerm}`
     );
   },
 
