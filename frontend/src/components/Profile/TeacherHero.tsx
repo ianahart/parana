@@ -1,10 +1,11 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import Actions from './Actions';
 import UserAvatar from '../Shared/UserAvatar';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../../context/user';
 import { IProfile, IUserContext } from '../../interfaces';
 import RequestLesson from './RequestLesson';
+import { Client } from '../../util/client';
 
 interface ITeacherHeroProps {
   profile: IProfile;
@@ -12,6 +13,43 @@ interface ITeacherHeroProps {
 
 const TeacherHero = ({ profile }: ITeacherHeroProps) => {
   const { user } = useContext(UserContext) as IUserContext;
+  const [numOfStudents, setNumberOfStudents] = useState(0);
+  const pagination = {
+    page: 0,
+    pageSize: 6,
+    totalPages: 0,
+    direction: 'next',
+    totalElements: 0,
+  };
+
+  const shouldRun = useRef(true);
+
+  const getNumberOfStudents = (paginate: boolean, searchTerm: string) => {
+    const pageNum = paginate ? pagination.page : -1;
+
+    Client.getConnections(
+      user.id,
+      pageNum,
+      pagination.pageSize,
+      pagination.direction,
+      searchTerm
+    )
+      .then((res) => {
+        const { totalElements } = res.data.data;
+        setNumberOfStudents(totalElements);
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
+  };
+
+  useEffect(() => {
+    if (shouldRun.current && user.id !== 0) {
+      shouldRun.current = false;
+      getNumberOfStudents(false, '');
+    }
+  }, [user.id, shouldRun.current]);
+
   return (
     <>
       {user.role === 'USER' && user.id !== profile.userId && (
@@ -48,7 +86,7 @@ const TeacherHero = ({ profile }: ITeacherHeroProps) => {
         <Flex my="1rem" align="center" justifyContent="space-between">
           <Text fontWeight="bold">Number of students</Text>
           <Text fontWeight="bold" fontSize="1.3rem">
-            0
+            {numOfStudents}
           </Text>
         </Flex>
         {user.role === 'USER' && (

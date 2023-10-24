@@ -2,7 +2,6 @@ import { Box, Flex, Heading, UnorderedList } from '@chakra-ui/react';
 import ConnectionLink from './ConnectionLink';
 import { PiUsersThree } from 'react-icons/pi';
 import { useState } from 'react';
-import { AiOutlineUserAdd } from 'react-icons/ai';
 import { TbUserUp } from 'react-icons/tb';
 
 const Sidebar = () => {
@@ -32,14 +31,6 @@ const Sidebar = () => {
             value="all"
             selected={selected}
             icon={<PiUsersThree />}
-          />
-          <ConnectionLink
-            setSelected={setSelected}
-            path="suggestions"
-            text="Suggestions"
-            value="suggestions"
-            selected={selected}
-            icon={<AiOutlineUserAdd />}
           />
         </UnorderedList>
       </Box>
