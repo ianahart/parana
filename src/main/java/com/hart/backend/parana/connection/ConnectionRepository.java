@@ -41,7 +41,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
             INNER JOIN c.receiver.profile p
             WHERE s.id = :userId
             AND accepted = :accepted
-            AND (:query IS NULL OR LOWER(s.fullName) LIKE %:query%)
+            AND (:query IS NULL OR LOWER(r.fullName) LIKE %:query%)
                 """)
 
     Page<ConnectionDto> getUserConnections(
