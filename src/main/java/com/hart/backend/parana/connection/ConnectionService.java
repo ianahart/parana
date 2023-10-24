@@ -10,8 +10,8 @@ import java.util.List;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.advice.ForbiddenException;
+import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
-import com.hart.backend.parana.connection.dto.ConnectionRequestDto;
 import com.hart.backend.parana.connection.dto.ConnectionStatusDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,9 +89,9 @@ public class ConnectionService {
         return connectionStatus(connection);
     }
 
-    private List<ConnectionRequestDto> packageConnectionRequests(List<ConnectionRequestDto> connectionRequests) {
+    private List<ConnectionDto> packageConnectionRequests(List<ConnectionDto> connectionRequests) {
 
-        for (ConnectionRequestDto connectionRequest : connectionRequests) {
+        for (ConnectionDto connectionRequest : connectionRequests) {
 
             connectionRequest.setReadableDate(MyUtil.constructReadableDate(connectionRequest.getCreatedAt()));
         }
@@ -99,7 +99,7 @@ public class ConnectionService {
         return connectionRequests;
     }
 
-    public ConnectionPaginationDto<ConnectionRequestDto> getConnectionRequests(Long userId, Role role, int page,
+    public ConnectionPaginationDto<ConnectionDto> getConnectionRequests(Long userId, Role role, int page,
             int pageSize, String direction) {
         if (userId == null || role == null) {
             throw new BadRequestException("userId and role must be present in the query string");
@@ -108,13 +108,13 @@ public class ConnectionService {
 
         Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
 
-        Page<ConnectionRequestDto> result = Role.USER == role
-                ? this.connectionRepository.getUserConnectionRequests(userId, paging)
-                : this.connectionRepository.getTeacherConnectionRequests(userId, paging);
+        Page<ConnectionDto> result = Role.USER == role
+                ? this.connectionRepository.getUserConnections(userId, false, paging)
+                : this.connectionRepository.getTeacherConnections(userId, false, paging);
 
-        List<ConnectionRequestDto> connectionRequests = packageConnectionRequests(result.getContent());
+        List<ConnectionDto> connectionRequests = packageConnectionRequests(result.getContent());
 
-        return new ConnectionPaginationDto<ConnectionRequestDto>(
+        return new ConnectionPaginationDto<ConnectionDto>(
                 connectionRequests,
                 currentPage,
                 pageSize,
@@ -153,5 +153,25 @@ public class ConnectionService {
 
             this.connectionRepository.save(connection);
         }
+    }
+
+    public ConnectionPaginationDto<ConnectionDto> getConnections(Long userId, int page, int pageSize,
+            String direction) {
+        User currentUser = this.userService.getUserById(userId);
+        int currentPage = MyUtil.paginate(page, direction);
+
+        Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+
+        Page<ConnectionDto> result = Role.USER == currentUser.getRole()
+                ? this.connectionRepository.getUserConnections(userId, true, paging)
+                : this.connectionRepository.getTeacherConnections(userId, true, paging);
+
+        return new ConnectionPaginationDto<ConnectionDto>(
+                result.getContent(),
+                currentPage,
+                pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
+
     }
 }

@@ -26,7 +26,7 @@ const ConnectionRequest = ({
       color="text.secondary"
       borderRadius={8}
       mx="auto"
-      bg="border.primary"
+      bg="blackAlpha.500"
       minH="275px"
     >
       <ConnectionAvatar

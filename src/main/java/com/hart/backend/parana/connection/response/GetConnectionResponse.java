@@ -3,16 +3,16 @@ package com.hart.backend.parana.connection.response;
 import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
 
-public class GetConnectionRequestResponse {
+public class GetConnectionResponse {
 
     private String message;
     private ConnectionPaginationDto<ConnectionDto> data;
 
-    public GetConnectionRequestResponse() {
+    public GetConnectionResponse() {
 
     }
 
-    public GetConnectionRequestResponse(String message, ConnectionPaginationDto<ConnectionDto> data) {
+    public GetConnectionResponse(String message, ConnectionPaginationDto<ConnectionDto> data) {
         this.message = message;
         this.data = data;
     }
