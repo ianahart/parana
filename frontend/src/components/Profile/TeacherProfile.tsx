@@ -8,6 +8,7 @@ import Tags from './Tags';
 import TeacherHero from './TeacherHero';
 import { IoRibbonOutline } from 'react-icons/io5';
 import HomeMountain from './HomeMountain';
+import Reviews from '../Review/Reviews';
 
 interface ITeacherProfileProps {
   profile: IProfile;
@@ -45,6 +46,7 @@ const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
           </Box>
         )}
         <Tags tags={profile.tags} heading="Hashtags" />
+        <Reviews teacherId={profile.userId} />
       </Flex>
       <Box
         bg="primary.bg"

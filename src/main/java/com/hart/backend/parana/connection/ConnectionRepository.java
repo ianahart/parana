@@ -13,6 +13,17 @@ import org.springframework.stereotype.Repository;
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     @Query(value = """
+            SELECT EXISTS(SELECT 1 FROM Connection c
+            INNER JOIN c.sender s
+            INNER JOIN c.receiver r
+            WHERE s.id = :senderId
+            AND r.id = :receiverId
+            AND accepted = true
+            )
+            """)
+    boolean isConnected(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
+
+    @Query(value = """
             SELECT new com.hart.backend.parana.connection.dto.ConnectionDto(
              s.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
              s.id AS userId, c.id AS id, p.id AS profileId

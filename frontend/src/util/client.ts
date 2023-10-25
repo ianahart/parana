@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getReviews(teacherId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/reviews?teacherId=${teacherId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
+  createReview(rating: number, review: string, userId: number, teacherId: number) {
+    return http.post('/reviews', { rating, review, userId, teacherId });
+  },
+
   getConnections(
     userId: number,
     page: number,

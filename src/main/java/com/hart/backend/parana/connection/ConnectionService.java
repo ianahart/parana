@@ -14,6 +14,8 @@ import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
 import com.hart.backend.parana.connection.dto.ConnectionStatusDto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ConnectionService {
+
+    Logger logger = LoggerFactory.getLogger(ConnectionService.class);
 
     private final UserService userService;
     private final ConnectionRepository connectionRepository;
@@ -178,5 +182,13 @@ public class ConnectionService {
                 result.getTotalPages(),
                 direction, result.getTotalElements());
 
+    }
+
+    public boolean isConnected(Long senderId, Long receiverId) {
+        if (senderId == null || receiverId == null) {
+            logger.info("isConnected is missing senderId or receiverId or both");
+            throw new BadRequestException("is Connected is missing parameters");
+        }
+        return this.connectionRepository.isConnected(senderId, receiverId);
     }
 }
