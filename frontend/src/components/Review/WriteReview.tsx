@@ -101,8 +101,9 @@ const WriteReview = ({ teacherId }: IWriteReviewProps) => {
   return (
     <>
       {user.role === 'USER' && (
-        <Flex justify="flex-end">
+        <Flex justify="flex-start">
           <Button
+            p="0"
             fontWeight="bold"
             onClick={onOpen}
             color="text.secondary"

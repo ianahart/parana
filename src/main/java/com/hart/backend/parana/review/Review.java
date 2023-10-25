@@ -33,6 +33,9 @@ public class Review {
     @Column(name = "review", length = 400)
     private String review;
 
+    @Column(name = "is_edited")
+    private Boolean isEdited;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -58,20 +61,23 @@ public class Review {
             Timestamp createdAt,
             Timestamp updatedAt,
             Byte rating,
-            String review) {
+            String review,
+            Boolean isEdited) {
 
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.rating = rating;
         this.review = review;
+        this.isEdited = isEdited;
     }
 
-    public Review(Byte rating, String review, User user, User teacher) {
+    public Review(Byte rating, String review, User user, User teacher, Boolean isEdited) {
         this.rating = rating;
         this.review = review;
         this.user = user;
         this.teacher = teacher;
+        this.isEdited = isEdited;
     }
 
     public Long getId() {
@@ -84,6 +90,10 @@ public class Review {
 
     public Byte getRating() {
         return rating;
+    }
+
+    public Boolean getIsEdited() {
+        return isEdited;
     }
 
     public String getReview() {
@@ -128,5 +138,9 @@ public class Review {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setIsEdited(Boolean isEdited) {
+        this.isEdited = isEdited;
     }
 }

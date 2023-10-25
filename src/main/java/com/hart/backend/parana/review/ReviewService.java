@@ -1,14 +1,21 @@
 package com.hart.backend.parana.review;
 
+import com.hart.backend.parana.review.dto.ReviewDto;
+import com.hart.backend.parana.review.dto.ReviewPaginationDto;
 import com.hart.backend.parana.review.request.CreateReviewRequest;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
+import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.connection.ConnectionService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,6 +63,29 @@ public class ReviewService {
                 request.getRating(),
                 request.getReview(),
                 user,
-                teacher));
+                teacher,
+                false));
+    }
+
+    private Byte getAvgRating(Long teacherId) {
+        return this.reviewRepository.getAvgRating(teacherId);
+    }
+
+    public ReviewPaginationDto<ReviewDto> getReviews(Long teacherId, int page, int pageSize, String direction) {
+
+        int currentPage = MyUtil.paginate(page, direction);
+
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<ReviewDto> result = this.reviewRepository.getReviews(teacherId, pageable);
+
+        return new ReviewPaginationDto<ReviewDto>(
+                result.getContent(),
+                currentPage,
+                pageSize,
+                result.getTotalPages(),
+                direction,
+                result.getTotalElements(),
+                getAvgRating(teacherId));
+
     }
 }
