@@ -12,16 +12,18 @@ interface IReviewsProps {
 }
 
 const Reviews = ({ teacherId }: IReviewsProps) => {
-  const shouldRun = useRef(true);
-  const [reviews, setReviews] = useState<IReview[]>([]);
-  const [avgRating, setAvgRating] = useState(1);
-  const [pagination, setPagination] = useState({
+  const paginationInitialState = {
     page: 0,
     totalPages: 0,
     totalElements: 0,
     direction: 'next',
     pageSize: 2,
-  });
+  };
+
+  const shouldRun = useRef(true);
+  const [reviews, setReviews] = useState<IReview[]>([]);
+  const [avgRating, setAvgRating] = useState(1);
+  const [pagination, setPagination] = useState(paginationInitialState);
 
   const getReviews = (paginate: boolean, teacherId: number) => {
     const pageNum = paginate ? pagination.page : -1;
@@ -47,7 +49,10 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
           totalPages,
         }));
 
-        setReviews((prevState) => [...prevState, ...reviews]);
+        paginate
+          ? setReviews((prevState) => [...prevState, ...reviews])
+          : setReviews(reviews);
+
         setAvgRating(avgRating);
       })
       .catch((err) => {
@@ -55,8 +60,20 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
       });
   };
 
+  const resetReviewState = () => {
+    setPagination(paginationInitialState);
+    getReviews(false, teacherId);
+  };
+
   const removeReview = (reviewId: number) => {
-    setReviews((prevState) => prevState.filter((r) => r.id !== reviewId));
+    Client.deleteReview(reviewId)
+      .then(() => {
+        setReviews((prevState) => prevState.filter((r) => r.id !== reviewId));
+        resetReviewState();
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
   };
 
   useEffect(() => {
@@ -95,24 +112,26 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
           </Flex>
         </Flex>
       </Box>
-      <WriteReview teacherId={teacherId} />
+      <WriteReview resetReviewState={resetReviewState} teacherId={teacherId} />
       <Box my="2rem">
         {reviews.map((review) => {
           return <Review removeReview={removeReview} key={review.id} review={review} />;
         })}
       </Box>
-      <Flex justify="flex-end">
-        <Button
-          onClick={() => getReviews(true, teacherId)}
-          fontSize="0.9rem"
-          fontWeight="bold"
-          color="text.secondary"
-          variant="ghost"
-          _hover={{ background: 'transparent' }}
-        >
-          See more
-        </Button>
-      </Flex>
+      {pagination.page < pagination.totalPages - 1 && (
+        <Flex justify="flex-end">
+          <Button
+            onClick={() => getReviews(true, teacherId)}
+            fontSize="0.9rem"
+            fontWeight="bold"
+            color="text.secondary"
+            variant="ghost"
+            _hover={{ background: 'transparent' }}
+          >
+            See more
+          </Button>
+        </Flex>
+      )}
     </Box>
   );
 };

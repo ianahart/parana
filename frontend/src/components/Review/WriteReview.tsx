@@ -29,9 +29,10 @@ interface IError {
 
 interface IWriteReviewProps {
   teacherId: number;
+  resetReviewState: () => void;
 }
 
-const WriteReview = ({ teacherId }: IWriteReviewProps) => {
+const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { user } = useContext(UserContext) as IUserContext;
   const [rating, setRating] = useState(0);
@@ -70,6 +71,7 @@ const WriteReview = ({ teacherId }: IWriteReviewProps) => {
         onClose();
         setReview('');
         setRating(0);
+        resetReviewState();
       })
       .catch((err) => {
         applyServerErrors(err.response.data);

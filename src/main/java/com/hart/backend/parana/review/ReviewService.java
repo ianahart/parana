@@ -7,6 +7,8 @@ import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
+import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.connection.ConnectionService;
 
 import org.slf4j.Logger;
@@ -72,7 +74,6 @@ public class ReviewService {
     }
 
     public ReviewPaginationDto<ReviewDto> getReviews(Long teacherId, int page, int pageSize, String direction) {
-
         int currentPage = MyUtil.paginate(page, direction);
 
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
@@ -87,5 +88,30 @@ public class ReviewService {
                 result.getTotalElements(),
                 getAvgRating(teacherId));
 
+    }
+
+    public Review getReviewById(Long reviewId) {
+        return this.reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("A review was not found"));
+    }
+
+    private boolean canModifyReview(Review review) {
+        User user = this.userService.getCurrentlyLoggedInUser();
+        boolean canModify = false;
+
+        if (review.getUser().getId() == user.getId()) {
+            canModify = true;
+        }
+
+        return canModify;
+    }
+
+    public void deleteReview(Long reviewId) {
+        Review review = getReviewById(reviewId);
+        if (!canModifyReview(review)) {
+            throw new ForbiddenException("Cannot modify another user's review");
+        }
+
+        this.reviewRepository.delete(review);
     }
 }

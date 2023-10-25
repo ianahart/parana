@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  deleteReview(reviewId: number) {
+    return http.delete(`/reviews/${reviewId}`);
+  },
+
   getReviews(teacherId: number, page: number, pageSize: number, direction: string) {
     return http.get(
       `/reviews?teacherId=${teacherId}&page=${page}&pageSize=${pageSize}&direction=${direction}`

@@ -2,12 +2,15 @@ package com.hart.backend.parana.review;
 
 import com.hart.backend.parana.review.request.CreateReviewRequest;
 import com.hart.backend.parana.review.response.CreateReviewResponse;
+import com.hart.backend.parana.review.response.DeleteReviewResponse;
 import com.hart.backend.parana.review.response.GetReviewResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +47,11 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new GetReviewResponse("success", this.reviewService.getReviews(teacherId, page, pageSize, direction)));
 
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<DeleteReviewResponse> deleteReview(@PathVariable("reviewId") Long reviewId) {
+        this.reviewService.deleteReview(reviewId);
+        return ResponseEntity.status(HttpStatus.OK).body(new DeleteReviewResponse("success"));
     }
 }

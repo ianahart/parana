@@ -21,6 +21,7 @@ public class ReviewPaginationDto<T> {
             Byte avgRating) {
         this.reviews = reviews;
         this.page = page;
+        this.pageSize = pageSize;
         this.totalPages = totalPages;
         this.direction = direction;
         this.totalElements = totalElements;
