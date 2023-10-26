@@ -19,6 +19,19 @@ export interface IProfile {
   aboutLesson: string;
 }
 
+export interface IRecommendation {
+  authorId: number;
+  avatarUrl: string;
+  createdAt: Date;
+  date: string;
+  firstName: string;
+  fullName: string;
+  id: number;
+  recommendation: string;
+  teacherId: number;
+  words: string;
+}
+
 export interface IRecommendationWord {
   id: number;
   word: string;

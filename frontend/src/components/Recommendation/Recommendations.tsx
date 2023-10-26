@@ -1,7 +1,11 @@
-import { Box, Flex, Tooltip, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex, Tooltip, Heading } from '@chakra-ui/react';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { HiOutlineThumbUp } from 'react-icons/hi';
 import WriteRecomendation from './WriteRecommendation';
+import { useEffect, useRef, useState } from 'react';
+import { Client } from '../../util/client';
+import { IRecommendation } from '../../interfaces';
+import Recommendation from './Recommendation';
 
 interface IRecommendationsProps {
   teacherId: number;
@@ -9,7 +13,73 @@ interface IRecommendationsProps {
 }
 
 const Recommendations = ({ teacherName, teacherId }: IRecommendationsProps) => {
+  const shouldRun = useRef(true);
   const tooltipLabel = 'Recomendations are given by other teachers.';
+  const paginationInitialState = {
+    page: 0,
+    totalPages: 0,
+    totalElements: 0,
+    direction: 'next',
+    pageSize: 2,
+  };
+  const [recommendations, setRecommendations] = useState<IRecommendation[]>([]);
+  const [pagination, setPagination] = useState(paginationInitialState);
+
+  const getRecommendations = (paginate: boolean) => {
+    const pageNum = paginate ? pagination.page : -1;
+    Client.getRecommendations(
+      teacherId,
+      pageNum,
+      pagination.pageSize,
+      pagination.direction
+    )
+      .then((res) => {
+        const { direction, page, pageSize, recommendations, totalElements, totalPages } =
+          res.data.data;
+
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+
+        paginate
+          ? setRecommendations((prevState) => [...prevState, ...recommendations])
+          : setRecommendations(recommendations);
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
+  };
+
+  useEffect(() => {
+    if (shouldRun.current) {
+      shouldRun.current = false;
+      getRecommendations(false);
+    }
+  }, [shouldRun.current, getRecommendations]);
+
+  const resetRecommendations = () => {
+    setPagination(paginationInitialState);
+    setRecommendations([]);
+    getRecommendations(false);
+  };
+
+  const removeRecommendation = (recommendationId: number) => {
+    Client.deleteRecommendation(recommendationId)
+      .then(() => {
+        resetRecommendations();
+        setRecommendations((prevState) =>
+          prevState.filter((r) => r.id !== recommendationId)
+        );
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
+  };
 
   return (
     <Box mt="3rem">
@@ -41,10 +111,38 @@ const Recommendations = ({ teacherName, teacherId }: IRecommendationsProps) => {
           <Box mr="0.25rem" color="text.secondary" fontSize="1.1rem">
             <HiOutlineThumbUp />
           </Box>
-          <Box fontWeight="bold">9</Box>
+          <Box fontWeight="bold">{pagination.totalElements}</Box>
         </Flex>
       </Flex>
-      <WriteRecomendation teacherName={teacherName} teacherId={teacherId} />
+      <WriteRecomendation
+        resetRecommendations={resetRecommendations}
+        teacherName={teacherName}
+        teacherId={teacherId}
+      />
+      <Box my="2rem">
+        {recommendations.map((recommendation) => {
+          return (
+            <Recommendation
+              removeRecommendation={removeRecommendation}
+              recommendation={recommendation}
+              key={recommendation.id}
+            />
+          );
+        })}
+      </Box>
+      {pagination.page < pagination.totalPages - 1 && (
+        <Flex my="2rem" justify="flex-end">
+          <Button
+            onClick={() => getRecommendations(true)}
+            fontSize="0.9rem"
+            _hover={{ background: 'transparent' }}
+            color="text.secondary"
+            variant="ghost"
+          >
+            See more
+          </Button>
+        </Flex>
+      )}
     </Box>
   );
 };

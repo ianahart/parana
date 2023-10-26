@@ -35,7 +35,7 @@ public class Recommendation {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Column(name = "words")
+    @Column(name = "words", length = 400)
     private String words;
 
     @Column(name = "recommendation", length = 400)

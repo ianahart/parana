@@ -32,19 +32,22 @@ interface IError {
 interface IWriteRecomendationProps {
   teacherId: number;
   teacherName: string;
+  resetRecommendations: () => void;
 }
 
-const WriteRecomendation = ({ teacherId, teacherName }: IWriteRecomendationProps) => {
+const WriteRecomendation = ({
+  teacherId,
+  teacherName,
+  resetRecommendations,
+}: IWriteRecomendationProps) => {
   const { user } = useContext(UserContext) as IUserContext;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [words, setWords] = useState<IRecommendationWord[]>(reccomendationWordState);
   const [selectedWords, setSelectedWords] = useState<IRecommendationWord[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [recommendation, setRecommendation] = useState('');
-  // test currentUser.role  (author)=== teacher on the server when submitting form
 
   const selectWord = (word: IRecommendationWord) => {
-    if (selectedWords.length >= 5) return;
     setWords((prevState) => prevState.filter((w) => w.id !== word.id));
     setSelectedWords((prevState) => [...prevState, word]);
   };
@@ -95,6 +98,7 @@ const WriteRecomendation = ({ teacherId, teacherName }: IWriteRecomendationProps
     )
       .then(() => {
         resetReccomendation();
+        resetRecommendations();
       })
       .catch((err) => {
         applyErrors(err.response.data);
@@ -143,14 +147,6 @@ const WriteRecomendation = ({ teacherId, teacherName }: IWriteRecomendationProps
               </Flex>
               <Divider borderColor="border.primary" />
               <Box my="0.25rem">
-                <Text
-                  color={selectedWords.length === 5 ? 'error.primary' : 'text.primary'}
-                  textAlign="center"
-                  fontSize="0.8rem"
-                  fontStyle="italic"
-                >
-                  (Limit of 5)
-                </Text>
                 <Text fontSize="0.85rem" color="text.primary" textAlign="center">
                   <Box as="span" fontWeight="bold">
                     {selectedWords.length}
