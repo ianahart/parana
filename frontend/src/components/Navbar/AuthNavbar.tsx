@@ -32,11 +32,9 @@ const AuthNavbar = () => {
             color="light.primary"
             mx="1rem"
           >
-            {user.role === 'USER' && (
-              <ListItem>
-                <RouterLink to="/explore">Explore</RouterLink>
-              </ListItem>
-            )}
+            <ListItem>
+              <RouterLink to="/explore">Explore</RouterLink>
+            </ListItem>
           </UnorderedList>
           <Searchbar />
           <Box onClick={openUserMenu} cursor="pointer">

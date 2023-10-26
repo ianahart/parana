@@ -1,5 +1,6 @@
 package com.hart.backend.parana.util;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -97,4 +98,12 @@ public final class MyUtil {
         return readableDate;
 
     }
+
+    public static String createDate(Timestamp createdAt) {
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        String strDate = formatter.format(createdAt);
+
+        return strDate;
+    }
+
 }

@@ -6,6 +6,30 @@ export const http = axios.create({
 });
 
 export const Client = {
+  deleteRecommendation(recommendationId: number) {
+    return http.delete(`/recommendations/${recommendationId}`);
+  },
+
+  getRecommendations(
+    teacherId: number,
+    page: number,
+    pageSize: number,
+    direction: string
+  ) {
+    return http.get(
+      `/recommendations?teacherId=${teacherId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
+  createRecommendation(
+    authorId: number,
+    teacherId: number,
+    recommendation: string,
+    words: string
+  ) {
+    return http.post('/recommendations', { authorId, teacherId, recommendation, words });
+  },
+
   updateReview(
     rating: number,
     review: string,
