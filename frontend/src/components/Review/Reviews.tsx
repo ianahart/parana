@@ -1,4 +1,4 @@
-import { Box, Heading, Flex, Button } from '@chakra-ui/react';
+import { Box, Heading, Flex, Button, Tooltip } from '@chakra-ui/react';
 import { AiFillStar, AiOutlineInfoCircle } from 'react-icons/ai';
 import WriteReview from './WriteReview';
 import { useEffect, useRef, useState } from 'react';
@@ -8,9 +8,10 @@ import Review from './Review';
 
 interface IReviewsProps {
   teacherId: number;
+  teacherName: string;
 }
 
-const Reviews = ({ teacherId }: IReviewsProps) => {
+const Reviews = ({ teacherId, teacherName }: IReviewsProps) => {
   const paginationInitialState = {
     page: 0,
     totalPages: 0,
@@ -23,6 +24,8 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
   const [reviews, setReviews] = useState<IReview[]>([]);
   const [avgRating, setAvgRating] = useState(1);
   const [pagination, setPagination] = useState(paginationInitialState);
+
+  const tooltipLabel = `All of our reviews are collected by us and are 100% reliable. They correspond to a real experience lived by students of ${teacherName}.`;
 
   const getReviews = (paginate: boolean, teacherId: number) => {
     const pageNum = paginate ? pagination.page : -1;
@@ -86,20 +89,23 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
     <Box>
       <Box mt="3rem">
         <Flex align="center" justify="space-between">
-          <Heading
-            display="flex"
-            alignItems="center"
-            wordBreak="break-word"
-            lineHeight="1.6"
-            fontSize="1.5rem"
-            as="h3"
-          >
-            Review
-            <Box ml="0.25rem">
-              <AiOutlineInfoCircle />
-            </Box>
-          </Heading>
-
+          <Box position="relative">
+            <Heading
+              display="flex"
+              alignItems="center"
+              wordBreak="break-word"
+              lineHeight="1.6"
+              fontSize="1.5rem"
+              as="h3"
+            >
+              Review
+              <Tooltip label={tooltipLabel} hasArrow bg="primary.dark">
+                <Box ml="0.25rem">
+                  <AiOutlineInfoCircle />
+                </Box>
+              </Tooltip>
+            </Heading>
+          </Box>
           <Flex align="center" fontSize="0.85rem">
             <Box mr="0.25rem" color="orange">
               <AiFillStar />

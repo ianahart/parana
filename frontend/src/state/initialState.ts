@@ -145,3 +145,24 @@ export const profileState = {
   firstName: '',
   aboutLesson: '',
 };
+
+export const reccomendationWordState = [
+  { id: 1, word: 'Acclaimed' },
+  { id: 2, word: 'Accommodative' },
+  { id: 3, word: 'Accessible' },
+  { id: 4, word: 'Awesome' },
+  { id: 5, word: 'Centered' },
+  { id: 6, word: 'Clever' },
+  { id: 7, word: 'Communicative' },
+  { id: 8, word: 'Dependable' },
+  { id: 9, word: 'Enthusiatic' },
+  { id: 10, word: 'Genuine' },
+  { id: 11, word: 'Insightful' },
+  { id: 12, word: 'Knowledgeable' },
+  { id: 13, word: 'Organized' },
+  { id: 14, word: 'Outstanding' },
+  { id: 15, word: 'Reccomendable' },
+  { id: 16, word: 'Reliable' },
+  { id: 17, word: 'Upbeat' },
+  { id: 18, word: 'Well-read' },
+];

@@ -6,6 +6,15 @@ export const http = axios.create({
 });
 
 export const Client = {
+  createRecommendation(
+    authorId: number,
+    teacherId: number,
+    recommendation: string,
+    words: string
+  ) {
+    return http.post('/recommendations', { authorId, teacherId, recommendation, words });
+  },
+
   updateReview(
     rating: number,
     review: string,

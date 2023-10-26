@@ -9,6 +9,7 @@ import TeacherHero from './TeacherHero';
 import { IoRibbonOutline } from 'react-icons/io5';
 import HomeMountain from './HomeMountain';
 import Reviews from '../Review/Reviews';
+import Recommendations from '../Recommendation/Recommendations';
 
 interface ITeacherProfileProps {
   profile: IProfile;
@@ -46,7 +47,8 @@ const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
           </Box>
         )}
         <Tags tags={profile.tags} heading="Hashtags" />
-        <Reviews teacherId={profile.userId} />
+        <Reviews teacherName={profile.firstName} teacherId={profile.userId} />
+        <Recommendations teacherName={profile.firstName} teacherId={profile.userId} />
       </Flex>
       <Box
         bg="primary.bg"

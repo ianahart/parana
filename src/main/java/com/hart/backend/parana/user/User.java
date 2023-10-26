@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
+import com.hart.backend.parana.recommendation.Recommendation;
 import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.token.Token;
 
@@ -101,6 +102,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> teacherReviews;
 
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommendation> teacherRecommendations;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommendation> authorRecommendations;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -155,6 +162,14 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public List<Recommendation> getAuthorRecommendations() {
+        return authorRecommendations;
+    }
+
+    public List<Recommendation> getTeacherRecommendations() {
+        return teacherRecommendations;
     }
 
     public List<Review> getUserReviews() {
@@ -291,6 +306,14 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setAuthorRecommendations(List<Recommendation> authorRecommendations) {
+        this.authorRecommendations = authorRecommendations;
+    }
+
+    public void setTeacherRecommendations(List<Recommendation> teacherRecommendations) {
+        this.teacherRecommendations = teacherRecommendations;
     }
 
     public void setAbbreviation(String abbreviation) {
