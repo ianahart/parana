@@ -17,6 +17,7 @@ export interface IProfile {
   fullName: string;
   firstName: string;
   aboutLesson: string;
+  isNewTeacher?: boolean;
 }
 
 export interface IRecommendation {
@@ -70,6 +71,7 @@ export interface ITeacher {
   state: string;
   userId: number;
   firstLessonFree: boolean;
+  isNewTeacher: boolean;
 }
 
 export interface IFormField {

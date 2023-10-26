@@ -1,5 +1,7 @@
 package com.hart.backend.parana.user.dto;
 
+import java.sql.Timestamp;
+
 public class TeacherDto {
 
     private Boolean firstLessonFree;
@@ -11,6 +13,8 @@ public class TeacherDto {
     private String firstName;
     private String city;
     private String state;
+    private Boolean isNewTeacher;
+    private Timestamp createdAt;
 
     public TeacherDto(
             Boolean firstLessonFree,
@@ -21,7 +25,8 @@ public class TeacherDto {
             String perHour,
             String firstName,
             String city,
-            String state) {
+            String state,
+            Timestamp createdAt) {
         this.firstLessonFree = firstLessonFree;
         this.avatarUrl = avatarUrl;
         this.bio = bio;
@@ -31,10 +36,15 @@ public class TeacherDto {
         this.firstName = firstName;
         this.city = city;
         this.state = state;
+        this.createdAt = createdAt;
     }
 
     public Boolean getFirstLessonFree() {
         return firstLessonFree;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
     public String getAvatarUrl() {
@@ -67,6 +77,10 @@ public class TeacherDto {
 
     public Long getProfileId() {
         return profileId;
+    }
+
+    public Boolean getIsNewTeacher() {
+        return isNewTeacher;
     }
 
     public void setBio(String bio) {
@@ -103,5 +117,13 @@ public class TeacherDto {
 
     public void setFirstLessonFree(Boolean firstLessonFree) {
         this.firstLessonFree = firstLessonFree;
+    }
+
+    public void setIsNewTeacher(Boolean isNewTeacher) {
+        this.isNewTeacher = isNewTeacher;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 }

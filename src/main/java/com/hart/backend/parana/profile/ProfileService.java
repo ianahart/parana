@@ -9,6 +9,8 @@ import com.hart.backend.parana.profile.dto.TeacherProfileDto;
 import com.hart.backend.parana.profile.dto.UserProfileDto;
 import com.hart.backend.parana.profile.request.UpdateProfileRequest;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
@@ -152,8 +154,18 @@ public class ProfileService {
         }
     }
 
+    private boolean isProfileNew(Timestamp timestamp) {
+        long createdAtInSeconds = (timestamp.getTime() / 1000L);
+        long nowInSeconds = Instant.now().getEpochSecond();
+        final int oneMonth = 2592000;
+        return nowInSeconds - createdAtInSeconds < oneMonth;
+
+    }
+
     public TeacherProfileDto retrieveTeacher(Long profileId) {
-        return this.profileRepository.retrieveTeacher(profileId);
+        TeacherProfileDto teacherProfile = this.profileRepository.retrieveTeacher(profileId);
+        teacherProfile.setIsNewTeacher(isProfileNew(teacherProfile.getCreatedAt()));
+        return teacherProfile;
     }
 
     public UserProfileDto retrieveUser(Long profileId) {
