@@ -28,7 +28,7 @@ const TeacherHero = ({ profile }: ITeacherHeroProps) => {
     const pageNum = paginate ? pagination.page : -1;
 
     Client.getConnections(
-      user.id,
+      profile.userId,
       pageNum,
       pagination.pageSize,
       pagination.direction,

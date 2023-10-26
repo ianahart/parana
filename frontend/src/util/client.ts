@@ -6,6 +6,34 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updateReview(
+    rating: number,
+    review: string,
+    userId: number,
+    teacherId: number,
+    reviewId: number
+  ) {
+    return http.put(`/reviews/${reviewId}`, { rating, review, userId, teacherId });
+  },
+
+  getReview(reviewId: number) {
+    return http.get(`reviews/${reviewId}`);
+  },
+
+  deleteReview(reviewId: number) {
+    return http.delete(`/reviews/${reviewId}`);
+  },
+
+  getReviews(teacherId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/reviews?teacherId=${teacherId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
+  createReview(rating: number, review: string, userId: number, teacherId: number) {
+    return http.post('/reviews', { rating, review, userId, teacherId });
+  },
+
   getConnections(
     userId: number,
     page: number,

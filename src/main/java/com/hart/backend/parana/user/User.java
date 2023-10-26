@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
+import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.token.Token;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -94,6 +95,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Connection> receiverConnections;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> userReviews;
+
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> teacherReviews;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -148,6 +155,14 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public List<Review> getUserReviews() {
+        return userReviews;
+    }
+
+    public List<Review> getTeacherReviews() {
+        return teacherReviews;
     }
 
     public List<Connection> getSenderConnections() {
@@ -212,6 +227,14 @@ public class User implements UserDetails {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public void setUserReviews(List<Review> userReviews) {
+        this.userReviews = userReviews;
+    }
+
+    public void setTeacherReviews(List<Review> teacherReviews) {
+        this.teacherReviews = teacherReviews;
     }
 
     public void setSenderConnections(List<Connection> senderConnections) {
