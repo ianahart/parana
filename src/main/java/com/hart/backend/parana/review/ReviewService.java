@@ -137,6 +137,7 @@ public class ReviewService {
 
         review.setRating(request.getRating());
         review.setReview(Jsoup.clean(request.getReview(), Safelist.none()));
+        review.setIsEdited(true);
 
         this.reviewRepository.save(review);
     }
