@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Client } from '../../util/client';
 import { IReview } from '../../interfaces';
 import Review from './Review';
-import { remove } from 'lodash';
 
 interface IReviewsProps {
   teacherId: number;
@@ -112,10 +111,23 @@ const Reviews = ({ teacherId }: IReviewsProps) => {
           </Flex>
         </Flex>
       </Box>
-      <WriteReview resetReviewState={resetReviewState} teacherId={teacherId} />
+      <WriteReview
+        buttonText="Write a review"
+        method="post"
+        resetReviewState={resetReviewState}
+        teacherId={teacherId}
+      />
       <Box my="2rem">
         {reviews.map((review) => {
-          return <Review removeReview={removeReview} key={review.id} review={review} />;
+          return (
+            <Review
+              resetReviewState={resetReviewState}
+              teacherId={teacherId}
+              removeReview={removeReview}
+              key={review.id}
+              review={review}
+            />
+          );
         })}
       </Box>
       {pagination.page < pagination.totalPages - 1 && (

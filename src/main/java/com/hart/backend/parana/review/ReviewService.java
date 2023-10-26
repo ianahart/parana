@@ -1,8 +1,10 @@
 package com.hart.backend.parana.review;
 
+import com.hart.backend.parana.review.dto.PartialReviewDto;
 import com.hart.backend.parana.review.dto.ReviewDto;
 import com.hart.backend.parana.review.dto.ReviewPaginationDto;
 import com.hart.backend.parana.review.request.CreateReviewRequest;
+import com.hart.backend.parana.review.request.UpdateReviewRequest;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
@@ -10,6 +12,9 @@ import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.connection.ConnectionService;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,5 +118,26 @@ public class ReviewService {
         }
 
         this.reviewRepository.delete(review);
+    }
+
+    public PartialReviewDto getPartialReview(Long reviewId) {
+        Review review = getReviewById(reviewId);
+        if (!canModifyReview(review)) {
+            throw new ForbiddenException("Cannot modify another user's review");
+        }
+
+        return this.reviewRepository.getPartialReview(reviewId);
+    }
+
+    public void updateReview(Long reviewId, UpdateReviewRequest request) {
+        Review review = getReviewById(reviewId);
+        if (!canModifyReview(review)) {
+            throw new ForbiddenException("Cannot modify another user's review");
+        }
+
+        review.setRating(request.getRating());
+        review.setReview(Jsoup.clean(request.getReview(), Safelist.none()));
+
+        this.reviewRepository.save(review);
     }
 }

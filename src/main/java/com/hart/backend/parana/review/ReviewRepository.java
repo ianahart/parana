@@ -1,5 +1,6 @@
 package com.hart.backend.parana.review;
 
+import com.hart.backend.parana.review.dto.PartialReviewDto;
 import com.hart.backend.parana.review.dto.ReviewDto;
 
 import org.springframework.data.domain.Page;
@@ -11,6 +12,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.review.dto.PartialReviewDto(
+            r.review AS review, r.rating AS rating
+            ) FROM Review r
+            WHERE r.id = :reviewId
+            """)
+    PartialReviewDto getPartialReview(@Param("reviewId") Long reviewId);
 
     @Query(value = """
              SELECT AVG(rating) FROM Review r

@@ -1,25 +1,22 @@
-import { Box, Flex, Text, useOutsideClick } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { IReview, IUserContext } from '../../interfaces';
 import UserAvatar from '../Shared/UserAvatar';
 import { AiFillStar, AiOutlineClose, AiOutlineEdit } from 'react-icons/ai';
 import { BsThreeDots, BsTrash } from 'react-icons/bs';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../context/user';
+import WriteReview from './WriteReview';
 
 interface IReviewProps {
   review: IReview;
   removeReview: (reviewId: number) => void;
+  teacherId: number;
+  resetReviewState: () => void;
 }
 
-const Review = ({ review, removeReview }: IReviewProps) => {
+const Review = ({ teacherId, review, removeReview, resetReviewState }: IReviewProps) => {
   const { user } = useContext(UserContext) as IUserContext;
-  const menuRef = useRef<HTMLDivElement>(null);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-
-  useOutsideClick({
-    ref: menuRef,
-    handler: () => setIsOptionsOpen(false),
-  });
 
   return (
     <Box
@@ -39,7 +36,6 @@ const Review = ({ review, removeReview }: IReviewProps) => {
         </Box>
         {user.id === review.userId && isOptionsOpen && (
           <Box
-            ref={menuRef}
             p="0.5rem"
             borderRadius={8}
             boxShadow="primary.boxShadow"
@@ -83,7 +79,13 @@ const Review = ({ review, removeReview }: IReviewProps) => {
               <Box mr="0.25rem">
                 <AiOutlineEdit />
               </Box>
-              <Text>Edit</Text>
+              <WriteReview
+                reviewId={review.id}
+                buttonText="Edit"
+                method="update"
+                resetReviewState={resetReviewState}
+                teacherId={teacherId}
+              />
             </Flex>
           </Box>
         )}

@@ -16,7 +16,7 @@ import {
   Textarea,
   FormLabel,
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../context/user';
 import { IUserContext } from '../../interfaces';
 import { AiFillStar } from 'react-icons/ai';
@@ -28,17 +28,44 @@ interface IError {
 }
 
 interface IWriteReviewProps {
+  reviewId?: number;
   teacherId: number;
   resetReviewState: () => void;
+  method: string;
+  buttonText: string;
 }
 
-const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
+const WriteReview = ({
+  reviewId = 0,
+  buttonText,
+  method,
+  teacherId,
+  resetReviewState,
+}: IWriteReviewProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { user } = useContext(UserContext) as IUserContext;
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
   const [error, setError] = useState('');
   const [serverErrors, setServerErrors] = useState<string[]>([]);
+
+  const getReview = (reviewId: number) => {
+    Client.getReview(reviewId)
+      .then((res) => {
+        const { rating, review } = res.data.data;
+        setRating(rating);
+        setReview(review);
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
+  };
+
+  useEffect(() => {
+    if (isOpen && reviewId !== 0 && method === 'update') {
+      getReview(reviewId);
+    }
+  }, [isOpen, reviewId, method]);
 
   const validate = (rating: number, review: string) => {
     let validated = true;
@@ -75,7 +102,25 @@ const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
       })
       .catch((err) => {
         applyServerErrors(err.response.data);
-        console.log(err);
+      });
+  };
+
+  const updateReview = (
+    rating: number,
+    review: string,
+    userId: number,
+    teacherId: number,
+    reviewId: number
+  ) => {
+    Client.updateReview(rating, review, userId, teacherId, reviewId)
+      .then(() => {
+        onClose();
+        setReview('');
+        setRating(0);
+        resetReviewState();
+      })
+      .catch((err) => {
+        applyServerErrors(err.response.data);
       });
   };
 
@@ -85,7 +130,11 @@ const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
     if (!validate(rating, review)) {
       return;
     }
-    createReview(rating, review, user.id, teacherId);
+    if (method === 'post') {
+      createReview(rating, review, user.id, teacherId);
+    } else {
+      updateReview(rating, review, user.id, teacherId, reviewId);
+    }
   };
 
   const handleOnMouseOver = (index: number) => {
@@ -112,7 +161,7 @@ const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
             _hover={{ background: 'transparent' }}
             variant="ghost"
           >
-            Write a review
+            {buttonText}
           </Button>
         </Flex>
       )}
@@ -183,7 +232,7 @@ const WriteReview = ({ teacherId, resetReviewState }: IWriteReviewProps) => {
           <ModalFooter>
             <ButtonGroup>
               <Button colorScheme="blackAlpha" mr={3} onClick={submitReview}>
-                Submit
+                {method === 'post' ? 'Submit' : 'Edit'}
               </Button>
               <Button colorScheme="gray" mr={3} onClick={onClose}>
                 Close
