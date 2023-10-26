@@ -1,6 +1,9 @@
 package com.hart.backend.parana.user;
 
 import java.security.Key;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,6 +15,7 @@ import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.geocode.GeocodeService;
+import com.hart.backend.parana.profile.ProfileService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,8 +140,21 @@ public class UserService {
                         distance, rate, paging)
                 : this.userRepository.retrieveTeachers(paging, rate);
 
-        return new UserPaginationDto<TeacherDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
+        List<TeacherDto> teachers = result.getContent();
+        for (TeacherDto teacher : teachers) {
+            teacher.setIsNewTeacher(isTeacherNew(teacher.getCreatedAt()));
+
+        }
+        return new UserPaginationDto<TeacherDto>(teachers, currentPage, pageSize, result.getTotalPages(),
                 direction, result.getTotalElements());
+
+    }
+
+    private boolean isTeacherNew(Timestamp timestamp) {
+        long createdAtInSeconds = (timestamp.getTime() / 1000L);
+        long nowInSeconds = Instant.now().getEpochSecond();
+        final int oneMonth = 2592000;
+        return nowInSeconds - createdAtInSeconds < oneMonth;
 
     }
 

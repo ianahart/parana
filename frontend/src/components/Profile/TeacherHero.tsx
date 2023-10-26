@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Badge, Box, Flex, Text } from '@chakra-ui/react';
 import Actions from './Actions';
 import UserAvatar from '../Shared/UserAvatar';
 import { useContext, useEffect, useRef, useState } from 'react';
@@ -65,10 +65,13 @@ const TeacherHero = ({ profile }: ITeacherHeroProps) => {
           avatarUrl={profile.avatarUrl}
         />
       </Flex>
-      <Flex justify="center" my="0.5rem">
+      <Flex flexDir="column" align="center" justify="center" my="0.5rem">
         <Text fontWeight="bold" fontSize="1.3rem">
           {profile.firstName}
         </Text>
+        <Badge variant="solid" colorScheme="gray">
+          New
+        </Badge>
       </Flex>
       <Box width="80%" mx="auto">
         <Flex my="1rem" align="center" justifyContent="space-between">

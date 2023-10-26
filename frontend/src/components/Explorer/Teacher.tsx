@@ -35,7 +35,11 @@ const Teacher = ({ data }: ITeacherProps) => {
       <CardFooter display="block">
         <ReviewStat />
         <Bio bio={data.bio} />
-        <Attributes firstLessonFree={data.firstLessonFree} perHour={data.perHour} />
+        <Attributes
+          isNewTeacher={data.isNewTeacher}
+          firstLessonFree={data.firstLessonFree}
+          perHour={data.perHour}
+        />
       </CardFooter>
     </Card>
   );

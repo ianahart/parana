@@ -1,14 +1,15 @@
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Badge, Box, Flex, Text } from '@chakra-ui/react';
 import { AiOutlineGift } from 'react-icons/ai';
 
 interface IAttributesProps {
   perHour: string;
   firstLessonFree: boolean;
+  isNewTeacher: boolean;
 }
 
-const Attributes = ({ perHour, firstLessonFree }: IAttributesProps) => {
+const Attributes = ({ perHour, firstLessonFree, isNewTeacher }: IAttributesProps) => {
   return (
-    <Flex color="text.secondary">
+    <Flex color="text.secondary" align="center">
       <Flex
         borderRadius={20}
         bg="primary.light"
@@ -34,6 +35,13 @@ const Attributes = ({ perHour, firstLessonFree }: IAttributesProps) => {
             <AiOutlineGift />
           </Box>
           <Text>1st lesson free</Text>
+        </Flex>
+      )}
+      {isNewTeacher && (
+        <Flex flexDir="column">
+          <Badge mx="1rem" colorScheme="orange" variant="solid">
+            New
+          </Badge>
         </Flex>
       )}
     </Flex>

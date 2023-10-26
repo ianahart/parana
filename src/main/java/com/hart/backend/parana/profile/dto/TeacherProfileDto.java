@@ -1,5 +1,7 @@
 package com.hart.backend.parana.profile.dto;
 
+import java.sql.Timestamp;
+
 import com.hart.backend.parana.user.Role;
 
 public class TeacherProfileDto {
@@ -22,6 +24,8 @@ public class TeacherProfileDto {
     private String travelUpTo;
     private Integer yearsSnowboarding;
     private String avatarUrl;
+    private Boolean isNewTeacher;
+    private Timestamp createdAt;
 
     public TeacherProfileDto() {
 
@@ -45,7 +49,8 @@ public class TeacherProfileDto {
             String terrain,
             String travelUpTo,
             Integer yearsSnowboarding,
-            String avatarUrl) {
+            String avatarUrl,
+            Timestamp createdAt) {
         this.aboutLesson = aboutLesson;
         this.firstName = firstName;
         this.fullName = fullName;
@@ -64,6 +69,7 @@ public class TeacherProfileDto {
         this.travelUpTo = travelUpTo;
         this.yearsSnowboarding = yearsSnowboarding;
         this.avatarUrl = avatarUrl;
+        this.createdAt = createdAt;
     }
 
     public String getAboutLesson() {
@@ -72,6 +78,14 @@ public class TeacherProfileDto {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getFullName() {
@@ -132,6 +146,10 @@ public class TeacherProfileDto {
 
     public Boolean getFirstLessonFree() {
         return firstLessonFree;
+    }
+
+    public Boolean getIsNewTeacher() {
+        return isNewTeacher;
     }
 
     public Integer getYearsSnowboarding() {
@@ -208,5 +226,9 @@ public class TeacherProfileDto {
 
     public void setAboutLesson(String aboutLesson) {
         this.aboutLesson = aboutLesson;
+    }
+
+    public void setIsNewTeacher(Boolean isNewTeacher) {
+        this.isNewTeacher = isNewTeacher;
     }
 }
