@@ -1,5 +1,6 @@
 package com.hart.backend.parana.user;
 
+import com.hart.backend.parana.recentsearch.RecentSearchService;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
@@ -22,10 +23,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
 
     private final UserService userService;
+    private final RecentSearchService recentSearchService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
+        this.recentSearchService = recentSearchService;
     }
 
     @GetMapping("/sync")
@@ -40,6 +43,13 @@ public class UserController {
             @RequestParam("page") int page,
             @RequestParam("pageSize") int pageSize,
             @RequestParam("direction") String direction) {
+
+        User currentUser = this.userService.getCurrentlyLoggedInUser();
+
+        if (searchTerm.trim().length() > 0) {
+            this.recentSearchService.createRecentSearch(currentUser, searchTerm);
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new SearchTeacherResponse("success",
                         this.userService.searchTeachers(searchTerm, page, pageSize, direction)));

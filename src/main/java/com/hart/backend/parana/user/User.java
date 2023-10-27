@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
+import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
 import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.token.Token;
@@ -108,6 +109,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recommendation> authorRecommendations;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecentSearch> userRecentSearches;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -162,6 +166,10 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public List<RecentSearch> getUserRecentSearches() {
+        return userRecentSearches;
     }
 
     public List<Recommendation> getAuthorRecommendations() {
@@ -290,6 +298,10 @@ public class User implements UserDetails {
 
     public void setLoggedIn(Boolean loggedIn) {
         this.loggedIn = loggedIn;
+    }
+
+    public void setUserRecentSearches(List<RecentSearch> userRecentSearches) {
+        this.userRecentSearches = userRecentSearches;
     }
 
     public void setCreatedAt(Timestamp createdAt) {
