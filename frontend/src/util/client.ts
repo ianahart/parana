@@ -6,6 +6,14 @@ export const http = axios.create({
 });
 
 export const Client = {
+  deleteRecentSearch(recentSearchId: number) {
+    return http.delete(`/recent-searches/${recentSearchId}`);
+  },
+
+  getRecentSearches(limit: number) {
+    return http.get(`/recent-searches?limit=${limit}`);
+  },
+
   searchTeachers(searchTerm: string, page: number, pageSize: number, direction: string) {
     return http.get(
       `/users/search?searchTerm=${searchTerm}&page=${page}&pageSize=${pageSize}&direction=${direction}`

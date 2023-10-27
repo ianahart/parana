@@ -30,6 +30,11 @@ export interface ISearch {
   state: string;
 }
 
+export interface IRecentSearch {
+  recentSearchId: number;
+  term: string;
+}
+
 export interface IRecommendation {
   authorId: number;
   avatarUrl: string;
