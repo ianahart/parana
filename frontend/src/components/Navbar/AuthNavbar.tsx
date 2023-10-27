@@ -1,7 +1,6 @@
 import { Box, Flex, ListItem, UnorderedList } from '@chakra-ui/react';
 import LogoWithName from '../Logo/LogoWithName';
 import { Link as RouterLink } from 'react-router-dom';
-import Searchbar from './Searchbar';
 import { useContext, useState } from 'react';
 import { UserContext } from '../../context/user';
 import { IUserContext } from '../../interfaces';
@@ -36,7 +35,6 @@ const AuthNavbar = () => {
               <RouterLink to="/explore">Explore</RouterLink>
             </ListItem>
           </UnorderedList>
-          <Searchbar />
           <Box onClick={openUserMenu} cursor="pointer">
             <UserAvatar
               avatarUrl={user.avatarUrl}

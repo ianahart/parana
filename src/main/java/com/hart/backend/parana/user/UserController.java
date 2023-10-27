@@ -4,6 +4,7 @@ import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.user.response.GetUsersResponse;
+import com.hart.backend.parana.user.response.SearchTeacherResponse;
 import com.hart.backend.parana.user.response.SyncUserResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,18 @@ public class UserController {
     public ResponseEntity<SyncUserResponse> syncUser(HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SyncUserResponse("success", this.userService.syncUser(request)));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchTeacherResponse> searchTeachers(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new SearchTeacherResponse("success",
+                        this.userService.searchTeachers(searchTerm, page, pageSize, direction)));
+
     }
 
     @GetMapping("")
