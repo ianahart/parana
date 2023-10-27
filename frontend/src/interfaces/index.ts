@@ -20,6 +20,16 @@ export interface IProfile {
   isNewTeacher?: boolean;
 }
 
+export interface ISearch {
+  id: number;
+  profileId: number;
+  avatarUrl: string;
+  fullName: string;
+  firstName: string;
+  city: string;
+  state: string;
+}
+
 export interface IRecommendation {
   authorId: number;
   avatarUrl: string;

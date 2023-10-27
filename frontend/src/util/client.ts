@@ -6,6 +6,12 @@ export const http = axios.create({
 });
 
 export const Client = {
+  searchTeachers(searchTerm: string, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/users/search?searchTerm=${searchTerm}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   deleteRecommendation(recommendationId: number) {
     return http.delete(`/recommendations/${recommendationId}`);
   },

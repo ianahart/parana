@@ -2,6 +2,7 @@ package com.hart.backend.parana.user;
 
 import java.util.Optional;
 
+import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 
@@ -14,6 +15,17 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.user.dto.SearchTeacherDto(
+             u.id AS id, p.id AS profileId, p.avatarUrl AS avatarUrl, u.fullName AS fullName, u.firstName AS firstName,
+             p.city AS city, p.state AS  state
+            ) FROM User u
+            INNER JOIN u.profile p
+            WHERE LOWER(u.firstName) LIKE %:searchTerm%
+            AND u.role = 'TEACHER'
+            """)
+    Page<SearchTeacherDto> searchTeachers(@Param("searchTerm") String searchTerm, @Param("pageable") Pageable pageable);
 
     String HAVERSINE_FORMULA = "(3961 * acos(cos(radians(:latitude)) * cos(radians(p.latitude)) *" +
             " cos(radians(p.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(p.latitude))))";

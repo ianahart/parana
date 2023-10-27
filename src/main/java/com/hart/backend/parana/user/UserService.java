@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.hart.backend.parana.user.dto.FullUserDto;
+import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
@@ -15,7 +16,6 @@ import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.geocode.GeocodeService;
-import com.hart.backend.parana.profile.ProfileService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,6 +164,18 @@ public class UserService {
         Page<UserDto> result = this.userRepository.retrieveUsers(paging);
 
         return new UserPaginationDto<UserDto>(result.getContent(), currentPage, pageSize, result.getTotalPages(),
+                direction, result.getTotalElements());
+
+    }
+
+    public UserPaginationDto<SearchTeacherDto> searchTeachers(String searchTerm, int page, int pageSize,
+            String direction) {
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<SearchTeacherDto> result = this.userRepository.searchTeachers(searchTerm.toLowerCase(), paging);
+
+        return new UserPaginationDto<SearchTeacherDto>(result.getContent(), currentPage, pageSize,
+                result.getTotalPages(),
                 direction, result.getTotalElements());
 
     }

@@ -1,0 +1,155 @@
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Text,
+} from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { debounce } from 'lodash';
+import { useCallback, useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { Client } from '../../util/client';
+import { ISearch } from '../../interfaces';
+import UserAvatar from '../Shared/UserAvatar';
+
+const Searchbar = () => {
+  const initialPaginationState = {
+    page: 0,
+    direction: 'next',
+    totalPages: 0,
+    pageSize: 1,
+    totalElements: 0,
+  };
+  const navigate = useNavigate();
+  const [teachers, setTeachers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searches, setSearches] = useState<ISearch[]>([]);
+  const [pagination, setPagination] = useState(initialPaginationState);
+
+  const search = (paginate: boolean, query: string) => {
+    const pageNum = paginate ? pagination.page : -1;
+    Client.searchTeachers(query, pageNum, pagination.pageSize, pagination.direction)
+      .then((res) => {
+        const { direction, page, pageSize, totalElements, totalPages, users } =
+          res.data.data;
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+        paginate
+          ? setSearches((prevState) => [...prevState, ...users])
+          : setSearches(users);
+      })
+      .catch((err) => {
+        throw new Error(err.response.data.message);
+      });
+  };
+
+  const preformDebounce = debounce((query) => {
+    search(false, query);
+  }, 250);
+
+  const debounceRequest = useCallback((query: string) => preformDebounce(query), []);
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.trim().length) {
+      debounceRequest(e.target.value);
+    }
+    setSearchTerm(e.target.value);
+  };
+
+  const goToProfile = (profileId: number) => {
+    navigate(`/profiles/${profileId}`);
+  };
+
+  return (
+    <Box position="relative">
+      <InputGroup>
+        <InputLeftElement pointerEvents="none">
+          <AiOutlineSearch color="gray" />
+        </InputLeftElement>
+        <Input
+          autoComplete="off"
+          _hover={{ borderColor: 'border.primary' }}
+          value={searchTerm}
+          onChange={handleOnChange}
+          width={['100%', '350px', '450px']}
+          borderRadius={15}
+          color="text.secondary"
+          id="search"
+          name="search"
+          borderColor="border.primary"
+          type="text"
+          placeholder="Search by name..."
+        />
+      </InputGroup>
+      {searches.length > 0 && searchTerm.trim().length > 0 && (
+        <Box
+          borderRadius={15}
+          top="40px"
+          zIndex={10}
+          position="absolute"
+          height="250px"
+          overflowY="auto"
+          className="overflow-scroll"
+          bg="primary.dark"
+          width={['100%', '350px', '450px']}
+        >
+          <Flex justify="flex-start" my="1rem" px="1rem">
+            <Text color="text.secondary">
+              <Box fontWeight="bold" as="span">
+                {pagination.totalElements}
+              </Box>{' '}
+              search results
+            </Text>
+          </Flex>
+          {searches.map((search) => {
+            return (
+              <Flex
+                onClick={() => goToProfile(search.profileId)}
+                cursor="pointer"
+                _hover={{ background: 'blackAlpha.500' }}
+                p="1rem"
+                key={search.id}
+                align="center"
+                justify="space-between"
+              >
+                <Flex align="center">
+                  <UserAvatar
+                    height="40px"
+                    width="40px"
+                    fullName={search.fullName}
+                    avatarUrl={search.avatarUrl}
+                  />
+                  <Text ml="0.5rem" color="text.secondary" fontWeight="bold">
+                    {search.firstName}
+                  </Text>
+                </Flex>
+                <Box color="text.primary" fontSize="0.8rem">
+                  <Text>{search.city}</Text>
+                  <Text>{search.state}</Text>
+                </Box>
+              </Flex>
+            );
+          })}
+          {pagination.page < pagination.totalPages - 1 && (
+            <Flex justify="center" mt="1rem" mb="0.5rem">
+              <Button onClick={() => search(true, searchTerm)} colorScheme="blackAlpha">
+                See more
+              </Button>
+            </Flex>
+          )}
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default Searchbar;

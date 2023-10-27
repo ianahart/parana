@@ -6,6 +6,7 @@ import { ITeacher } from '../interfaces';
 import BasicSpinner from '../components/Shared/BasicSpinner';
 import RateFilter from '../components/Explorer/RateFilter';
 import DistanceFilter from '../components/Explorer/DistanceFilter';
+import Searchbar from '../components/Explorer/Searchbar';
 
 const ExplorerRoute = () => {
   const shouldRun = useRef(true);
@@ -115,6 +116,9 @@ const ExplorerRoute = () => {
             setDistance={setDistance}
             resetFilter={resetFilter}
           />
+        </Flex>
+        <Flex justify={['center', 'center', 'flex-end']} m="1.5rem">
+          <Searchbar />
         </Flex>
         <Box fontSize="0.9rem" color="text.secondary" fontWeight="bold" mx="1.5rem">
           {pagination.totalElements} teachers available
