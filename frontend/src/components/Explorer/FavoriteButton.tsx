@@ -8,9 +8,10 @@ import { favoriteState } from '../../state/initialState';
 
 interface IFavoriteButtonProps {
   teacherId: number;
+  requestType: string;
 }
 
-const FavoriteButton = ({ teacherId }: IFavoriteButtonProps) => {
+const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
   const shouldRun = useRef(true);
   const { user } = useContext(UserContext) as IUserContext;
   const [favorite, setFavorite] = useState(favoriteState);
@@ -30,7 +31,7 @@ const FavoriteButton = ({ teacherId }: IFavoriteButtonProps) => {
   };
 
   useEffect(() => {
-    if (shouldRun.current) {
+    if (shouldRun.current && requestType === 'single') {
       getFavorite();
     }
   }, [shouldRun.current]);

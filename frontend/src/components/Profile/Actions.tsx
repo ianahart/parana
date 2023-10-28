@@ -10,7 +10,7 @@ interface IActionsProps {
 const Actions = ({ teacherId }: IActionsProps) => {
   return (
     <Box position="relative">
-      <FavoriteButton teacherId={teacherId} />
+      <FavoriteButton requestType="single" teacherId={teacherId} />
       <Tooltip label="Share">
         <Box cursor="pointer" my="1.5rem">
           <BsShare />
