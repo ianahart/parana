@@ -4,6 +4,7 @@ import com.hart.backend.parana.favorite.request.CreateFavoriteRequest;
 import com.hart.backend.parana.favorite.response.CreateFavoriteResponse;
 import com.hart.backend.parana.favorite.response.DeleteFavoriteResponse;
 import com.hart.backend.parana.favorite.response.GetFavoriteResponse;
+import com.hart.backend.parana.favorite.response.GetFavoritesResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,5 +49,17 @@ public class FavoriteController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CreateFavoriteResponse("success", this.favoriteService.createFavorite(request)));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<GetFavoritesResponse> getFavorites(
+            @RequestParam("userId") Long userId,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new GetFavoritesResponse("success",
+                        this.favoriteService.getFavorites(userId, page, pageSize, direction)));
     }
 }

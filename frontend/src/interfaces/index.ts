@@ -81,6 +81,17 @@ export interface IConnectionRequest {
 
 export interface IConnection extends IConnectionRequest {}
 
+export interface IConnectionFavorite {
+  id: number;
+  teacherId: number;
+  profileId: number;
+  avatarUrl: string;
+  fullName: string;
+  createdAt: Date;
+  readableDate: string;
+  isConnected: boolean;
+}
+
 export interface ITeacher {
   avatarUrl: string;
   bio: string;

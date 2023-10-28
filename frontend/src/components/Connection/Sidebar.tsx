@@ -3,6 +3,7 @@ import ConnectionLink from './ConnectionLink';
 import { PiUsersThree } from 'react-icons/pi';
 import { useState } from 'react';
 import { TbUserUp } from 'react-icons/tb';
+import { AiOutlineHeart } from 'react-icons/ai';
 
 const Sidebar = () => {
   const [selected, setSelected] = useState('all');
@@ -31,6 +32,14 @@ const Sidebar = () => {
             value="all"
             selected={selected}
             icon={<PiUsersThree />}
+          />
+          <ConnectionLink
+            setSelected={setSelected}
+            path="favorites"
+            text="Favorites"
+            value="favorites"
+            selected={selected}
+            icon={<AiOutlineHeart />}
           />
         </UnorderedList>
       </Box>

@@ -6,6 +6,12 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getFavorites(userId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/favorites?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   removeTeacherFavorite(favoriteId: number) {
     return http.delete(`/favorites/${favoriteId}`);
   },

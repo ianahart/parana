@@ -1,30 +1,45 @@
 package com.hart.backend.parana.favorite;
 
+import java.util.List;
+
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.connection.ConnectionService;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.favorite.dto.FavoriteDto;
+import com.hart.backend.parana.favorite.dto.FavoritePaginationDto;
+import com.hart.backend.parana.favorite.dto.FullFavoriteDto;
 import com.hart.backend.parana.favorite.request.CreateFavoriteRequest;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
+import com.hart.backend.parana.util.MyUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FavoriteService {
 
     Logger logger = LoggerFactory.getLogger(FavoriteService.class);
+
     private final FavoriteRepository favoriteRepository;
 
     private final UserService userService;
 
+    private final ConnectionService connectionService;
+
     @Autowired
-    public FavoriteService(FavoriteRepository favoriteRepository, UserService userService) {
+    public FavoriteService(FavoriteRepository favoriteRepository, UserService userService,
+            ConnectionService connectionService) {
         this.favoriteRepository = favoriteRepository;
         this.userService = userService;
+        this.connectionService = connectionService;
     }
 
     private boolean validateFavorite(Long userId, Long teacherId) {
@@ -91,5 +106,43 @@ public class FavoriteService {
         }
 
         this.favoriteRepository.delete(favorite);
+    }
+
+    private void addDateToFavorites(List<FullFavoriteDto> favorites) {
+        for (FullFavoriteDto favorite : favorites) {
+
+            favorite.setReadableDate(MyUtil.constructReadableDate(favorite.getCreatedAt()));
+
+        }
+    }
+
+    private void addConnectedStatusToFavorites(Long userId, List<FullFavoriteDto> favorites) {
+
+        for (FullFavoriteDto favorite : favorites) {
+
+            boolean isConnected = this.connectionService.isConnected(userId, favorite.getTeacherId());
+            favorite.setIsConnected(isConnected);
+        }
+    }
+
+    public FavoritePaginationDto<FullFavoriteDto> getFavorites(Long userId, int page, int pageSize, String direction) {
+
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+
+        Page<FullFavoriteDto> result = this.favoriteRepository.getFavorites(userId, pageable);
+
+        List<FullFavoriteDto> favorites = result.getContent();
+
+        addDateToFavorites(favorites);
+        addConnectedStatusToFavorites(userId, favorites);
+
+        return new FavoritePaginationDto<FullFavoriteDto>(
+                result.getContent(),
+                currentPage,
+                pageSize,
+                result.getTotalPages(),
+                direction,
+                result.getTotalElements());
     }
 }
