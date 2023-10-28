@@ -2,6 +2,8 @@ package com.hart.backend.parana.user.dto;
 
 import java.sql.Timestamp;
 
+import com.hart.backend.parana.favorite.dto.FavoriteDto;
+
 public class TeacherDto {
 
     private Boolean firstLessonFree;
@@ -15,6 +17,7 @@ public class TeacherDto {
     private String state;
     private Boolean isNewTeacher;
     private Timestamp createdAt;
+    private FavoriteDto favorite;
 
     public TeacherDto(
             Boolean firstLessonFree,
@@ -41,6 +44,10 @@ public class TeacherDto {
 
     public Boolean getFirstLessonFree() {
         return firstLessonFree;
+    }
+
+    public FavoriteDto getFavorite() {
+        return favorite;
     }
 
     public Timestamp getCreatedAt() {
@@ -125,5 +132,9 @@ public class TeacherDto {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setFavorite(FavoriteDto favorite) {
+        this.favorite = favorite;
     }
 }

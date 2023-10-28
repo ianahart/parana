@@ -92,6 +92,7 @@ export interface ITeacher {
   userId: number;
   firstLessonFree: boolean;
   isNewTeacher: boolean;
+  favorite: IFavorite;
 }
 
 export interface IFormField {

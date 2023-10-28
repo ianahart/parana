@@ -1,5 +1,4 @@
 import { Box, Tooltip } from '@chakra-ui/react';
-import { AiOutlineHeart } from 'react-icons/ai';
 import { BsShare } from 'react-icons/bs';
 import FavoriteButton from '../Explorer/FavoriteButton';
 
