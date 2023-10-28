@@ -2,16 +2,21 @@ import { Box, Tooltip } from '@chakra-ui/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AiFillHeart } from 'react-icons/ai';
 import { UserContext } from '../../context/user';
-import { IUserContext } from '../../interfaces';
+import { IFavorite, IUserContext } from '../../interfaces';
 import { Client } from '../../util/client';
 import { favoriteState } from '../../state/initialState';
 
 interface IFavoriteButtonProps {
   teacherId: number;
   requestType: string;
+  existingFavorite?: IFavorite;
 }
 
-const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
+const FavoriteButton = ({
+  teacherId,
+  requestType,
+  existingFavorite = favoriteState,
+}: IFavoriteButtonProps) => {
   const shouldRun = useRef(true);
   const { user } = useContext(UserContext) as IUserContext;
   const [favorite, setFavorite] = useState(favoriteState);
@@ -32,7 +37,12 @@ const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
 
   useEffect(() => {
     if (shouldRun.current && requestType === 'single') {
+      shouldRun.current = false;
       getFavorite();
+    }
+    if (shouldRun.current && requestType === 'multiple') {
+      shouldRun.current = false;
+      setFavorite({ ...existingFavorite });
     }
   }, [shouldRun.current]);
 
@@ -46,7 +56,6 @@ const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
         }));
       })
       .catch((err) => {
-        console.log(err.response);
         throw new Error(err);
       });
   };
@@ -64,7 +73,12 @@ const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
       });
   };
 
-  const determineFavoriteAction = (userId: number, teacherId: number) => {
+  const determineFavoriteAction = (
+    e: React.MouseEvent<HTMLDivElement>,
+    userId: number,
+    teacherId: number
+  ) => {
+    e.stopPropagation();
     favorite.isFavorited ? removeFavorite(favorite.id) : addFavorite(userId, teacherId);
   };
 
@@ -73,9 +87,10 @@ const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
       <Tooltip label={favorite.isFavorited ? 'Unfavorite' : 'Add to favorites'}>
         <Box
           cursor="pointer"
-          onClick={() => determineFavoriteAction(user.id, teacherId)}
+          onClick={(e) => determineFavoriteAction(e, user.id, teacherId)}
           _hover={{ transform: 'scale(1.2)' }}
           transition="all 0.25s ease-in-out"
+          zIndex={5}
           position="relative"
           color="#fff"
           fontSize="25px"
@@ -85,6 +100,7 @@ const FavoriteButton = ({ teacherId, requestType }: IFavoriteButtonProps) => {
             transition="all 0.25s ease-in-out"
             _hover={{ transform: 'scale(1.1)' }}
             pos="absolute"
+            zIndex={10}
             top="2px"
             right="2.5px"
             color={favorite.isFavorited ? 'red' : 'rgba(0, 0, 0, 0.75)'}

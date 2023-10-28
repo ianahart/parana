@@ -6,6 +6,7 @@ import TeacherInformation from './TeacherInformation';
 import ReviewStat from './ReviewStat';
 import Bio from './Bio';
 import Attributes from './Attributes';
+import FavoriteButton from './FavoriteButton';
 
 interface ITeacherProps {
   data: ITeacher;
@@ -27,6 +28,11 @@ const Teacher = ({ data }: ITeacherProps) => {
             firstName={data.firstName}
             city={data.city}
             state={data.state}
+          />
+          <FavoriteButton
+            existingFavorite={data.favorite}
+            teacherId={data.userId}
+            requestType="multiple"
           />
         </Box>
       </CardBody>

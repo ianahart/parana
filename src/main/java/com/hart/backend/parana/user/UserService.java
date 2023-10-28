@@ -15,12 +15,14 @@ import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.favorite.FavoriteService;
 import com.hart.backend.parana.geocode.GeocodeService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,11 +47,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final GeocodeService geocodeService;
+    private final FavoriteService favoriteService;
 
     @Autowired
-    public UserService(UserRepository userRepository, GeocodeService geocodeService) {
+    public UserService(UserRepository userRepository, GeocodeService geocodeService,
+            @Lazy FavoriteService favoriteService) {
         this.userRepository = userRepository;
         this.geocodeService = geocodeService;
+        this.favoriteService = favoriteService;
     }
 
     public boolean userExistsByEmail(String email) {
@@ -126,6 +131,16 @@ public class UserService {
         return this.geocodeService.geocode(user.getProfile().getCity(), user.getProfile().getState());
     }
 
+    private List<TeacherDto> AddExtraFieldsToTeacher(List<TeacherDto> teachers) {
+        User user = getCurrentlyLoggedInUser();
+        for (TeacherDto teacher : teachers) {
+            teacher.setIsNewTeacher(isTeacherNew(teacher.getCreatedAt()));
+            teacher.setFavorite(this.favoriteService.getFavorite(user.getId(), teacher.getUserId()));
+        }
+
+        return teachers;
+    }
+
     public UserPaginationDto<TeacherDto> retrieveTeachers(int page, int pageSize, String direction, int rateParam,
             Double distanceParam) {
         int currentPage = MyUtil.paginate(page, direction);
@@ -140,11 +155,7 @@ public class UserService {
                         distance, rate, paging)
                 : this.userRepository.retrieveTeachers(paging, rate);
 
-        List<TeacherDto> teachers = result.getContent();
-        for (TeacherDto teacher : teachers) {
-            teacher.setIsNewTeacher(isTeacherNew(teacher.getCreatedAt()));
-
-        }
+        List<TeacherDto> teachers = AddExtraFieldsToTeacher(result.getContent());
         return new UserPaginationDto<TeacherDto>(teachers, currentPage, pageSize, result.getTotalPages(),
                 direction, result.getTotalElements());
 
@@ -153,8 +164,8 @@ public class UserService {
     private boolean isTeacherNew(Timestamp timestamp) {
         long createdAtInSeconds = (timestamp.getTime() / 1000L);
         long nowInSeconds = Instant.now().getEpochSecond();
-        final int oneMonth = 2592000;
-        return nowInSeconds - createdAtInSeconds < oneMonth;
+        final int sixMonths = 15768000;
+        return nowInSeconds - createdAtInSeconds < sixMonths;
 
     }
 
