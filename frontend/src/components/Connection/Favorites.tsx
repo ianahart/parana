@@ -102,12 +102,13 @@ const Favorites = () => {
           );
         })}
       </Grid>
-      {pagination.totalPages < pagination.totalPages -1 && 
-      <Flex my="1rem" justify="center">
-        <Button onClick={() => getFavorites(true)} colorScheme="blackAlpha">
-          See more
-        </Button>
-      </Flex>}
+      {pagination.page < pagination.totalPages - 1 && (
+        <Flex my="1rem" justify="center">
+          <Button onClick={() => getFavorites(true)} colorScheme="blackAlpha">
+            See more
+          </Button>
+        </Flex>
+      )}
     </>
   );
 };
