@@ -11,6 +11,11 @@ export const userState = {
   fullName: '',
 };
 
+export const favoriteState = {
+  id: 0,
+  isFavorited: false,
+};
+
 export const tokenState = {
   refreshToken: '',
   token: '',

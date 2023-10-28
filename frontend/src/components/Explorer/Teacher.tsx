@@ -2,7 +2,6 @@ import { Box, Card, CardBody, CardFooter } from '@chakra-ui/react';
 import { ITeacher } from '../../interfaces';
 import { useNavigate } from 'react-router-dom';
 import HeroImage from './HeroImage';
-import FavoriteButton from './FavoriteButton';
 import TeacherInformation from './TeacherInformation';
 import ReviewStat from './ReviewStat';
 import Bio from './Bio';
@@ -24,7 +23,6 @@ const Teacher = ({ data }: ITeacherProps) => {
       <CardBody>
         <Box position="relative">
           <HeroImage firstName={data.firstName} avatarUrl={data.avatarUrl} />
-          <FavoriteButton />
           <TeacherInformation
             firstName={data.firstName}
             city={data.city}

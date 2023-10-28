@@ -54,7 +54,7 @@ const TeacherHero = ({ profile }: ITeacherHeroProps) => {
     <>
       {user.role === 'USER' && user.id !== profile.userId && (
         <Flex justify="flex-end">
-          <Actions />
+          <Actions teacherId={profile.userId} />
         </Flex>
       )}
       <Flex mx="auto" align="center" flexDir="column">
@@ -69,7 +69,7 @@ const TeacherHero = ({ profile }: ITeacherHeroProps) => {
         <Text fontWeight="bold" fontSize="1.3rem">
           {profile.firstName}
         </Text>
-        <Badge variant="solid" colorScheme="gray">
+        <Badge variant="solid" colorScheme="orange">
           New
         </Badge>
       </Flex>
