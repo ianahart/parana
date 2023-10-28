@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import { ITeacher } from '../../interfaces';
 import Teacher from './Teacher';
 

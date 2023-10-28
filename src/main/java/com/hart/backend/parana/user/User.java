@@ -15,6 +15,7 @@ import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.connection.Connection;
+import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
@@ -112,6 +113,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecentSearch> userRecentSearches;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorite> userFavorites;
+
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favorite> teacherFavorites;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -178,6 +185,14 @@ public class User implements UserDetails {
 
     public List<Recommendation> getTeacherRecommendations() {
         return teacherRecommendations;
+    }
+
+    public List<Favorite> getUserFavorites() {
+        return userFavorites;
+    }
+
+    public List<Favorite> getTeacherFavorites() {
+        return teacherFavorites;
     }
 
     public List<Review> getUserReviews() {
@@ -314,6 +329,14 @@ public class User implements UserDetails {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setUserFavorites(List<Favorite> userFavorites) {
+        this.userFavorites = userFavorites;
+    }
+
+    public void setTeacherFavorites(List<Favorite> teacherFavorites) {
+        this.teacherFavorites = teacherFavorites;
     }
 
     public void setPassword(String password) {

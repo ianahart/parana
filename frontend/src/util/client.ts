@@ -6,6 +6,18 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removeTeacherFavorite(favoriteId: number) {
+    return http.delete(`/favorites/${favoriteId}`);
+  },
+
+  getFavorite(userId: number, teacherId: number) {
+    return http.get(`/favorites/favorite?userId=${userId}&teacherId=${teacherId}`);
+  },
+
+  addTeacherFavorite(userId: number, teacherId: number) {
+    return http.post('/favorites', { userId, teacherId });
+  },
+
   deleteRecentSearch(recentSearchId: number) {
     return http.delete(`/recent-searches/${recentSearchId}`);
   },

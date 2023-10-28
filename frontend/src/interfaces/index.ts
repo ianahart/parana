@@ -20,6 +20,11 @@ export interface IProfile {
   isNewTeacher?: boolean;
 }
 
+export interface IFavorite {
+  id: number;
+  isFavorited: boolean;
+}
+
 export interface ISearch {
   id: number;
   profileId: number;
