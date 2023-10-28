@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Grid, GridItem, Heading } from '@chakra-ui/react';
+import { Box, Flex, Text, Grid, GridItem, Heading, Button } from '@chakra-ui/react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../../context/user';
 import { IConnectionFavorite, IUserContext } from '../../interfaces';
@@ -11,7 +11,7 @@ const Favorites = () => {
     page: 0,
     direction: 'next',
     totalPages: 0,
-    pageSize: 6,
+    pageSize: 2,
     totalElements: 0,
   };
 
@@ -102,6 +102,12 @@ const Favorites = () => {
           );
         })}
       </Grid>
+      {pagination.totalPages < pagination.totalPages -1 && 
+      <Flex my="1rem" justify="center">
+        <Button onClick={() => getFavorites(true)} colorScheme="blackAlpha">
+          See more
+        </Button>
+      </Flex>}
     </>
   );
 };
