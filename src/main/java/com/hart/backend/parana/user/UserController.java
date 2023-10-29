@@ -4,6 +4,7 @@ import com.hart.backend.parana.recentsearch.RecentSearchService;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
+import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
 import com.hart.backend.parana.user.response.SyncUserResponse;
@@ -29,6 +30,13 @@ public class UserController {
     public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
         this.recentSearchService = recentSearchService;
+    }
+
+    @GetMapping("/suggestions")
+    public ResponseEntity<GetUserSuggestionResponse> getUserSugggestions() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new GetUserSuggestionResponse("success", this.userService.getUserSuggestions()));
     }
 
     @GetMapping("/sync")

@@ -27,6 +27,7 @@ import ConnectionRoute from './routes/ConnectionRoute';
 import ConnectionRequests from './components/Connection/ConnectionRequests';
 import Connections from './components/Connection/Connections';
 import Favorites from './components/Connection/Favorites';
+import Suggestions from './components/Connection/Suggestions';
 
 function App() {
   const shouldRun = useRef(true);
@@ -146,6 +147,14 @@ function App() {
                   element={
                     <RequireAuth>
                       <Favorites />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="suggestions"
+                  element={
+                    <RequireAuth>
+                      <Suggestions />
                     </RequireAuth>
                   }
                 />

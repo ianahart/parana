@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getSuggestions() {
+    return http.get('/users/suggestions');
+  },
+
   getFavorites(userId: number, page: number, pageSize: number, direction: string) {
     return http.get(
       `/favorites?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`

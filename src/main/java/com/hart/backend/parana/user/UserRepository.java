@@ -1,10 +1,12 @@
 package com.hart.backend.parana.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
+import com.hart.backend.parana.user.dto.UserSuggestionDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,16 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
+
+    @Query(value = """
+             SELECT new com.hart.backend.parana.user.dto.UserSuggestionDto(
+             u.id AS teacherId, p.id AS profileId, p.terrain AS terrain,
+             u.fullName AS fullName, p.avatarUrl AS avatarUrl
+             ) FROM User u
+             INNER JOIN u.profile p
+             WHERE u.role = 'TEACHER'
+            """)
+    List<UserSuggestionDto> getUserSuggestions();
 
     @Query(value = """
             SELECT new com.hart.backend.parana.user.dto.SearchTeacherDto(

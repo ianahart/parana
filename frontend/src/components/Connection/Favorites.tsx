@@ -33,7 +33,6 @@ const Favorites = () => {
           totalElements,
           totalPages,
         } = res.data.data;
-        console.log(res.data.data);
         setPagination((prevState) => ({
           ...prevState,
           direction,

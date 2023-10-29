@@ -191,4 +191,13 @@ public class ConnectionService {
         }
         return this.connectionRepository.isConnected(senderId, receiverId);
     }
+
+    public boolean isPending(Long senderId, Long receiverId) {
+        if (senderId == null || receiverId == null) {
+            logger.info("isPending is missing senderId or receiverId or both");
+            throw new BadRequestException("is pending is missing parameters");
+        }
+        return this.connectionRepository.isPending(senderId, receiverId);
+    }
+
 }

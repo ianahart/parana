@@ -25,6 +25,15 @@ export interface IFavorite {
   isFavorited: boolean;
 }
 
+export interface ISuggestion {
+  avatarUrl: string;
+  fullName: string;
+  profileId: number;
+  teacherId: number;
+  terrain: string;
+  terrainInCommon: string[];
+}
+
 export interface ISearch {
   id: number;
   profileId: number;

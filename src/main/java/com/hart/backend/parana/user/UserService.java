@@ -3,6 +3,8 @@ package com.hart.backend.parana.user;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,9 +14,11 @@ import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
+import com.hart.backend.parana.user.dto.UserSuggestionDto;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.connection.ConnectionService;
 import com.hart.backend.parana.favorite.FavoriteService;
 import com.hart.backend.parana.geocode.GeocodeService;
 
@@ -48,13 +52,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final GeocodeService geocodeService;
     private final FavoriteService favoriteService;
+    private final ConnectionService connectionService;
 
     @Autowired
     public UserService(UserRepository userRepository, GeocodeService geocodeService,
-            @Lazy FavoriteService favoriteService) {
+            @Lazy FavoriteService favoriteService,
+            @Lazy ConnectionService connectionService) {
         this.userRepository = userRepository;
         this.geocodeService = geocodeService;
         this.favoriteService = favoriteService;
+        this.connectionService = connectionService;
     }
 
     public boolean userExistsByEmail(String email) {
@@ -189,5 +196,52 @@ public class UserService {
                 result.getTotalPages(),
                 direction, result.getTotalElements());
 
+    }
+
+    private List<UserSuggestionDto> getNonConnectedUsers(User currentUser) {
+        return this.userRepository
+                .getUserSuggestions()
+                .stream()
+                .filter(u -> !this.connectionService.isConnected(currentUser.getId(),
+                        u.getTeacherId()) && !this.connectionService.isPending(currentUser.getId(), u.getTeacherId()))
+                .toList();
+    }
+
+    public List<UserSuggestionDto> getUserSuggestions() {
+        User currentUser = getCurrentlyLoggedInUser();
+
+        List<UserSuggestionDto> nonConnectedUsers = new ArrayList<UserSuggestionDto>(getNonConnectedUsers(currentUser));
+
+        List<String> currentUserTerrain = currentUser.getProfile().getTerrain() == null ? new ArrayList<>()
+                : Arrays.asList(currentUser.getProfile().getTerrain().split(","));
+
+        for (int i = 0; i < nonConnectedUsers.size(); i++) {
+
+            List<String> teacherTerrain = nonConnectedUsers.get(i).getTerrain() == null ? new ArrayList<>()
+                    : Arrays.asList(nonConnectedUsers.get(i).getTerrain().split(","));
+
+            List<String> maxList = teacherTerrain.size() > currentUserTerrain.size() ? teacherTerrain
+                    : currentUserTerrain;
+
+            List<String> terrainInCommon = new ArrayList<String>();
+
+            for (int j = 0; j < maxList.size(); j++) {
+
+                if (teacherTerrain.size() > currentUserTerrain.size()) {
+
+                    if (currentUserTerrain.contains(teacherTerrain.get(j))) {
+                        terrainInCommon.add(teacherTerrain.get(j));
+                    }
+                } else {
+                    if (teacherTerrain.contains(currentUserTerrain.get(j))) {
+                        terrainInCommon.add(currentUserTerrain.get(j));
+                    }
+                }
+            }
+
+            nonConnectedUsers.get(i).setTerrainInCommon(terrainInCommon);
+        }
+        nonConnectedUsers.removeIf(u -> u.getTerrainInCommon().size() <= 0);
+        return nonConnectedUsers;
     }
 }

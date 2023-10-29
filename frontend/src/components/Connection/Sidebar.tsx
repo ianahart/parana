@@ -1,11 +1,14 @@
 import { Box, Flex, Heading, UnorderedList } from '@chakra-ui/react';
 import ConnectionLink from './ConnectionLink';
 import { PiUsersThree } from 'react-icons/pi';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { TbUserUp } from 'react-icons/tb';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineUsergroupAdd } from 'react-icons/ai';
+import { UserContext } from '../../context/user';
+import { IUserContext } from '../../interfaces';
 
 const Sidebar = () => {
+  const { user } = useContext(UserContext) as IUserContext;
   const [selected, setSelected] = useState('all');
 
   return (
@@ -41,6 +44,16 @@ const Sidebar = () => {
             selected={selected}
             icon={<AiOutlineHeart />}
           />
+          {user.role === 'USER' && (
+            <ConnectionLink
+              setSelected={setSelected}
+              path="suggestions"
+              text="Suggestions"
+              value="suggestions"
+              selected={selected}
+              icon={<AiOutlineUsergroupAdd />}
+            />
+          )}
         </UnorderedList>
       </Box>
     </Box>
