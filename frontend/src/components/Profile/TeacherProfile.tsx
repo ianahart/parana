@@ -10,6 +10,7 @@ import { IoRibbonOutline } from 'react-icons/io5';
 import HomeMountain from './HomeMountain';
 import Reviews from '../Review/Reviews';
 import Recommendations from '../Recommendation/Recommendations';
+import SocialWall from './SocialMedia/SocialWall';
 
 interface ITeacherProfileProps {
   profile: IProfile;
@@ -49,6 +50,11 @@ const TeacherProfile = ({ profile }: ITeacherProfileProps) => {
         <Tags tags={profile.tags} heading="Hashtags" />
         <Reviews teacherName={profile.firstName} teacherId={profile.userId} />
         <Recommendations teacherName={profile.firstName} teacherId={profile.userId} />
+        <SocialWall
+          ownerId={profile.userId}
+          ownerFirstName={profile.firstName}
+          ownerProfileId={profile.id}
+        />
       </Flex>
       <Box
         bg="primary.bg"

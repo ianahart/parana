@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.passwordreset.PasswordReset;
+import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
@@ -119,6 +120,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "teacher", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Favorite> teacherFavorites;
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> ownerPosts;
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> authorPosts;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -189,6 +196,14 @@ public class User implements UserDetails {
 
     public List<Favorite> getUserFavorites() {
         return userFavorites;
+    }
+
+    public List<Post> getOwnerPosts() {
+        return ownerPosts;
+    }
+
+    public List<Post> getAuthorPosts() {
+        return authorPosts;
     }
 
     public List<Favorite> getTeacherFavorites() {
@@ -349,6 +364,14 @@ public class User implements UserDetails {
 
     public void setTeacherRecommendations(List<Recommendation> teacherRecommendations) {
         this.teacherRecommendations = teacherRecommendations;
+    }
+
+    public void setOwnerPosts(List<Post> ownerPosts) {
+        this.ownerPosts = ownerPosts;
+    }
+
+    public void setAuthorPosts(List<Post> authorPosts) {
+        this.authorPosts = authorPosts;
     }
 
     public void setAbbreviation(String abbreviation) {
