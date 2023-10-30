@@ -20,7 +20,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT new com.hart.backend.parana.post.dto.PostDto(
             p.id AS id, o.id AS ownerId, p.text AS text, p.gif AS gif,
             p.fileUrl AS fileUrl, p.createdAt AS createdAt, p.isEdited AS isEdited,
-            a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl
+            a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl,
+            a.id AS authorId
             ) FROM Post p
             INNER JOIN p.owner o
             INNER JOIN p.author a

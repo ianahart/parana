@@ -61,7 +61,10 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
     setCreatePostError('');
     setCreatePostLoading(true);
     Client.createPost(ownerId, authorId, postText, file, gif)
-      .then((res) => {
+      .then(() => {
+        setPosts([]);
+        setPagination(postPaginationState);
+        getPosts(false);
         setCreatePostLoading(false);
       })
       .catch((err) => {
@@ -69,6 +72,17 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         setCreatePostLoading(false);
         throw new Error(err);
       });
+  };
+
+  const removePost = (postId: number) => {
+        Client.removePost(postId).then(() => {
+    setPosts([]);
+    setPagination(postPaginationState);
+    getPosts(false);
+
+        }).catch((err) => {
+                throw new Error(err);
+            })
   };
 
   return (
@@ -82,7 +96,12 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         createPostError={createPostError}
       />
       <ManagePosts postView={postView} setPostView={setPostView} />
-      <Posts posts={posts} postView={postView} />
+      <Posts
+        removePost={removePost}
+        posts={posts}
+        postView={postView}
+        ownerProfileId={ownerProfileId}
+      />
       {pagination.page < pagination.totalPages - 1 && (
         <Flex justify="center">
           <Button onClick={() => getPosts(true)} colorScheme="blackAlpha">

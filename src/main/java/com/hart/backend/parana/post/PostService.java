@@ -6,6 +6,7 @@ import com.hart.backend.parana.post.dto.PostPaginationDto;
 import com.hart.backend.parana.post.request.CreatePostRequest;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
+import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.amazon.AmazonService;
 import com.hart.backend.parana.user.Role;
 import com.hart.backend.parana.user.User;
@@ -143,6 +144,32 @@ public class PostService {
         return new PostPaginationDto<PostDto>(result.getContent(), page + 1, pageSize,
                 result.getTotalPages(),
                 direction, result.getTotalElements());
+    }
 
+    private Post getPostById(Long postId) {
+        return this.postRepository.findById(postId).orElseThrow(() -> {
+            String error = String.format("A post with the id %d was not found", postId);
+            logger.info(error);
+            throw new NotFoundException(error);
+        });
+    }
+
+    private boolean canModifyPost(User currentUser, Post post) {
+        return currentUser.getId() == post.getAuthor().getId() || currentUser.getId() == post.getOwner().getId();
+    }
+
+    public void deletePost(Long postId) {
+        Post post = getPostById(postId);
+        User currentUser = this.userService.getCurrentlyLoggedInUser();
+
+        if (!canModifyPost(currentUser, post)) {
+            throw new ForbiddenException("You do not have necessary privileges to delete this post");
+        }
+
+        if (post.getFilename() != null) {
+            this.amazonService.delete(BUCKET_NAME, post.getFilename());
+        }
+
+        this.postRepository.delete(post);
     }
 }

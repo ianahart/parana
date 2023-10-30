@@ -9,6 +9,7 @@ export interface IPost {
   text: string;
   authorFullName: string;
   authorAvatarUrl: string;
+  authorId: number;
 }
 
 export interface IProfile {

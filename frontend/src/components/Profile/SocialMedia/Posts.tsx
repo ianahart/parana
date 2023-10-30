@@ -1,13 +1,15 @@
-import {  Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import { IPost } from '../../../interfaces';
 import Post from './Post';
 
 interface IPostProps {
   posts: IPost[];
   postView: string;
+  ownerProfileId: number;
+  removePost: (postId: number) => void;
 }
 
-const Posts = ({ posts, postView }: IPostProps) => {
+const Posts = ({ posts, postView, ownerProfileId, removePost }: IPostProps) => {
   const gridTemplateColumns =
     postView === 'list' ? ['1fr', '1fr', '1fr'] : ['1fr', '1fr 1fr', '1fr 1fr'];
 
@@ -20,7 +22,7 @@ const Posts = ({ posts, postView }: IPostProps) => {
       {posts.map((post) => {
         return (
           <GridItem key={post.id}>
-            <Post post={post} />
+            <Post removePost={removePost} post={post} ownerProfileId={ownerProfileId} />
           </GridItem>
         );
       })}

@@ -14,6 +14,7 @@ public class PostDto {
     private String readableDate;
     private String authorFullName;
     private String authorAvatarUrl;
+    private Long authorId;
 
     public PostDto() {
 
@@ -28,7 +29,8 @@ public class PostDto {
             Timestamp createdAt,
             Boolean isEdited,
             String authorFullName,
-            String authorAvatarUrl) {
+            String authorAvatarUrl,
+            Long authorId) {
         this.id = id;
         this.ownerId = ownerId;
         this.text = text;
@@ -38,6 +40,7 @@ public class PostDto {
         this.isEdited = isEdited;
         this.authorFullName = authorFullName;
         this.authorAvatarUrl = authorAvatarUrl;
+        this.authorId = authorId;
     }
 
     public String getAuthorAvatarUrl() {
@@ -62,6 +65,10 @@ public class PostDto {
 
     public String getText() {
         return text;
+    }
+
+    public Long getAuthorId() {
+        return authorId;
     }
 
     public Long getOwnerId() {
@@ -120,4 +127,7 @@ public class PostDto {
         this.authorAvatarUrl = authorAvatarUrl;
     }
 
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
 }
