@@ -7,9 +7,20 @@ interface IPostProps {
   postView: string;
   ownerProfileId: number;
   removePost: (postId: number) => void;
+  updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
+  ownerId: number;
+  ownerFirstName: string;
 }
 
-const Posts = ({ posts, postView, ownerProfileId, removePost }: IPostProps) => {
+const Posts = ({
+  posts,
+  postView,
+  ownerProfileId,
+  removePost,
+  ownerId,
+  ownerFirstName,
+  updatePost,
+}: IPostProps) => {
   const gridTemplateColumns =
     postView === 'list' ? ['1fr', '1fr', '1fr'] : ['1fr', '1fr 1fr', '1fr 1fr'];
 
@@ -22,7 +33,14 @@ const Posts = ({ posts, postView, ownerProfileId, removePost }: IPostProps) => {
       {posts.map((post) => {
         return (
           <GridItem key={post.id}>
-            <Post removePost={removePost} post={post} ownerProfileId={ownerProfileId} />
+            <Post
+              updatePost={updatePost}
+              ownerId={ownerId}
+              ownerFirstName={ownerFirstName}
+              removePost={removePost}
+              post={post}
+              ownerProfileId={ownerProfileId}
+            />
           </GridItem>
         );
       })}

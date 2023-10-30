@@ -75,14 +75,32 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
   };
 
   const removePost = (postId: number) => {
-        Client.removePost(postId).then(() => {
-    setPosts([]);
-    setPagination(postPaginationState);
-    getPosts(false);
+    Client.removePost(postId)
+      .then(() => {
+        setPosts([]);
+        setPagination(postPaginationState);
+        getPosts(false);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
 
-        }).catch((err) => {
-                throw new Error(err);
-            })
+  const updatePost = (
+    postId: number,
+    postText: string,
+    file: File | null,
+    gif: string
+  ) => {
+    Client.updatePost(postId, postText, file, gif)
+      .then(() => {
+        setPosts([]);
+        setPagination(postPaginationState);
+        getPosts(false);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   };
 
   return (
@@ -92,12 +110,17 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         ownerFirstName={ownerFirstName}
         ownerProfileId={ownerProfileId}
         createPost={createPost}
-        createPostLoading={createPostLoading}
-        createPostError={createPostError}
+        updatePost={updatePost}
+        isLoading={createPostLoading}
+        postError={createPostError}
+        method="post"
       />
       <ManagePosts postView={postView} setPostView={setPostView} />
       <Posts
+        ownerId={ownerId}
+        ownerFirstName={ownerFirstName}
         removePost={removePost}
+        updatePost={updatePost}
         posts={posts}
         postView={postView}
         ownerProfileId={ownerProfileId}

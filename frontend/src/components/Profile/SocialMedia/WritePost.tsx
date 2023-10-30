@@ -18,41 +18,49 @@ import {
   Image,
   Tooltip,
 } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../../../context/user';
 import { IUserContext } from '../../../interfaces';
 import BasicSpinner from '../../Shared/BasicSpinner';
 import UserAvatar from '../../Shared/UserAvatar';
 import { BsEmojiSmile, BsImages } from 'react-icons/bs';
-import { AiOutlineClose, AiOutlineGif } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineEdit, AiOutlineGif } from 'react-icons/ai';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { Grid } from '@giphy/react-components';
 import { GiphyFetch } from '@giphy/js-fetch-api';
+import { Client } from '../../../util/client';
 
 interface IWritePostProps {
+  postId?: number;
+  method: string;
   ownerFirstName: string;
   ownerId: number;
   ownerProfileId: number;
-  createPost: (
+  createPost?: (
     ownerId: number,
     authorId: number,
     postText: string,
     file?: File | null,
     gif?: string
   ) => void;
-  createPostLoading: boolean;
-  createPostError: string;
+  updatePost?: (postId: number, postText: string, file: File | null, gif: string) => void;
+  isLoading: boolean;
+  postError: string;
 }
 
 const WritePost = ({
+  postId = undefined,
   ownerFirstName,
   ownerId,
   ownerProfileId,
-  createPost,
-  createPostLoading,
-  createPostError,
+  createPost = undefined,
+  updatePost = undefined,
+  isLoading,
+  postError,
+  method,
 }: IWritePostProps) => {
   const { user } = useContext(UserContext) as IUserContext;
+  const shouldRun = useRef(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [postText, setPostText] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -62,6 +70,25 @@ const WritePost = ({
   const [error, setError] = useState('');
   const [isGifOpen, setIsGifOpen] = useState(false);
   const MAX_BYTES = 3000000;
+
+  const getPost = (postId: number) => {
+    Client.getPost(postId)
+      .then((res) => {
+        const { fileUrl, gif, text } = res.data.data;
+        setDataURL(fileUrl == null ? '' : fileUrl);
+        setGifURL(gif);
+        setPostText(text);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  useEffect(() => {
+    if (shouldRun.current && postId !== undefined) {
+      getPost(postId);
+    }
+  }, [shouldRun.current, postId]);
 
   const gf = new GiphyFetch(import.meta.env.VITE_GIPHY_KEY);
   const fetchGifs = (offset: number) => gf.trending({ offset, limit: 10 });
@@ -84,16 +111,23 @@ const WritePost = ({
     setGifURL('');
   };
 
-  const handleCreatePost = () => {
+  const handlePostAction = () => {
     setError('');
     if (postText.trim().length === 0 || postText.length > 600) {
       setError('Post must be between 1 and 600 characters');
       return;
     }
-    createPost(ownerId, user.id, postText, file, gifURL);
 
-    if (createPostError == undefined || createPostError.length > 0) {
-      return;
+    if (createPost !== undefined && method === 'post') {
+      createPost(ownerId, user.id, postText, file, gifURL);
+
+      if (postError == undefined || postError.length > 0) {
+        return;
+      }
+    } else {
+      if (postId !== undefined && updatePost !== undefined) {
+        updatePost(postId, postText, file, gifURL);
+      }
     }
     handleOnClose();
   };
@@ -151,49 +185,67 @@ const WritePost = ({
 
   return (
     <Box
-      p="1rem"
+      p={method === 'update' ? '0' : '1rem'}
       boxShadow="sm"
       borderRadius={8}
-      border="1px solid"
+      border={method === 'update' ? 'none' : '1px solid'}
       borderColor="border.primary"
     >
-      <Flex align="center">
-        <UserAvatar
-          height="45px"
-          width="45px"
-          avatarUrl={user.avatarUrl}
-          fullName={user.fullName}
-        />
-        <Box
-          onClick={onOpen}
-          cursor="pointer"
-          flexGrow={2}
-          p="0.5rem"
-          borderRadius={20}
-          ml="0.5rem"
-          border="1px solid"
-          borderColor="border.primary"
-        >
-          {statusText}
-        </Box>
-      </Flex>
-      <Box position="relative" padding="10">
-        <Divider borderColor="border.primary" />
-        <AbsoluteCenter bg="primary.dark" px="4">
-          <Flex onClick={onOpen} cursor="pointer" align="center">
-            <Box color="primary.light" mr="0.25rem">
-              <BsImages />
+      {method === 'post' && (
+        <>
+          <Flex align="center">
+            <UserAvatar
+              height="45px"
+              width="45px"
+              avatarUrl={user.avatarUrl}
+              fullName={user.fullName}
+            />
+            <Box
+              onClick={onOpen}
+              cursor="pointer"
+              flexGrow={2}
+              p="0.5rem"
+              borderRadius={20}
+              ml="0.5rem"
+              border="1px solid"
+              borderColor="border.primary"
+            >
+              {statusText}
             </Box>
-            <Text fontSize="0.9rem" fontWeight="bold">
-              Photo/video
-            </Text>
           </Flex>
-        </AbsoluteCenter>
-      </Box>
+          <Box position="relative" padding="10">
+            <Divider borderColor="border.primary" />
+            <AbsoluteCenter bg="primary.dark" px="4">
+              <Flex onClick={onOpen} cursor="pointer" align="center">
+                <Box color="primary.light" mr="0.25rem">
+                  <BsImages />
+                </Box>
+                <Text fontSize="0.9rem" fontWeight="bold">
+                  Photo/video
+                </Text>
+              </Flex>
+            </AbsoluteCenter>
+          </Box>
+        </>
+      )}
+      {method === 'update' && (
+        <Flex
+          onClick={onOpen}
+          _hover={{ bg: 'black.tertiary' }}
+          borderRadius={8}
+          p="0.25rem"
+          align="center"
+        >
+          <Box mr="0.25rem">
+            <AiOutlineEdit />
+          </Box>
+          <Text>Edit</Text>
+        </Flex>
+      )}
       <Modal isOpen={isOpen} onClose={handleOnClose}>
         <ModalOverlay />
         <ModalContent color="text.secondary" bg="black.tertiary">
-          <ModalHeader>Create a post</ModalHeader>
+          <ModalHeader>{method === 'post' ? 'Create a post' : 'Update post'}</ModalHeader>
           <Divider borderColor="border.primary" />
           <ModalCloseButton />
           <ModalBody>
@@ -225,10 +277,10 @@ const WritePost = ({
                 </Text>
               </Flex>
             )}
-            {createPostError !== undefined && createPostError.length > 0 && (
+            {postError !== undefined && postError.length > 0 && (
               <Flex justify="center" my="0.5rem">
                 <Text fontSize="0.85rem" color="error.primary">
-                  {createPostError}
+                  {postError}
                 </Text>
               </Flex>
             )}
@@ -354,22 +406,22 @@ const WritePost = ({
             </Box>
           </ModalBody>
           <ModalFooter display="flex" justifyContent="center">
-            {createPostLoading && (
+            {isLoading && (
               <Flex justify="center" my="1rem">
                 <BasicSpinner
                   color="text.secondary"
-                  message="Creating post... Please wait."
+                  message={method === 'update' ? 'Saving post...' : 'Creating post...'}
                 />
               </Flex>
             )}
-            {!createPostLoading && (
+            {!isLoading && (
               <Button
-                onClick={handleCreatePost}
+                onClick={handlePostAction}
                 width="100%"
                 colorScheme="blackAlpha"
                 mr={3}
               >
-                Post
+                {method === 'post' ? 'Post' : 'Save'}
               </Button>
             )}
           </ModalFooter>

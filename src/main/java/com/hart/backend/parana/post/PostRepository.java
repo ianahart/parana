@@ -2,6 +2,7 @@ package com.hart.backend.parana.post;
 
 import java.util.List;
 
+import com.hart.backend.parana.post.dto.EditPostDto;
 import com.hart.backend.parana.post.dto.PostDto;
 
 import org.springframework.data.domain.Page;
@@ -29,4 +30,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHERE o.id = :ownerId
             """)
     Page<PostDto> getPosts(@Param("ownerId") Long ownerId, @Param("pageable") Pageable pageable);
+
+    @Query(value = """
+                SELECT new com.hart.backend.parana.post.dto.EditPostDto(
+                p.id AS id, p.text AS text, p.fileUrl, p.gif AS gif
+                ) FROM Post p
+               WHERE p.id = :postId
+            """)
+    EditPostDto getPost(@Param("postId") Long postId);
 }

@@ -6,6 +6,21 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updatePost(postId: number, text: string, file: File | null, gif: string) {
+    const formData = new FormData();
+    formData.append('text', text);
+    formData.append('gif', gif ?? '');
+    if (file !== undefined && file !== null) {
+      formData.append('file', file);
+    }
+
+    return http.patch(`/posts/${postId}`, formData);
+  },
+
+  getPost(postId: number) {
+    return http.get(`/posts/${postId}`);
+  },
+
   removePost(postId: number) {
     return http.delete(`/posts/${postId}`);
   },

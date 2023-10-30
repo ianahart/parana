@@ -1,25 +1,31 @@
-import { Box, Divider, Fade, Flex, Image, Text, useOutsideClick } from '@chakra-ui/react';
+import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react';
 import { IPost, IUserContext } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
 import { BsThreeDots, BsTrash } from 'react-icons/bs';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../../context/user';
+import WritePost from './WritePost';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface IPostProps {
   post: IPost;
   ownerProfileId: number;
   removePost: (postId: number) => void;
+  ownerId: number;
+  ownerFirstName: string;
+  updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
 }
 
-const Post = ({ post, ownerProfileId, removePost }: IPostProps) => {
-  const ref = useRef<HTMLDivElement>(null);
+const Post = ({
+  post,
+  ownerProfileId,
+  removePost,
+  ownerId,
+  ownerFirstName,
+  updatePost,
+}: IPostProps) => {
   const { user } = useContext(UserContext) as IUserContext;
   const [optionsOpen, setOptionsOpen] = useState(false);
-
-  useOutsideClick({
-    ref,
-    handler: () => setOptionsOpen(false),
-  });
 
   const handleOptions = () => {
     if (user.id === ownerProfileId || user.id === post.authorId) {
@@ -62,7 +68,6 @@ const Post = ({ post, ownerProfileId, removePost }: IPostProps) => {
             <Box
               p="0.5rem"
               className="fade-in"
-              ref={ref}
               zIndex={5}
               borderRadius={8}
               top="15px"
@@ -72,6 +77,18 @@ const Post = ({ post, ownerProfileId, removePost }: IPostProps) => {
               width="180px"
               minH="240px"
             >
+              <Flex
+                m="0.25rem"
+                justify="flex-end"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOptionsOpen(false);
+                }}
+              >
+                <Box>
+                  <AiOutlineClose />
+                </Box>
+              </Flex>
               <Flex
                 onClick={handleRemovePost}
                 _hover={{ bg: 'black.tertiary' }}
@@ -87,6 +104,18 @@ const Post = ({ post, ownerProfileId, removePost }: IPostProps) => {
                 </Box>
               </Flex>
               <Divider my="0.25rem" borderColor="border.primary" />
+              {user.id === post.authorId && (
+                <WritePost
+                  postId={post.id}
+                  method="update"
+                  ownerId={ownerId}
+                  ownerFirstName={ownerFirstName}
+                  ownerProfileId={ownerProfileId}
+                  updatePost={updatePost}
+                  isLoading={false}
+                  postError=""
+                />
+              )}
             </Box>
           )}
         </Box>

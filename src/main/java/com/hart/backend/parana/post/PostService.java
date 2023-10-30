@@ -1,9 +1,11 @@
 package com.hart.backend.parana.post;
 
 import com.hart.backend.parana.connection.ConnectionService;
+import com.hart.backend.parana.post.dto.EditPostDto;
 import com.hart.backend.parana.post.dto.PostDto;
 import com.hart.backend.parana.post.dto.PostPaginationDto;
 import com.hart.backend.parana.post.request.CreatePostRequest;
+import com.hart.backend.parana.post.request.UpdatePostRequest;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
@@ -171,5 +173,45 @@ public class PostService {
         }
 
         this.postRepository.delete(post);
+    }
+
+    public EditPostDto getPost(Long postId) {
+        return this.postRepository.getPost(postId);
+    }
+
+    public void updatePost(Long postId, UpdatePostRequest request) {
+        Post post = getPostById(postId);
+        User currentUser = this.userService.getCurrentlyLoggedInUser();
+
+        if (currentUser.getId() != post.getAuthor().getId()) {
+            throw new ForbiddenException("Cannot edit another user's post");
+        }
+
+        post.setIsEdited(false);
+        post.setText(Jsoup.clean(request.getText(), Safelist.none()));
+        post.setGif(request.getGif());
+
+        if (post.getFilename() != null && request.getFile() == null) {
+            post.setFilename(null);
+            post.setFileUrl(null);
+        }
+
+        if (request.getFile() != null) {
+            validateFileSize(request.getFile());
+
+            String filename = this.amazonService.upload(BUCKET_NAME, request.getFile().getOriginalFilename(),
+                    request.getFile());
+            Map<String, String> data = this.amazonService.getPublicUrl(BUCKET_NAME, filename);
+
+            if (post.getFilename() != null) {
+                this.amazonService.delete(BUCKET_NAME, post.getFilename());
+            }
+
+            post.setFilename(data.get("filename"));
+            post.setFileUrl(data.get("url"));
+
+        }
+
+        this.postRepository.save(post);
     }
 }
