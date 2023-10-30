@@ -1,7 +1,11 @@
-import { Box } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Box, Flex, Button } from '@chakra-ui/react';
+import { useEffect, useRef, useState } from 'react';
 import { Client } from '../../../util/client';
 import WritePost from './WritePost';
+import { postPaginationState } from '../../../state/initialState';
+import { IPost } from '../../../interfaces';
+import ManagePosts from './ManagePosts';
+import Posts from './Posts';
 
 interface ISocialWallProps {
   ownerId: number;
@@ -10,8 +14,42 @@ interface ISocialWallProps {
 }
 
 const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProps) => {
+  const shouldRun = useRef(true);
+  const [pagination, setPagination] = useState(postPaginationState);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [postView, setPostView] = useState('list');
+
   const [createPostLoading, setCreatePostLoading] = useState(false);
   const [createPostError, setCreatePostError] = useState('');
+
+  const getPosts = (paginate: boolean) => {
+    const pageNum = paginate ? pagination.page : -1;
+    Client.getPosts(ownerId, pageNum, pagination.pageSize, pagination.direction)
+      .then((res) => {
+        const { direction, page, pageSize, posts, totalElements, totalPages } =
+          res.data.data;
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+
+        setPosts((prevState) => [...prevState, ...posts]);
+      })
+      .catch((err) => {
+        throw new Error(err.response.data);
+      });
+  };
+
+  useEffect(() => {
+    if (shouldRun.current) {
+      shouldRun.current = false;
+      getPosts(false);
+    }
+  }, [shouldRun.current]);
 
   const createPost = (
     ownerId: number,
@@ -24,11 +62,9 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
     setCreatePostLoading(true);
     Client.createPost(ownerId, authorId, postText, file, gif)
       .then((res) => {
-        console.log(res);
         setCreatePostLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setCreatePostError(err.response.data.message);
         setCreatePostLoading(false);
         throw new Error(err);
@@ -36,15 +72,24 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
   };
 
   return (
-    <Box>
+    <Box width="100%">
       <WritePost
         ownerId={ownerId}
         ownerFirstName={ownerFirstName}
         ownerProfileId={ownerProfileId}
         createPost={createPost}
         createPostLoading={createPostLoading}
-                createPostError={createPostError}
+        createPostError={createPostError}
       />
+      <ManagePosts postView={postView} setPostView={setPostView} />
+      <Posts posts={posts} postView={postView} />
+      {pagination.page < pagination.totalPages - 1 && (
+        <Flex justify="center">
+          <Button onClick={() => getPosts(true)} colorScheme="blackAlpha">
+            See more posts
+          </Button>
+        </Flex>
+      )}
     </Box>
   );
 };

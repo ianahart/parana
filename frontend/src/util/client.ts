@@ -6,6 +6,12 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getPosts(ownerId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/posts?ownerId=${ownerId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   createPost(
     ownerId: number,
     authorId: number,

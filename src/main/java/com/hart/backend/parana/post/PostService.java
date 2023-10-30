@@ -1,6 +1,8 @@
 package com.hart.backend.parana.post;
 
 import com.hart.backend.parana.connection.ConnectionService;
+import com.hart.backend.parana.post.dto.PostDto;
+import com.hart.backend.parana.post.dto.PostPaginationDto;
 import com.hart.backend.parana.post.request.CreatePostRequest;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
@@ -19,6 +21,10 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -112,6 +118,31 @@ public class PostService {
         post.setAuthor(author);
 
         this.postRepository.save(post);
+
+    }
+
+    private Page<PostDto> paginatePosts(Long ownerId, int page, int pageSize, String direction) {
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+
+        return this.postRepository.getPosts(ownerId, pageable);
+    }
+
+    private void addDatesToPosts(List<PostDto> posts) {
+        for (PostDto post : posts) {
+            post.setReadableDate(MyUtil.createDate(post.getCreatedAt()));
+        }
+    }
+
+    public PostPaginationDto<PostDto> getPosts(Long ownerId, int page, int pageSize, String direction) {
+
+        Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction);
+
+        addDatesToPosts(result.getContent());
+
+        return new PostPaginationDto<PostDto>(result.getContent(), page + 1, pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
 
     }
 }

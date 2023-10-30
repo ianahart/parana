@@ -1,3 +1,16 @@
+export interface IPost {
+  createdAt: Date;
+  fileUrl: string;
+  gif: string;
+  id: number;
+  isEdited: boolean;
+  ownerId: number;
+  readableDate: string;
+  text: string;
+  authorFullName: string;
+  authorAvatarUrl: string;
+}
+
 export interface IProfile {
   avatarUrl: string;
   bio: string;
