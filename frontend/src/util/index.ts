@@ -26,7 +26,9 @@ export const slugify = (firstName: string, lastName: string) => {
 
 export const abbreviate = (fullName: string) => {
   const [firstName, lastName] = fullName.split(' ');
-  return firstName.slice(0, 1) + lastName.slice(0, 1);
+  if (firstName.length && lastName.length) {
+    return firstName.slice(0, 1) + lastName.slice(0, 1);
+  }
 };
 
 export const capitalize = (value: string) => {

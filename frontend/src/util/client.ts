@@ -6,6 +6,34 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removePost(postId: number) {
+    return http.delete(`/posts/${postId}`);
+  },
+
+  getPosts(ownerId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/posts?ownerId=${ownerId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
+  createPost(
+    ownerId: number,
+    authorId: number,
+    postText: string,
+    file?: File | null,
+    gif?: string
+  ) {
+    const formData = new FormData();
+    formData.append('ownerId', ownerId.toString());
+    formData.append('authorId', authorId.toString());
+    formData.append('text', postText);
+    formData.append('gif', gif ?? '');
+    if (file !== undefined && file !== null) {
+      formData.append('file', file);
+    }
+    return http.post('/posts', formData);
+  },
+
   getSuggestions() {
     return http.get('/users/suggestions');
   },

@@ -68,6 +68,10 @@ public final class MyUtil {
         return String.join("", list);
     }
 
+    public static long getSeconds(Timestamp timestamp) {
+        return (timestamp.getTime() / 1000L);
+    }
+
     public static String constructReadableDate(Timestamp timestamp) {
         long createdAtInSeconds = (timestamp.getTime() / 1000L);
         long nowInSeconds = Instant.now().getEpochSecond();
