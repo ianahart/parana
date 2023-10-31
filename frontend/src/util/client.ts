@@ -6,6 +6,14 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removeLikePost(userId: number, postId: number) {
+    return http.delete(`/posts/${postId}/likes/${userId}`);
+  },
+
+  likePost(userId: number, postId: number) {
+    return http.post(`/posts/${postId}/likes`, { userId, postId });
+  },
+
   updatePost(postId: number, text: string, file: File | null, gif: string) {
     const formData = new FormData();
     formData.append('text', text);

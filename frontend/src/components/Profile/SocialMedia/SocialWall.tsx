@@ -44,6 +44,42 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
       });
   };
 
+  const handleLikePost = (userId: number, postId: number, action: string) => {
+    action === 'like' ? likePost(userId, postId) : unLikePost(userId, postId);
+  };
+
+  const likePost = (userId: number, postId: number) => {
+    Client.likePost(userId, postId)
+      .then((res) => {
+        const { currentUserHasLikedPost } = res.data.data;
+        updateLikedPost(postId, currentUserHasLikedPost);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  const updateLikedPost = (postId: number, isLiked: boolean) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        post.currentUserHasLikedPost = isLiked;
+        post.likesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+
+  const unLikePost = (userId: number, postId: number) => {
+    Client.removeLikePost(userId, postId)
+      .then(() => {
+        updateLikedPost(postId, false);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
   useEffect(() => {
     if (shouldRun.current) {
       shouldRun.current = false;
@@ -124,6 +160,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         posts={posts}
         postView={postView}
         ownerProfileId={ownerProfileId}
+        handleLikePost={handleLikePost}
       />
       {pagination.page < pagination.totalPages - 1 && (
         <Flex justify="center">

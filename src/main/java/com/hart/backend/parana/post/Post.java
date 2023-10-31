@@ -1,19 +1,24 @@
 package com.hart.backend.parana.post;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import com.hart.backend.parana.postlike.PostLike;
 import com.hart.backend.parana.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -57,6 +62,9 @@ public class Post {
     @ManyToOne()
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postPostLikes;
 
     public Post() {
 
@@ -102,6 +110,10 @@ public class Post {
 
     public Long getId() {
         return id;
+    }
+
+    public List<PostLike> getPostPostLikes() {
+        return postPostLikes;
     }
 
     public String getGif() {
@@ -170,6 +182,10 @@ public class Post {
 
     public void setIsEdited(Boolean isEdited) {
         this.isEdited = isEdited;
+    }
+
+    public void setPostPostLikes(List<PostLike> postPostLikes) {
+        this.postPostLikes = postPostLikes;
     }
 
     public void setCreatedAt(Timestamp createdAt) {

@@ -1,11 +1,12 @@
 import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react';
 import { IPost, IUserContext } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
-import { BsThreeDots, BsTrash } from 'react-icons/bs';
+import { BsHandThumbsUpFill, BsThreeDots, BsTrash } from 'react-icons/bs';
 import { useContext, useState } from 'react';
 import { UserContext } from '../../../context/user';
 import WritePost from './WritePost';
 import { AiOutlineClose } from 'react-icons/ai';
+import Actions from './Actions';
 
 interface IPostProps {
   post: IPost;
@@ -14,6 +15,7 @@ interface IPostProps {
   ownerId: number;
   ownerFirstName: string;
   updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
+  handleLikePost: (userId: number, postId: number, action: string) => void;
 }
 
 const Post = ({
@@ -23,6 +25,7 @@ const Post = ({
   ownerId,
   ownerFirstName,
   updatePost,
+  handleLikePost,
 }: IPostProps) => {
   const { user } = useContext(UserContext) as IUserContext;
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -140,6 +143,30 @@ const Post = ({
           </Flex>
         )}
       </Box>
+      <Flex my="1rem" align="center">
+        <Flex
+          mr="0.25rem"
+          height="20px"
+          width="20px"
+          flexDir="column"
+          align="center"
+          justify="center"
+          borderRadius={50}
+          bg="blue.500"
+          fontSize="0.9rem"
+        >
+          <BsHandThumbsUpFill />
+        </Flex>
+        <Text fontSize="0.9rem" color="text.secondary">
+          {post.likesCount > 0 ? post.likesCount : ''}
+        </Text>
+      </Flex>
+      <Divider my="1rem" borderColor="border.primary" />
+      <Actions
+        currentUserHasLikedPost={post.currentUserHasLikedPost}
+        handleLikePost={handleLikePost}
+        postId={post.id}
+      />
     </Box>
   );
 };

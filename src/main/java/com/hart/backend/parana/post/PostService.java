@@ -6,6 +6,7 @@ import com.hart.backend.parana.post.dto.PostDto;
 import com.hart.backend.parana.post.dto.PostPaginationDto;
 import com.hart.backend.parana.post.request.CreatePostRequest;
 import com.hart.backend.parana.post.request.UpdatePostRequest;
+import com.hart.backend.parana.postlike.PostLikeService;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
@@ -24,6 +25,7 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,15 +51,19 @@ public class PostService {
 
     private AmazonService amazonService;
 
+    private final PostLikeService postLikeService;
+
     @Autowired
     public PostService(UserService userService,
             PostRepository postRepository,
             ConnectionService connectionService,
-            AmazonService amazonService) {
+            AmazonService amazonService,
+            @Lazy PostLikeService postLikeService) {
         this.userService = userService;
         this.postRepository = postRepository;
         this.connectionService = connectionService;
         this.amazonService = amazonService;
+        this.postLikeService = postLikeService;
     }
 
     private boolean canCreatePost(User author, User owner) {
@@ -137,18 +143,29 @@ public class PostService {
         }
     }
 
+    private void addLikedFields(List<PostDto> posts) {
+        User user = this.userService.getCurrentlyLoggedInUser();
+        for (PostDto post : posts) {
+            post.setCurrentUserHasLikedPost(
+                    this.postLikeService.hasAlreadyLikedPost(user.getId(), post.getId()));
+
+            post.setLikesCount(this.postLikeService.countPostLikes(post.getId()));
+        }
+    }
+
     public PostPaginationDto<PostDto> getPosts(Long ownerId, int page, int pageSize, String direction) {
 
         Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction);
 
         addDatesToPosts(result.getContent());
+        addLikedFields(result.getContent());
 
         return new PostPaginationDto<PostDto>(result.getContent(), page + 1, pageSize,
                 result.getTotalPages(),
                 direction, result.getTotalElements());
     }
 
-    private Post getPostById(Long postId) {
+    public Post getPostById(Long postId) {
         return this.postRepository.findById(postId).orElseThrow(() -> {
             String error = String.format("A post with the id %d was not found", postId);
             logger.info(error);

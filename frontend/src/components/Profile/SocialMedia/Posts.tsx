@@ -10,6 +10,7 @@ interface IPostProps {
   updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
   ownerId: number;
   ownerFirstName: string;
+    handleLikePost: (userId: number, postId: number, action: string) => void;
 }
 
 const Posts = ({
@@ -20,6 +21,7 @@ const Posts = ({
   ownerId,
   ownerFirstName,
   updatePost,
+  handleLikePost,
 }: IPostProps) => {
   const gridTemplateColumns =
     postView === 'list' ? ['1fr', '1fr', '1fr'] : ['1fr', '1fr 1fr', '1fr 1fr'];
@@ -40,6 +42,7 @@ const Posts = ({
               removePost={removePost}
               post={post}
               ownerProfileId={ownerProfileId}
+              handleLikePost={handleLikePost}
             />
           </GridItem>
         );

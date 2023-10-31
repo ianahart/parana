@@ -24,7 +24,6 @@ const FavoriteButton = ({
   const getFavorite = () => {
     Client.getFavorite(user.id, teacherId)
       .then((res) => {
-        console.log(res.data);
         const { data } = res.data;
         if (data !== null) {
           setFavorite(data);
