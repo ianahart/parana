@@ -18,6 +18,7 @@ import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.post.Post;
+import com.hart.backend.parana.postlike.PostLike;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
@@ -126,6 +127,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> authorPosts;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> userPostLikes;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -176,6 +180,11 @@ public class User implements UserDetails {
 
     public String getAbbreviation() {
         return firstName.substring(0, 1).toUpperCase() + lastName.substring(0, 1).toUpperCase();
+    }
+
+    public List<PostLike> getUserPostLikes() {
+
+        return userPostLikes;
     }
 
     public Long getId() {
@@ -284,6 +293,10 @@ public class User implements UserDetails {
 
     public void setUserReviews(List<Review> userReviews) {
         this.userReviews = userReviews;
+    }
+
+    public void setUserPostLikes(List<PostLike> userPostLikes) {
+        this.userPostLikes = userPostLikes;
     }
 
     public void setTeacherReviews(List<Review> teacherReviews) {

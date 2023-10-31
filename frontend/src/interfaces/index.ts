@@ -10,6 +10,8 @@ export interface IPost {
   authorFullName: string;
   authorAvatarUrl: string;
   authorId: number;
+  currentUserHasLikedPost: boolean;
+  likesCount: number;
 }
 
 export interface IProfile {

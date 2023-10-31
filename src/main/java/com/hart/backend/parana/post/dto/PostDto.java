@@ -15,6 +15,8 @@ public class PostDto {
     private String authorFullName;
     private String authorAvatarUrl;
     private Long authorId;
+    private Boolean currentUserHasLikedPost;
+    private Long likesCount;
 
     public PostDto() {
 
@@ -51,6 +53,10 @@ public class PostDto {
         return authorFullName;
     }
 
+    public Long getLikesCount() {
+        return likesCount;
+    }
+
     public Long getId() {
         return id;
     }
@@ -85,6 +91,10 @@ public class PostDto {
 
     public String getReadableDate() {
         return readableDate;
+    }
+
+    public Boolean getCurrentUserHasLikedPost() {
+        return currentUserHasLikedPost;
     }
 
     public void setId(Long id) {
@@ -129,5 +139,13 @@ public class PostDto {
 
     public void setAuthorId(Long authorId) {
         this.authorId = authorId;
+    }
+
+    public void setCurrentUserHasLikedPost(Boolean currentUserHasLikedPost) {
+        this.currentUserHasLikedPost = currentUserHasLikedPost;
+    }
+
+    public void setLikesCount(Long likesCount) {
+        this.likesCount = likesCount;
     }
 }
