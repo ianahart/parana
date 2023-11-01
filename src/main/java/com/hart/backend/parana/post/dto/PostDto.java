@@ -2,6 +2,8 @@ package com.hart.backend.parana.post.dto;
 
 import java.sql.Timestamp;
 
+import com.hart.backend.parana.comment.dto.CommentDto;
+
 public class PostDto {
 
     private Long id;
@@ -17,6 +19,7 @@ public class PostDto {
     private Long authorId;
     private Boolean currentUserHasLikedPost;
     private Long likesCount;
+    private CommentDto comment;
 
     public PostDto() {
 
@@ -47,6 +50,10 @@ public class PostDto {
 
     public String getAuthorAvatarUrl() {
         return authorAvatarUrl;
+    }
+
+    public CommentDto getComment() {
+        return comment;
     }
 
     public String getAuthorFullName() {
@@ -107,6 +114,10 @@ public class PostDto {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public void setComment(CommentDto comment) {
+        this.comment = comment;
     }
 
     public void setFileUrl(String fileUrl) {

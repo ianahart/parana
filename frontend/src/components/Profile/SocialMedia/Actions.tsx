@@ -13,6 +13,7 @@ interface IActionsProps {
   handleLikePost: (userId: number, postId: number, action: string) => void;
   postId: number;
   currentUserHasLikedPost: boolean;
+  refreshComments: () => void;
   createComment: (
     userId: number,
     postId: number,
@@ -29,6 +30,7 @@ const Actions = ({
   postId,
   currentUserHasLikedPost,
   createComment,
+  refreshComments,
 }: IActionsProps) => {
   const COMMENT_LIMIT = 300;
   const { user } = useContext(UserContext) as IUserContext;
@@ -71,8 +73,8 @@ const Actions = ({
     createComment(user.id, postId, text)
       .then((res) => {
         console.log(res);
-                setText('');
-        //handleAddComment()
+        setText('');
+        refreshComments();
       })
       .catch((err) => {
         applyErrors(err.response.data);

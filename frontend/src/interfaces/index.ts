@@ -1,3 +1,13 @@
+export interface IComment {
+  id: number;
+  userId: number;
+  postId: number;
+  fullName: string;
+  avatarUrl: string;
+  text: string;
+  createdAt: Date;
+}
+
 export interface IPost {
   createdAt: Date;
   fileUrl: string;
@@ -12,6 +22,7 @@ export interface IPost {
   authorId: number;
   currentUserHasLikedPost: boolean;
   likesCount: number;
+  comment: IComment;
 }
 
 export interface IProfile {

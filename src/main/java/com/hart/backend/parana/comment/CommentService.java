@@ -1,5 +1,7 @@
 package com.hart.backend.parana.comment;
 
+import com.hart.backend.parana.comment.dto.CommentDto;
+import com.hart.backend.parana.comment.dto.CommentPaginationDto;
 import com.hart.backend.parana.comment.request.CreateCommentRequest;
 import com.hart.backend.parana.connection.ConnectionService;
 
@@ -19,6 +21,10 @@ import com.hart.backend.parana.util.MyUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,6 +50,31 @@ public class CommentService {
         this.userService = userService;
         this.postService = postService;
         this.connectionService = connectionService;
+    }
+
+    public Page<CommentDto> getComments(Long postId, int page, int pageSize, String direction) {
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<CommentDto> result = this.commentRepository.getComments(postId, pageable);
+
+        return result;
+    }
+
+    public CommentDto getLatestComment(Long postId) {
+        Page<CommentDto> result = getComments(postId, 0, 1, "next");
+
+        if (result.getContent().size() > 0) {
+            return result.getContent().get(0);
+        }
+
+        return null;
+    }
+
+    public CommentPaginationDto<CommentDto> getAllComments(Long postId, int page, int pageSize, String direction) {
+        Page<CommentDto> result = getComments(postId, page, pageSize, direction);
+        return new CommentPaginationDto<CommentDto>(result.getContent(), result.getNumber() + 1, pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
     }
 
     private boolean canCreateComment(User user, Post post, Long ownerId) {
