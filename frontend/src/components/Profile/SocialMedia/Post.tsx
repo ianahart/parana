@@ -78,6 +78,19 @@ const Post = ({
     getComments(false);
   };
 
+  const deleteComment = (commentId: number, ownerId: number) => {
+    Client.removeComment(commentId, ownerId)
+      .then(() => {
+        setComments((prevState) =>
+          prevState.filter((comment) => comment.id !== commentId)
+        );
+        refreshComments();
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
   return (
     <Box
       my="1rem"
@@ -216,15 +229,25 @@ const Post = ({
               View more comments
             </Text>
           </Box>
-
           <Box my="0.5rem">
-            <Comment comment={post.comment} />
+            <Comment
+              deleteComment={deleteComment}
+              ownerId={ownerId}
+              comment={post.comment}
+            />
           </Box>
         </>
       )}
       <Box my="0.5rem">
         {comments.map((comment) => {
-          return <Comment comment={comment} key={comment.id} />;
+          return (
+            <Comment
+              deleteComment={deleteComment}
+              ownerId={ownerId}
+              comment={comment}
+              key={comment.id}
+            />
+          );
         })}
       </Box>
 

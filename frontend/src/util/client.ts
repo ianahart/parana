@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removeComment(commentId: number, ownerId: number) {
+    return http.delete(`/comments/${commentId}?ownerId=${ownerId}`);
+  },
+
   getComments(postId: number, page: number, pageSize: number, direction: string) {
     return http.get(
       `/comments?postId=${postId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
