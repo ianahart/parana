@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  createComment(userId: number, postId: number, text: string, ownerId: number) {
+    return http.post('/comments', { userId, postId, text, ownerId });
+  },
+
   removeLikePost(userId: number, postId: number) {
     return http.delete(`/posts/${postId}/likes/${userId}`);
   },

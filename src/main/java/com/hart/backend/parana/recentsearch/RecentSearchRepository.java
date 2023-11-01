@@ -23,7 +23,9 @@ public interface RecentSearchRepository extends JpaRepository<RecentSearch, Long
 
     @Query(value = """
               SELECT r.id AS recentSearchId, term FROM recent_search r
-              INNER JOIN _user u on u.id = :userId
+              INNER JOIN _user u
+               ON r.user_id = :userId
+               WHERE u.id = :userId
               ORDER BY recentSearchId DESC LIMIT :limit
             """, nativeQuery = true)
     List<RecentSearchDto> getRecentSearches(@Param("userId") Long userId, @Param("limit") Integer limit);

@@ -7,6 +7,7 @@ import { UserContext } from '../../../context/user';
 import WritePost from './WritePost';
 import { AiOutlineClose } from 'react-icons/ai';
 import Actions from './Actions';
+import { Client } from '../../../util/client';
 
 interface IPostProps {
   post: IPost;
@@ -40,6 +41,14 @@ const Post = ({
     e.stopPropagation();
     setOptionsOpen(false);
     removePost(post.id);
+  };
+
+  //    const handleAddComment = (comment) => {
+  //        setComments((prevState) => [...prevState, comment]);
+  //    }
+  //
+  const createComment = (userId: number, postId: number, text: string) => {
+    return Client.createComment(userId, postId, text, ownerId);
   };
 
   return (
@@ -163,6 +172,7 @@ const Post = ({
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />
       <Actions
+        createComment={createComment}
         currentUserHasLikedPost={post.currentUserHasLikedPost}
         handleLikePost={handleLikePost}
         postId={post.id}

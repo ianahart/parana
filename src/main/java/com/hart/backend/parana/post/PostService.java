@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostService {
 
     private final int POST_LIMIT = 5;
-    private final int POST_LIMIT_IN_SECONDS = 60 * 1;
+    private final int POST_LIMIT_IN_SECONDS = 60 * 5;
     private final int MAX_MEGA_BYTES = 3;
     private final String BUCKET_NAME = "arrow-date/parana/posts";
 

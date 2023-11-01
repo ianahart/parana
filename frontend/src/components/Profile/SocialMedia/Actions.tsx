@@ -1,61 +1,195 @@
-import { Box, Flex, Text, Tooltip } from '@chakra-ui/react';
-import { useContext } from 'react';
-import { AiOutlineComment } from 'react-icons/ai';
-import { BsHandThumbsUp } from 'react-icons/bs';
+import { Box, Flex, Text, Textarea, Tooltip, ScaleFade } from '@chakra-ui/react';
+import { useContext, useState } from 'react';
+import { AiOutlineComment, AiOutlineSend } from 'react-icons/ai';
+import { BsEmojiSmile, BsHandThumbsUp } from 'react-icons/bs';
 import { UserContext } from '../../../context/user';
 import { IUserContext } from '../../../interfaces';
+import UserAvatar from '../../Shared/UserAvatar';
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
+import { nanoid } from 'nanoid';
+import { AxiosResponse } from 'axios';
 
 interface IActionsProps {
   handleLikePost: (userId: number, postId: number, action: string) => void;
   postId: number;
   currentUserHasLikedPost: boolean;
+  createComment: (
+    userId: number,
+    postId: number,
+    text: string
+  ) => Promise<AxiosResponse<any, any>>;
 }
 
-const Actions = ({ handleLikePost, postId, currentUserHasLikedPost }: IActionsProps) => {
-  const { user } = useContext(UserContext) as IUserContext;
+interface IError {
+  [key: string]: string;
+}
 
-  const handleOnClick = (action: string) => {
+const Actions = ({
+  handleLikePost,
+  postId,
+  currentUserHasLikedPost,
+  createComment,
+}: IActionsProps) => {
+  const COMMENT_LIMIT = 300;
+  const { user } = useContext(UserContext) as IUserContext;
+  const [isCommentBoxShowing, setIsCommentBoxShowing] = useState(false);
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [text, setText] = useState('');
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const handleOnClick = (e: React.MouseEvent<HTMLDivElement>, action: string) => {
+    e.stopPropagation();
     handleLikePost(user.id, postId, action);
   };
 
+  const handleOnEmojiClick = (emoji: EmojiClickData) => {
+    setText((prevState) => prevState + ' ' + emoji.emoji);
+    setIsEmojiPickerOpen(false);
+  };
+
+  const validateComment = (text: string) => {
+    return !(text.trim().length === 0 || text.length > COMMENT_LIMIT);
+  };
+
+  const applyErrors = <T extends IError>(data: T) => {
+    for (const key of Object.keys(data)) {
+      setErrors((prevState) => [...prevState, data[key]]);
+    }
+  };
+
+  const handleCreateComment = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setErrors([]);
+    if (!validateComment(text)) {
+      setErrors((prevState) => [
+        ...prevState,
+        'Comment must be between 1 and 300 characters',
+      ]);
+      return;
+    }
+    setIsCommentBoxShowing(false);
+    createComment(user.id, postId, text)
+      .then((res) => {
+        console.log(res);
+                setText('');
+        //handleAddComment()
+      })
+      .catch((err) => {
+        applyErrors(err.response.data);
+        throw new Error(err);
+      });
+  };
+
   return (
-    <Flex justify="space-around">
-      {!currentUserHasLikedPost && (
-        <Flex
-          align="center"
-          cursor="pointer"
-          fontSize="0.9rem"
-          onClick={() => handleOnClick('like')}
-        >
-          <Box mr="0.25rem">
-            <BsHandThumbsUp />
-          </Box>
-          <Text>Like</Text>
-        </Flex>
-      )}
-      {currentUserHasLikedPost && (
-        <Tooltip label="Unlike">
+    <Box>
+      <Flex justify="space-around">
+        {!currentUserHasLikedPost && (
           <Flex
-            color="blue.500"
             align="center"
             cursor="pointer"
             fontSize="0.9rem"
-            onClick={() => handleOnClick('unlike')}
+            onClick={(e) => handleOnClick(e, 'like')}
           >
-            <Box transform={'rotate(-15deg)'} mr="0.25rem">
+            <Box mr="0.25rem">
               <BsHandThumbsUp />
             </Box>
-            <Text fontWeight="bold">Like</Text>
+            <Text>Like</Text>
           </Flex>
-        </Tooltip>
-      )}
-      <Flex align="center" cursor="pointer" fontSize="0.9rem">
-        <Box mr="0.25rem">
-          <AiOutlineComment />
-        </Box>
-        <Text>Comment</Text>
+        )}
+        {currentUserHasLikedPost && (
+          <Tooltip label="Unlike">
+            <Flex
+              color="blue.500"
+              align="center"
+              cursor="pointer"
+              fontSize="0.9rem"
+              onClick={(e) => handleOnClick(e, 'unlike')}
+            >
+              <Box transform={'rotate(-15deg)'} mr="0.25rem">
+                <BsHandThumbsUp />
+              </Box>
+              <Text fontWeight="bold">Like</Text>
+            </Flex>
+          </Tooltip>
+        )}
+        <Flex
+          onClick={() => setIsCommentBoxShowing((prevState) => !prevState)}
+          align="center"
+          cursor="pointer"
+          fontSize="0.9rem"
+        >
+          <Box mr="0.25rem">
+            <AiOutlineComment />
+          </Box>
+          <Text fontWeight={isCommentBoxShowing ? 'bold' : 'normal'}>Comment</Text>
+        </Flex>
       </Flex>
-    </Flex>
+      <ScaleFade hidden={!isCommentBoxShowing} in={isCommentBoxShowing}>
+        <Flex mt="1rem" mb="0.25rem" align="center">
+          <UserAvatar
+            width="45px"
+            height="45px"
+            avatarUrl={user.avatarUrl}
+            fullName={user.fullName}
+          />
+          <Box
+            ml="0.5rem"
+            p="0.5rem"
+            borderRadius={8}
+            border="1px solid"
+            borderColor="border.primary"
+            width="100%"
+          >
+            {errors.length > 0 && (
+              <Box my="0.5rem" mx="auto">
+                {errors.map((error) => {
+                  return (
+                    <Text
+                      key={nanoid()}
+                      textAlign="center"
+                      fontSize="0.8rem"
+                      color="error.primary"
+                    >
+                      {error}
+                    </Text>
+                  );
+                })}
+              </Box>
+            )}
+            <Textarea
+              onChange={(e) => setText(e.target.value)}
+              value={text}
+              resize="none"
+              fontSize="0.9rem"
+              _placeholder={{ fontSize: '0.9rem' }}
+              placeholder="Leave a comment..."
+              _hover={{ borderColor: 'transparent' }}
+              borderColor="transparent"
+            />
+            <Flex align="center" justify="flex-end">
+              {isEmojiPickerOpen ? (
+                <EmojiPicker onEmojiClick={handleOnEmojiClick} theme={Theme.DARK} />
+              ) : (
+                <Tooltip label="Emoji" placement="end-start">
+                  <Box
+                    cursor="pointer"
+                    mx="0.5rem"
+                    onClick={() => setIsEmojiPickerOpen(true)}
+                  >
+                    <BsEmojiSmile />
+                  </Box>
+                </Tooltip>
+              )}
+              <Tooltip label="Comment" placement="end-start">
+                <Box cursor="pointer" onClick={(e) => handleCreateComment(e)}>
+                  <AiOutlineSend />
+                </Box>
+              </Tooltip>
+            </Flex>
+          </Box>
+        </Flex>
+      </ScaleFade>
+    </Box>
   );
 };
 

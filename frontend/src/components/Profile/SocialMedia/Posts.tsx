@@ -10,7 +10,7 @@ interface IPostProps {
   updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
   ownerId: number;
   ownerFirstName: string;
-    handleLikePost: (userId: number, postId: number, action: string) => void;
+  handleLikePost: (userId: number, postId: number, action: string) => void;
 }
 
 const Posts = ({
