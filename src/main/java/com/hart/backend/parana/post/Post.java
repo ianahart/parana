@@ -3,6 +3,7 @@ package com.hart.backend.parana.post;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.hart.backend.parana.comment.Comment;
 import com.hart.backend.parana.postlike.PostLike;
 import com.hart.backend.parana.user.User;
 
@@ -66,6 +67,9 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> postPostLikes;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> postComments;
+
     public Post() {
 
     }
@@ -114,6 +118,10 @@ public class Post {
 
     public List<PostLike> getPostPostLikes() {
         return postPostLikes;
+    }
+
+    public List<Comment> getPostComments() {
+        return postComments;
     }
 
     public String getGif() {
@@ -194,5 +202,9 @@ public class Post {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setPostComments(List<Comment> postComments) {
+        this.postComments = postComments;
     }
 }

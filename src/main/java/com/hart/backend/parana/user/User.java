@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.hart.backend.parana.comment.Comment;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.passwordreset.PasswordReset;
@@ -130,6 +131,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> userPostLikes;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> userComments;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -189,6 +193,10 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public List<Comment> getUserComments() {
+        return userComments;
     }
 
     public List<RecentSearch> getUserRecentSearches() {
@@ -293,6 +301,10 @@ public class User implements UserDetails {
 
     public void setUserReviews(List<Review> userReviews) {
         this.userReviews = userReviews;
+    }
+
+    public void setUserComments(List<Comment> userComments) {
+        this.userComments = userComments;
     }
 
     public void setUserPostLikes(List<PostLike> userPostLikes) {
