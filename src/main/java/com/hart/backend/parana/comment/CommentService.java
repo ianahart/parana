@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
+import com.hart.backend.parana.advice.NotFoundException;
 
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.post.PostService;
@@ -20,6 +21,8 @@ import com.hart.backend.parana.util.MyUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +32,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
+
+    Logger logger = LoggerFactory.getLogger(CommentService.class);
     private final int COMMENT_LIMIT = 5;
     private final int COMMENT_LIMIT_IN_SECONDS = 60 * 5;
 
@@ -61,7 +66,7 @@ public class CommentService {
     }
 
     public CommentDto getLatestComment(Long postId) {
-        Page<CommentDto> result = getComments(postId, 0, 1, "next");
+        Page<CommentDto> result = getComments(postId, -1, 1, "next");
 
         if (result.getContent().size() > 0) {
             return result.getContent().get(0);
@@ -72,7 +77,7 @@ public class CommentService {
 
     public CommentPaginationDto<CommentDto> getAllComments(Long postId, int page, int pageSize, String direction) {
         Page<CommentDto> result = getComments(postId, page, pageSize, direction);
-        return new CommentPaginationDto<CommentDto>(result.getContent(), result.getNumber() + 1, pageSize,
+        return new CommentPaginationDto<CommentDto>(result.getContent(), result.getNumber(), pageSize,
                 result.getTotalPages(),
                 direction, result.getTotalElements());
     }
@@ -117,5 +122,28 @@ public class CommentService {
                 false,
                 user,
                 post));
+    }
+
+    public Comment getCommentById(Long commentId) {
+        return this.commentRepository.findById(commentId).orElseThrow(() -> {
+            String error = String.format("Cannot find comment with the id %d", commentId);
+            logger.info(error);
+            throw new NotFoundException(error);
+        });
+    }
+
+    private boolean canModifyComment(User user, Comment comment, Long ownerId) {
+        return user.getId() == ownerId || user.getId() == comment.getUser().getId();
+    }
+
+    public void deleteComment(Long commentId, Long ownerId) {
+        User user = this.userService.getCurrentlyLoggedInUser();
+        Comment comment = getCommentById(commentId);
+
+        if (!canModifyComment(user, comment, ownerId)) {
+            throw new ForbiddenException("You do not have the necessary privileges to modify this comment");
+        }
+
+        this.commentRepository.delete(comment);
     }
 }
