@@ -11,6 +11,7 @@ import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.amazon.AmazonService;
+import com.hart.backend.parana.comment.CommentService;
 import com.hart.backend.parana.user.Role;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
@@ -53,17 +54,21 @@ public class PostService {
 
     private final PostLikeService postLikeService;
 
+    private final CommentService commentService;
+
     @Autowired
     public PostService(UserService userService,
             PostRepository postRepository,
             ConnectionService connectionService,
             AmazonService amazonService,
-            @Lazy PostLikeService postLikeService) {
+            @Lazy PostLikeService postLikeService,
+            @Lazy CommentService commentService) {
         this.userService = userService;
         this.postRepository = postRepository;
         this.connectionService = connectionService;
         this.amazonService = amazonService;
         this.postLikeService = postLikeService;
+        this.commentService = commentService;
     }
 
     private boolean canCreatePost(User author, User owner) {
@@ -143,13 +148,14 @@ public class PostService {
         }
     }
 
-    private void addLikedFields(List<PostDto> posts) {
+    private void addNonConstructorFields(List<PostDto> posts) {
         User user = this.userService.getCurrentlyLoggedInUser();
         for (PostDto post : posts) {
             post.setCurrentUserHasLikedPost(
                     this.postLikeService.hasAlreadyLikedPost(user.getId(), post.getId()));
 
             post.setLikesCount(this.postLikeService.countPostLikes(post.getId()));
+            post.setComment(this.commentService.getLatestComment(post.getId()));
         }
     }
 
@@ -158,7 +164,7 @@ public class PostService {
         Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction);
 
         addDatesToPosts(result.getContent());
-        addLikedFields(result.getContent());
+        addNonConstructorFields(result.getContent());
 
         return new PostPaginationDto<PostDto>(result.getContent(), page + 1, pageSize,
                 result.getTotalPages(),

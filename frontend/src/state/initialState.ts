@@ -29,6 +29,14 @@ export const postPaginationState = {
   totalElements: 0,
 };
 
+export const commentPaginationState = {
+  page: 0,
+  pageSize: 2,
+  totalPages: 0,
+  direction: 'next',
+  totalElements: 0,
+};
+
 export const registerFormState = {
   firstName: { name: 'firstName', error: '', value: '', type: 'text' },
   lastName: { name: 'lastName', error: '', value: '', type: 'text' },

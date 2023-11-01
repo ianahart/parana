@@ -1,5 +1,5 @@
 import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react';
-import { IPost, IUserContext } from '../../../interfaces';
+import { IComment, IPost, IUserContext } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
 import { BsHandThumbsUpFill, BsThreeDots, BsTrash } from 'react-icons/bs';
 import { useContext, useState } from 'react';
@@ -8,6 +8,8 @@ import WritePost from './WritePost';
 import { AiOutlineClose } from 'react-icons/ai';
 import Actions from './Actions';
 import { Client } from '../../../util/client';
+import Comment from './Comment';
+import { commentPaginationState } from '../../../state/initialState';
 
 interface IPostProps {
   post: IPost;
@@ -30,6 +32,8 @@ const Post = ({
 }: IPostProps) => {
   const { user } = useContext(UserContext) as IUserContext;
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const [comments, setComments] = useState<IComment[]>([]);
+  const [pagination, setPagination] = useState(commentPaginationState);
 
   const handleOptions = () => {
     if (user.id === ownerProfileId || user.id === post.authorId) {
@@ -43,12 +47,35 @@ const Post = ({
     removePost(post.id);
   };
 
-  //    const handleAddComment = (comment) => {
-  //        setComments((prevState) => [...prevState, comment]);
-  //    }
-  //
   const createComment = (userId: number, postId: number, text: string) => {
     return Client.createComment(userId, postId, text, ownerId);
+  };
+
+  const getComments = (paginate: boolean) => {
+    const pageNum = paginate ? pagination.page : -1;
+    Client.getComments(post.id, pageNum, pagination.pageSize, pagination.direction)
+      .then((res) => {
+        const { comments, direction, page, pageSize, totalElements, totalPages } =
+          res.data.data;
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+        setComments((prevState) => [...prevState, ...comments]);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  const refreshComments = () => {
+    setPagination(commentPaginationState);
+    setComments([]);
+    getComments(false);
   };
 
   return (
@@ -172,11 +199,48 @@ const Post = ({
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />
       <Actions
+        refreshComments={refreshComments}
         createComment={createComment}
         currentUserHasLikedPost={post.currentUserHasLikedPost}
         handleLikePost={handleLikePost}
         postId={post.id}
       />
+      {post.comment !== null && comments.length <= 0 && (
+        <>
+          <Box
+            onClick={() => getComments(false)}
+            cursor="pointer"
+            _hover={{ opacity: 0.8 }}
+          >
+            <Text fontWeight="bold" fontSize="0.9rem" role="button">
+              View more comments
+            </Text>
+          </Box>
+
+          <Box my="0.5rem">
+            <Comment comment={post.comment} />
+          </Box>
+        </>
+      )}
+      <Box my="0.5rem">
+        {comments.map((comment) => {
+          return <Comment comment={comment} key={comment.id} />;
+        })}
+      </Box>
+
+      {pagination.page < pagination.totalPages - 1 && (
+        <Box my="0.5rem">
+          <Box
+            onClick={() => getComments(true)}
+            cursor="pointer"
+            _hover={{ opacity: 0.8 }}
+          >
+            <Text fontWeight="bold" fontSize="0.9rem" role="button">
+              View more comments
+            </Text>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };
