@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removeReplyComment(replyCommentId: number, ownerId: number) {
+    return http.delete(`/reply-comments/${replyCommentId}?ownerId=${ownerId}`);
+  },
+
+  getReplyComments(commentId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/reply-comments?commentId=${commentId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   createReplyComment(userId: number, commentId: number, text: string, ownerId: number) {
     return http.post('/reply-comments', { userId, commentId, text, ownerId });
   },

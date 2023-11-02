@@ -14,7 +14,7 @@ import {
   Textarea,
   ScaleFade,
 } from '@chakra-ui/react';
-import { IComment, IUserContext } from '../../../interfaces';
+import { IComment, IReplyComment, IUserContext } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
 import { BsEmojiSmile, BsHandThumbsUpFill, BsThreeDots, BsTrash } from 'react-icons/bs';
 import { useContext, useState } from 'react';
@@ -23,6 +23,8 @@ import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import { AiOutlineSend } from 'react-icons/ai';
 import { nanoid } from 'nanoid';
 import { Client } from '../../../util/client';
+import { replyCommentPaginationState } from '../../../state/initialState';
+import ReplyComment from './ReplyComment';
 
 interface IError {
   [key: string]: string;
@@ -50,11 +52,24 @@ const Comment = ({
   const [text, setText] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [pagination, setPagination] = useState(replyCommentPaginationState);
+  const [replyComments, setReplyComments] = useState<IReplyComment[]>([]);
 
   const handleDeleteComment = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     deleteComment(comment.id, ownerId);
     onClose();
+  };
+
+  const deleteReplyComment = (replyCommentId: number, ownerId: number) => {
+    Client.removeReplyComment(replyCommentId, ownerId)
+      .then(() => {
+        setPagination(replyCommentPaginationState);
+        setReplyComments([]);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   };
 
   const handleOnEmojiClick = (emoji: EmojiClickData) => {
@@ -89,6 +104,8 @@ const Comment = ({
       .then(() => {
         setReplyTriggerClicked(false);
         setText('');
+        setPagination(replyCommentPaginationState);
+        setReplyComments([]);
       })
       .catch((err) => {
         applyErrors(err.response.data);
@@ -110,6 +127,31 @@ const Comment = ({
     createReplyComment(user.id, comment.id, text, ownerId);
   };
 
+  const getReplyComments = () => {
+    Client.getReplyComments(
+      comment.id,
+      pagination.page,
+      pagination.pageSize,
+      pagination.direction
+    )
+      .then((res) => {
+        const { direction, page, pageSize, replyComments, totalElements, totalPages } =
+          res.data.data;
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+        setReplyComments((prevState) => [...prevState, ...replyComments]);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
   return (
     <>
       <Flex my={replyTriggerClicked ? '0' : '1rem'} align="center">
@@ -123,6 +165,7 @@ const Comment = ({
           <Box
             pos="relative"
             maxW="250px"
+            minW="250px"
             ml="0.5rem"
             bg="primary.dark"
             borderRadius={12}
@@ -217,8 +260,7 @@ const Comment = ({
           </Popover>
         </Box>
       </Flex>
-      {/*REPLY COMMENT BOX*/}
-      {replyTriggerClicked && (
+      <>
         <ScaleFade hidden={!replyTriggerClicked} in={replyTriggerClicked}>
           <Flex mb="0.25rem" justify="center" align="center">
             <UserAvatar
@@ -284,8 +326,28 @@ const Comment = ({
             </Box>
           </Flex>
         </ScaleFade>
-      )}
-      {/*REPLY COMMENT BOX*/}
+        {comment.replyCommentsExist && pagination.page !== pagination.totalPages && (
+          <Box ml={['0', '5rem', '5rem']}>
+            <Box onClick={getReplyComments} cursor="pointer" _hover={{ opacity: 0.8 }}>
+              <Text fontWeight="bold" fontSize="0.9rem" role="button">
+                View reply comments
+              </Text>
+            </Box>
+          </Box>
+        )}
+        <Box ml={['0', '5rem', '5rem']}>
+          {replyComments.map((replyComment) => {
+            return (
+              <ReplyComment
+                deleteReplyComment={deleteReplyComment}
+                key={replyComment.id}
+                replyComment={replyComment}
+                ownerId={ownerId}
+              />
+            );
+          })}
+        </Box>
+      </>
     </>
   );
 };

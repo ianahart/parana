@@ -1,39 +1,33 @@
-package com.hart.backend.parana.comment.dto;
+package com.hart.backend.parana.replycomment.dto;
 
 import java.sql.Timestamp;
 
-public class CommentDto {
-
+public class ReplyCommentDto {
     private Long id;
     private Long userId;
-    private Long postId;
-    private String fullName;
     private String avatarUrl;
     private String text;
     private Timestamp createdAt;
-    private Long likesCount;
-    private Boolean currentUserHasLikedComment;
-    private Boolean replyCommentsExist;
+    private String fullName;
 
-    public CommentDto() {
+    public ReplyCommentDto() {
 
     }
 
-    public CommentDto(
+    public ReplyCommentDto(
             Long id,
             Long userId,
-            Long postId,
-            String fullName,
             String avatarUrl,
             String text,
-            Timestamp createdAt) {
+            Timestamp createdAt,
+            String fullName) {
+
         this.id = id;
         this.userId = userId;
-        this.postId = postId;
-        this.fullName = fullName;
         this.avatarUrl = avatarUrl;
         this.text = text;
         this.createdAt = createdAt;
+        this.fullName = fullName;
     }
 
     public Long getId() {
@@ -42,10 +36,6 @@ public class CommentDto {
 
     public String getText() {
         return text;
-    }
-
-    public Long getPostId() {
-        return postId;
     }
 
     public Long getUserId() {
@@ -60,20 +50,8 @@ public class CommentDto {
         return avatarUrl;
     }
 
-    public Long getLikesCount() {
-        return likesCount;
-    }
-
-    public Boolean getCurrentUserHasLikedComment() {
-        return currentUserHasLikedComment;
-    }
-
     public Timestamp getCreatedAt() {
         return createdAt;
-    }
-
-    public Boolean getReplyCommentsExist() {
-        return replyCommentsExist;
     }
 
     public void setId(Long id) {
@@ -82,10 +60,6 @@ public class CommentDto {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
     }
 
     public void setUserId(Long userId) {
@@ -102,17 +76,5 @@ public class CommentDto {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public void setLikesCount(Long likesCount) {
-        this.likesCount = likesCount;
-    }
-
-    public void setCurrentUserHasLikedComment(Boolean currentUserHasLikedComment) {
-        this.currentUserHasLikedComment = currentUserHasLikedComment;
-    }
-
-    public void setReplyCommentsExist(Boolean replyCommentsExist) {
-        this.replyCommentsExist = replyCommentsExist;
     }
 }

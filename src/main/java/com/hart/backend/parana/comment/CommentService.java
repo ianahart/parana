@@ -15,6 +15,7 @@ import com.hart.backend.parana.advice.NotFoundException;
 
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.post.PostService;
+import com.hart.backend.parana.replycomment.ReplyCommentService;
 import com.hart.backend.parana.user.Role;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
@@ -49,18 +50,22 @@ public class CommentService {
 
     private final CommentLikeService commentLikeService;
 
+    private final ReplyCommentService replyCommentService;
+
     @Autowired
     public CommentService(
             CommentRepository commentRepository,
             UserService userService,
             PostService postService,
             ConnectionService connectionService,
-            @Lazy CommentLikeService commentLikeService) {
+            @Lazy CommentLikeService commentLikeService,
+            @Lazy ReplyCommentService replyCommentService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;
         this.connectionService = connectionService;
         this.commentLikeService = commentLikeService;
+        this.replyCommentService = replyCommentService;
     }
 
     public Page<CommentDto> getComments(Long postId, int page, int pageSize, String direction) {
@@ -96,6 +101,7 @@ public class CommentService {
 
         for (CommentDto comment : comments) {
 
+            comment.setReplyCommentsExist(this.replyCommentService.replyCommentsExist(comment.getId()));
             comment.setLikesCount(this.commentLikeService.countCommentLikes(comment.getId()));
             comment.setCurrentUserHasLikedComment(
                     this.commentLikeService.alreadyLikedComment(comment.getId(), currentUser.getId()));
