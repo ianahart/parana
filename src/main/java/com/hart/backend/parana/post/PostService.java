@@ -156,6 +156,7 @@ public class PostService {
 
             post.setLikesCount(this.postLikeService.countPostLikes(post.getId()));
             post.setComment(this.commentService.getLatestComment(post.getId()));
+            post.setCommentCount(this.commentService.getCommentCount(post.getId()));
         }
     }
 
