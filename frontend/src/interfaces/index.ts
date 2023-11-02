@@ -35,6 +35,7 @@ export interface IPost {
   currentUserHasLikedPost: boolean;
   likesCount: number;
   comment: IComment;
+  commentCount: number;
 }
 
 export interface IProfile {

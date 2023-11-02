@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    Long countByPostId(Long postId);
+
     List<Comment> findTop5ByUserIdAndPostIdOrderByIdDesc(Long userId, Long postId);
 
     @Query(value = """

@@ -20,6 +20,7 @@ public class PostDto {
     private Boolean currentUserHasLikedPost;
     private Long likesCount;
     private CommentDto comment;
+    private Long commentCount;
 
     public PostDto() {
 
@@ -100,6 +101,10 @@ public class PostDto {
         return readableDate;
     }
 
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
     public Boolean getCurrentUserHasLikedPost() {
         return currentUserHasLikedPost;
     }
@@ -158,5 +163,9 @@ public class PostDto {
 
     public void setLikesCount(Long likesCount) {
         this.likesCount = likesCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
     }
 }

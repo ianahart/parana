@@ -234,23 +234,30 @@ const Post = ({
           </Flex>
         )}
       </Box>
-      <Flex my="1rem" align="center">
-        <Flex
-          mr="0.25rem"
-          height="20px"
-          width="20px"
-          flexDir="column"
-          align="center"
-          justify="center"
-          borderRadius={50}
-          bg="blue.500"
-          fontSize="0.9rem"
-        >
-          <BsHandThumbsUpFill />
-        </Flex>
-        <Text fontSize="0.9rem" color="text.secondary">
-          {post.likesCount > 0 ? post.likesCount : ''}
-        </Text>
+      <Flex my="1rem" align="center" justify="space-between">
+        <Box>
+          <Flex align="center">
+            <Flex
+              mr="0.25rem"
+              height="20px"
+              width="20px"
+              flexDir="column"
+              align="center"
+              justify="center"
+              borderRadius={50}
+              bg="blue.500"
+              fontSize="0.9rem"
+            >
+              <BsHandThumbsUpFill />
+            </Flex>
+            <Text fontSize="0.9rem" color="text.secondary">
+              {post.likesCount > 0 ? post.likesCount : ''}
+            </Text>
+          </Flex>
+        </Box>
+        <Box>
+          <Text>{post.commentCount > 0 ? post.commentCount : ''} comments</Text>
+        </Box>
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />
       <Actions

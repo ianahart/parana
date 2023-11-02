@@ -172,4 +172,8 @@ public class CommentService {
 
         this.commentRepository.delete(comment);
     }
+
+    public Long getCommentCount(Long postId) {
+        return this.commentRepository.countByPostId(postId);
+    }
 }
