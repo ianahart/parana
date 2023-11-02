@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hart.backend.parana.commentlike.CommentLike;
 import com.hart.backend.parana.post.Post;
+import com.hart.backend.parana.replycomment.ReplyComment;
 import com.hart.backend.parana.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -58,6 +59,9 @@ public class Comment {
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentCommentLikes;
 
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReplyComment> commentReplyComments;
+
     public Comment() {
 
     }
@@ -88,6 +92,10 @@ public class Comment {
 
     public Long getId() {
         return id;
+    }
+
+    public List<ReplyComment> getCommentReplyComments() {
+        return commentReplyComments;
     }
 
     public List<CommentLike> getCommentCommentLikes() {
@@ -124,6 +132,10 @@ public class Comment {
 
     public void setCommentCommentLikes(List<CommentLike> commentCommentLikes) {
         this.commentCommentLikes = commentCommentLikes;
+    }
+
+    public void setCommentReplyComments(List<ReplyComment> commentReplyComments) {
+        this.commentReplyComments = commentReplyComments;
     }
 
     public void setPost(Post post) {
