@@ -24,6 +24,7 @@ import com.hart.backend.parana.postlike.PostLike;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
+import com.hart.backend.parana.replycomment.ReplyComment;
 import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.token.Token;
 
@@ -138,6 +139,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> userCommentLikes;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReplyComment> userReplyComments;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -229,6 +233,10 @@ public class User implements UserDetails {
 
     public List<Post> getAuthorPosts() {
         return authorPosts;
+    }
+
+    public List<ReplyComment> getUserReplyComments() {
+        return userReplyComments;
     }
 
     public List<Favorite> getTeacherFavorites() {
@@ -409,6 +417,10 @@ public class User implements UserDetails {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
+    }
+
+    public void setUserReplyComments(List<ReplyComment> userReplyComments) {
+        this.userReplyComments = userReplyComments;
     }
 
     public void setUserCommentLikes(List<CommentLike> userCommentLikes) {
