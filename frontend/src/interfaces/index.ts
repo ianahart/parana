@@ -6,6 +6,8 @@ export interface IComment {
   avatarUrl: string;
   text: string;
   createdAt: Date;
+  likesCount: number;
+  currentUserHasLikedComment: boolean;
 }
 
 export interface IPost {

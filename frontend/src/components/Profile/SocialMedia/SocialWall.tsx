@@ -80,6 +80,25 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
       });
   };
 
+  const updateLatestCommentLike = (postId: number, isLiked: boolean) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          comment: {
+            ...post.comment,
+            currentUserHasLikedComment: isLiked,
+            likesCount: isLiked
+              ? post.comment.likesCount + 1
+              : post.comment.likesCount - 1,
+          },
+        };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+
   useEffect(() => {
     if (shouldRun.current) {
       shouldRun.current = false;
@@ -161,6 +180,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         postView={postView}
         ownerProfileId={ownerProfileId}
         handleLikePost={handleLikePost}
+        updateLatestCommentLike={updateLatestCommentLike}
       />
       {pagination.page < pagination.totalPages - 1 && (
         <Flex justify="center">

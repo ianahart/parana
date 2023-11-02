@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { IComment, IUserContext } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
-import { BsThreeDots, BsTrash } from 'react-icons/bs';
+import { BsHandThumbsUpFill, BsThreeDots, BsTrash } from 'react-icons/bs';
 import { useContext } from 'react';
 import { UserContext } from '../../../context/user';
 
@@ -21,9 +21,17 @@ interface ICommentProps {
   comment: IComment;
   ownerId: number;
   deleteComment: (commentId: number, ownerId: number) => void;
+  likeComment: (commentId: number, userId: number) => void;
+  unlikeComment: (commentId: number, userId: number) => void;
 }
 
-const Comment = ({ comment, ownerId, deleteComment }: ICommentProps) => {
+const Comment = ({
+  comment,
+  ownerId,
+  deleteComment,
+  likeComment,
+  unlikeComment,
+}: ICommentProps) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { user } = useContext(UserContext) as IUserContext;
 
@@ -31,6 +39,13 @@ const Comment = ({ comment, ownerId, deleteComment }: ICommentProps) => {
     e.stopPropagation();
     deleteComment(comment.id, ownerId);
     onClose();
+  };
+
+  const handleLikeComment = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    comment.currentUserHasLikedComment
+      ? unlikeComment(comment.id, user.id)
+      : likeComment(comment.id, user.id);
   };
 
   return (
@@ -43,6 +58,7 @@ const Comment = ({ comment, ownerId, deleteComment }: ICommentProps) => {
       />
       <Box>
         <Box
+          pos="relative"
           maxW="250px"
           ml="0.5rem"
           bg="primary.dark"
@@ -54,10 +70,31 @@ const Comment = ({ comment, ownerId, deleteComment }: ICommentProps) => {
             {comment.fullName}
           </Text>
           <Text fontSize="0.9rem">{comment.text}</Text>
+          {comment.likesCount > 0 && (
+            <Box pos="absolute" right="0" bottom="1px">
+              <Flex align="center">
+                <Text fontSize="0.8rem" mr="0.25rem">
+                  {comment.likesCount}
+                </Text>
+                <Flex
+                  height="20px"
+                  width="20px"
+                  borderRadius={50}
+                  bg="blue.500"
+                  flexDir="column"
+                  justify="center"
+                  align="center"
+                >
+                  <BsHandThumbsUpFill />
+                </Flex>
+              </Flex>
+            </Box>
+          )}
         </Box>
         <Flex align="center" justify="space-around">
           <Button
-            color="text.secondary"
+            color={comment.currentUserHasLikedComment ? 'blue.500' : 'text.secondary'}
+            onClick={(e) => handleLikeComment(e)}
             fontSize="0.8rem"
             colorScheme="ghost"
             _hover={{ bg: 'transparent' }}

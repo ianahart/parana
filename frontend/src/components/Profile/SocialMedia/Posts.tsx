@@ -11,6 +11,7 @@ interface IPostProps {
   ownerId: number;
   ownerFirstName: string;
   handleLikePost: (userId: number, postId: number, action: string) => void;
+  updateLatestCommentLike: (postId: number, isLiked: boolean) => void;
 }
 
 const Posts = ({
@@ -22,6 +23,7 @@ const Posts = ({
   ownerFirstName,
   updatePost,
   handleLikePost,
+  updateLatestCommentLike,
 }: IPostProps) => {
   const gridTemplateColumns =
     postView === 'list' ? ['1fr', '1fr', '1fr'] : ['1fr', '1fr 1fr', '1fr 1fr'];
@@ -43,6 +45,7 @@ const Posts = ({
               post={post}
               ownerProfileId={ownerProfileId}
               handleLikePost={handleLikePost}
+              updateLatestCommentLike={updateLatestCommentLike}
             />
           </GridItem>
         );

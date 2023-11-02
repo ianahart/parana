@@ -15,6 +15,7 @@ import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.hart.backend.parana.comment.Comment;
+import com.hart.backend.parana.commentlike.CommentLike;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.passwordreset.PasswordReset;
@@ -134,6 +135,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> userComments;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> userCommentLikes;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -184,6 +188,10 @@ public class User implements UserDetails {
 
     public String getAbbreviation() {
         return firstName.substring(0, 1).toUpperCase() + lastName.substring(0, 1).toUpperCase();
+    }
+
+    public List<CommentLike> getUserCommentLikes() {
+        return userCommentLikes;
     }
 
     public List<PostLike> getUserPostLikes() {
@@ -401,6 +409,10 @@ public class User implements UserDetails {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
+    }
+
+    public void setUserCommentLikes(List<CommentLike> userCommentLikes) {
+        this.userCommentLikes = userCommentLikes;
     }
 
     public String getUsername() {
