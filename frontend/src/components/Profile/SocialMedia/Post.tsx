@@ -19,6 +19,7 @@ interface IPostProps {
   ownerFirstName: string;
   updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
   handleLikePost: (userId: number, postId: number, action: string) => void;
+  updateLatestCommentLike: (postId: number, isLiked: boolean) => void;
 }
 
 const Post = ({
@@ -29,6 +30,7 @@ const Post = ({
   ownerFirstName,
   updatePost,
   handleLikePost,
+  updateLatestCommentLike,
 }: IPostProps) => {
   const { user } = useContext(UserContext) as IUserContext;
   const [optionsOpen, setOptionsOpen] = useState(false);
@@ -89,6 +91,46 @@ const Post = ({
       .catch((err) => {
         throw new Error(err);
       });
+  };
+
+  const likeComment = (commentId: number, userId: number) => {
+    if (post.comment !== null) {
+      updateLatestCommentLike(post.id, true);
+    }
+
+    Client.likeComment(commentId, userId)
+      .then(() => {
+        updatedCommentLike(commentId, true);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  const unlikeComment = (commentId: number, userId: number) => {
+    if (post.comment !== null) {
+      updateLatestCommentLike(post.id, false);
+    }
+
+    Client.removeLikeComment(commentId, userId)
+      .then(() => {
+        updatedCommentLike(commentId, false);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  const updatedCommentLike = (commentId: number, isLiked: boolean) => {
+    setComments(
+      comments.map((comment) => {
+        if (comment.id === commentId) {
+          comment.currentUserHasLikedComment = isLiked;
+          comment.likesCount = isLiked ? comment.likesCount + 1 : comment.likesCount - 1;
+        }
+        return comment;
+      })
+    );
   };
 
   return (
@@ -231,6 +273,8 @@ const Post = ({
           </Box>
           <Box my="0.5rem">
             <Comment
+              unlikeComment={unlikeComment}
+              likeComment={likeComment}
               deleteComment={deleteComment}
               ownerId={ownerId}
               comment={post.comment}
@@ -242,6 +286,8 @@ const Post = ({
         {comments.map((comment) => {
           return (
             <Comment
+              unlikeComment={unlikeComment}
+              likeComment={likeComment}
               deleteComment={deleteComment}
               ownerId={ownerId}
               comment={comment}

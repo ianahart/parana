@@ -11,6 +11,8 @@ public class CommentDto {
     private String avatarUrl;
     private String text;
     private Timestamp createdAt;
+    private Long likesCount;
+    private Boolean currentUserHasLikedComment;
 
     public CommentDto() {
 
@@ -57,6 +59,14 @@ public class CommentDto {
         return avatarUrl;
     }
 
+    public Long getLikesCount() {
+        return likesCount;
+    }
+
+    public Boolean getCurrentUserHasLikedComment() {
+        return currentUserHasLikedComment;
+    }
+
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -87,5 +97,13 @@ public class CommentDto {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setLikesCount(Long likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public void setCurrentUserHasLikedComment(Boolean currentUserHasLikedComment) {
+        this.currentUserHasLikedComment = currentUserHasLikedComment;
     }
 }

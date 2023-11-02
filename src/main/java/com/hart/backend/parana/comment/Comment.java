@@ -1,20 +1,25 @@
 package com.hart.backend.parana.comment;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import com.hart.backend.parana.commentlike.CommentLike;
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -50,6 +55,9 @@ public class Comment {
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentCommentLikes;
+
     public Comment() {
 
     }
@@ -82,6 +90,10 @@ public class Comment {
         return id;
     }
 
+    public List<CommentLike> getCommentCommentLikes() {
+        return commentCommentLikes;
+    }
+
     public Post getPost() {
         return post;
     }
@@ -108,6 +120,10 @@ public class Comment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setCommentCommentLikes(List<CommentLike> commentCommentLikes) {
+        this.commentCommentLikes = commentCommentLikes;
     }
 
     public void setPost(Post post) {

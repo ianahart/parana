@@ -3,6 +3,7 @@ package com.hart.backend.parana.comment;
 import com.hart.backend.parana.comment.dto.CommentDto;
 import com.hart.backend.parana.comment.dto.CommentPaginationDto;
 import com.hart.backend.parana.comment.request.CreateCommentRequest;
+import com.hart.backend.parana.commentlike.CommentLikeService;
 import com.hart.backend.parana.connection.ConnectionService;
 
 import java.time.Instant;
@@ -24,6 +25,7 @@ import org.jsoup.safety.Safelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,16 +47,20 @@ public class CommentService {
 
     private final ConnectionService connectionService;
 
+    private final CommentLikeService commentLikeService;
+
     @Autowired
     public CommentService(
             CommentRepository commentRepository,
             UserService userService,
             PostService postService,
-            ConnectionService connectionService) {
+            ConnectionService connectionService,
+            @Lazy CommentLikeService commentLikeService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;
         this.connectionService = connectionService;
+        this.commentLikeService = commentLikeService;
     }
 
     public Page<CommentDto> getComments(Long postId, int page, int pageSize, String direction) {
@@ -69,6 +75,7 @@ public class CommentService {
         Page<CommentDto> result = getComments(postId, -1, 1, "next");
 
         if (result.getContent().size() > 0) {
+            addLikeStats(result.getContent());
             return result.getContent().get(0);
         }
 
@@ -77,9 +84,22 @@ public class CommentService {
 
     public CommentPaginationDto<CommentDto> getAllComments(Long postId, int page, int pageSize, String direction) {
         Page<CommentDto> result = getComments(postId, page, pageSize, direction);
+        addLikeStats(result.getContent());
+
         return new CommentPaginationDto<CommentDto>(result.getContent(), result.getNumber(), pageSize,
                 result.getTotalPages(),
                 direction, result.getTotalElements());
+    }
+
+    private void addLikeStats(List<CommentDto> comments) {
+        User currentUser = this.userService.getCurrentlyLoggedInUser();
+
+        for (CommentDto comment : comments) {
+
+            comment.setLikesCount(this.commentLikeService.countCommentLikes(comment.getId()));
+            comment.setCurrentUserHasLikedComment(
+                    this.commentLikeService.alreadyLikedComment(comment.getId(), currentUser.getId()));
+        }
     }
 
     private boolean canCreateComment(User user, Post post, Long ownerId) {
