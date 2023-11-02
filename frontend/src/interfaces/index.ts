@@ -8,6 +8,16 @@ export interface IComment {
   createdAt: Date;
   likesCount: number;
   currentUserHasLikedComment: boolean;
+  replyCommentsExist: boolean;
+}
+
+export interface IReplyComment {
+  avatarUrl: string;
+  createdAt: Date;
+  fullName: string;
+  id: number;
+  text: string;
+  userId: number;
 }
 
 export interface IPost {
