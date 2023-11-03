@@ -6,6 +6,14 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getMessages(userId: number, connectionUserId: number) {
+    return http.get(`/messages?userId=${userId}&connectionUserId=${connectionUserId}`);
+  },
+
+  createMessage(senderId: number, receiverId: number, text: string) {
+    return http.post('/messages', { senderId, receiverId, text });
+  },
+
   removeReplyComment(replyCommentId: number, ownerId: number) {
     return http.delete(`/reply-comments/${replyCommentId}?ownerId=${ownerId}`);
   },

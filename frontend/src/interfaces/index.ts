@@ -11,6 +11,19 @@ export interface IComment {
   replyCommentsExist: boolean;
 }
 
+export interface IMessage {
+  id: number;
+  createdAt: Date;
+  senderUserId: number;
+  receiverUserId: number;
+  receiverFullName: string;
+  senderFullName: string;
+  receiverAvatarUrl: string;
+  senderAvatarUrl: string;
+  readableDate: string;
+  text: string;
+}
+
 export interface IReplyComment {
   avatarUrl: string;
   createdAt: Date;
@@ -128,7 +141,9 @@ export interface IConnectionRequest {
   profileId: number;
 }
 
-export interface IConnection extends IConnectionRequest {}
+export interface IConnection extends IConnectionRequest {
+  loggedIn: boolean;
+}
 
 export interface IConnectionFavorite {
   id: number;

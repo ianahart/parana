@@ -18,6 +18,7 @@ import com.hart.backend.parana.comment.Comment;
 import com.hart.backend.parana.commentlike.CommentLike;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
+import com.hart.backend.parana.message.Message;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.postlike.PostLike;
@@ -142,6 +143,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReplyComment> userReplyComments;
 
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> senderMessages;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> receiverMessages;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -196,6 +203,14 @@ public class User implements UserDetails {
 
     public List<CommentLike> getUserCommentLikes() {
         return userCommentLikes;
+    }
+
+    public List<Message> getSenderMessages() {
+        return senderMessages;
+    }
+
+    public List<Message> getReceiverMessages() {
+        return receiverMessages;
     }
 
     public List<PostLike> getUserPostLikes() {
@@ -317,6 +332,14 @@ public class User implements UserDetails {
 
     public void setUserReviews(List<Review> userReviews) {
         this.userReviews = userReviews;
+    }
+
+    public void setSenderMessages(List<Message> senderMessages) {
+        this.senderMessages = senderMessages;
+    }
+
+    public void setReceiverMessages(List<Message> receiverMessages) {
+        this.receiverMessages = receiverMessages;
     }
 
     public void setUserComments(List<Comment> userComments) {
