@@ -36,7 +36,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     @Query(value = """
             SELECT new com.hart.backend.parana.connection.dto.ConnectionDto(
-             s.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
+            s.loggedIn AS loggedIn, s.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
              s.id AS userId, c.id AS id, p.id AS profileId
             ) FROM Connection c
             INNER JOIN c.receiver r
@@ -55,7 +55,7 @@ public interface ConnectionRepository extends JpaRepository<Connection, Long> {
 
     @Query(value = """
             SELECT new com.hart.backend.parana.connection.dto.ConnectionDto(
-             r.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
+            r.loggedIn AS loggedIn, r.fullName AS fullName, p.avatarUrl AS avatarUrl, c.createdAt AS createdAt,
              r.id AS userId, c.id AS id, p.id AS profileId
             ) FROM Connection c
             INNER JOIN c.sender s

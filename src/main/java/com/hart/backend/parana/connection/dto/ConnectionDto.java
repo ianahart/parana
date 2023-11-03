@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class ConnectionDto {
 
+    private Boolean loggedIn;
     private String fullName;
     private String avatarUrl;
     private Timestamp createdAt;
@@ -12,8 +13,9 @@ public class ConnectionDto {
     private String readableDate;
     private Long profileId;
 
-    public ConnectionDto(String fullName, String avatarUrl, Timestamp createdAt,
+    public ConnectionDto(Boolean loggedIn, String fullName, String avatarUrl, Timestamp createdAt,
             Long userId, Long id, Long profileId) {
+        this.loggedIn = loggedIn;
         this.fullName = fullName;
         this.avatarUrl = avatarUrl;
         this.createdAt = createdAt;
@@ -28,6 +30,11 @@ public class ConnectionDto {
 
     public Long getId() {
         return id;
+
+    }
+
+    public Boolean getLoggedIn() {
+        return loggedIn;
     }
 
     public Long getUserId() {
@@ -76,5 +83,9 @@ public class ConnectionDto {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
 }

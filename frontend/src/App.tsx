@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import WithAxios from './util/WithAxios';
 import HomeRoute from './routes/HomeRoute';
@@ -7,7 +7,7 @@ import LoginRoute from './routes/LoginRoute';
 import RegisterRoute from './routes/RegisterRoute';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { UserContext } from './context/user';
 import { IUserContext } from './interfaces';
 import ReviewRoute from './routes/ReviewRoute';
@@ -28,10 +28,15 @@ import ConnectionRequests from './components/Connection/ConnectionRequests';
 import Connections from './components/Connection/Connections';
 import Favorites from './components/Connection/Favorites';
 import Suggestions from './components/Connection/Suggestions';
+import { BsChatDots } from 'react-icons/bs';
+import MessagesConnectionList from './components/Messages/MessagesConnectionList';
+import { AiOutlineClose } from 'react-icons/ai';
 
 function App() {
   const shouldRun = useRef(true);
   const { updateUser, stowTokens } = useContext(UserContext) as IUserContext;
+  const { user } = useContext(UserContext) as IUserContext;
+  const [messagesOpen, setMessagesOpen] = useState(false);
 
   const syncUser = useCallback(() => {
     Client.syncUser(retreiveTokens()?.token)
@@ -51,13 +56,32 @@ function App() {
     }
   }, [shouldRun.current, syncUser]);
 
-  const { user } = useContext(UserContext) as IUserContext;
   return (
     <Box className="app">
       <Router>
         {!user.loggedIn && <Navbar />}
         {user.loggedIn && <AuthNavbar />}
         <Box className="content" minH="100vh">
+          {user.loggedIn && (
+            <>
+              <Box
+                transform="rotate(-90deg)"
+                onClick={() => setMessagesOpen((prevState) => !prevState)}
+                position="fixed"
+                zIndex={20}
+                top="50%"
+                right="-40px"
+              >
+                <Button colorScheme="blackAlpha">
+                  <Box mr="0.25rem">
+                    {messagesOpen ? <AiOutlineClose /> : <BsChatDots />}
+                  </Box>
+                  Messages
+                </Button>
+              </Box>
+              {user.loggedIn && messagesOpen && <MessagesConnectionList />}
+            </>
+          )}
           <WithAxios>
             <Routes>
               <Route index element={<HomeRoute />} />

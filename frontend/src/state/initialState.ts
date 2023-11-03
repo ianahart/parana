@@ -11,6 +11,27 @@ export const userState = {
   fullName: '',
 };
 
+export interface IConnectionRequest {
+  avatarUrl: string;
+  createdAt: Date;
+  fullName: string;
+  id: number;
+  readableDate: string;
+  userId: number;
+  profileId: number;
+}
+
+export const connectionState = {
+  loggedIn: false,
+  avatarUrl: '',
+  createdAt: new Date(),
+  fullName: '',
+  id: 0,
+  readableDate: '',
+  userId: 0,
+  profileId: 0,
+};
+
 export const favoriteState = {
   id: 0,
   isFavorited: false,
@@ -19,6 +40,14 @@ export const favoriteState = {
 export const tokenState = {
   refreshToken: '',
   token: '',
+};
+
+export const connectionPaginationState = {
+  page: 0,
+  pageSize: 2,
+  totalPages: 0,
+  direction: 'next',
+  totalElements: 0,
 };
 
 export const postPaginationState = {

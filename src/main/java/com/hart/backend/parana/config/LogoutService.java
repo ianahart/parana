@@ -10,11 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
+@Transactional
 public class LogoutService implements LogoutHandler {
 
     private final JwtService jwtService;
@@ -47,6 +49,7 @@ public class LogoutService implements LogoutHandler {
         User user = this.userRepository.findByEmail(this.jwtService.extractUsername(jwt))
                 .orElseThrow(() -> new NotFoundException("User not found logging out."));
 
+        this.userRepository.updateLoggedIn(user.getId(), false);
         storedToken.setRevoked(true);
         storedToken.setExpired(true);
         this.tokenRepository.save(storedToken);
