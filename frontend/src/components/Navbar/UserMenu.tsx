@@ -47,20 +47,29 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
         <Box borderBottom="1px solid" borderColor="border.primary"></Box>
         <UnorderedList color="light.primary" margin="0" fontSize="0.9rem">
           <NavLink
+            closeUserMenu={closeUserMenu}
             icon={<AiOutlineUser />}
             link={`/profiles/${user.profileId}`}
             linkText="Profile"
             mobile={true}
           />
           <NavLink
+            closeUserMenu={closeUserMenu}
             icon={<AiOutlineEdit />}
             link={`/profiles/${user.profileId}/edit`}
             linkText="Edit Profile"
             mobile={true}
           />
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
-          <NavLink icon={<MdOutlineFeed />} link="/feed" linkText="Feed" mobile={true} />
           <NavLink
+            closeUserMenu={closeUserMenu}
+            icon={<MdOutlineFeed />}
+            link="/feed"
+            linkText="Feed"
+            mobile={true}
+          />
+          <NavLink
+            closeUserMenu={closeUserMenu}
             icon={<HiOutlineUsers />}
             link="/connections/all"
             linkText="Connections"
@@ -68,6 +77,7 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
           />
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
           <NavLink
+            closeUserMenu={closeUserMenu}
             icon={<IoSettingsOutline />}
             link="/settings"
             linkText="Settings"

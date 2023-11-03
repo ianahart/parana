@@ -1,5 +1,5 @@
-import { ListItem, Box, Flex } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { ListItem, Box, Flex, Text } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { BsChevronRight } from 'react-icons/bs';
 
 export interface INavLinkProps {
@@ -7,15 +7,30 @@ export interface INavLinkProps {
   linkText: string;
   mobile: boolean;
   icon?: React.ReactNode;
+  closeUserMenu: () => void;
 }
 
-const NavLink = ({ link, linkText, mobile, icon = undefined }: INavLinkProps) => {
+const NavLink = ({
+  link,
+  linkText,
+  mobile,
+  icon = undefined,
+  closeUserMenu,
+}: INavLinkProps) => {
+  const navigate = useNavigate();
+
+  const handleOnClick = () => {
+    navigate(link);
+    closeUserMenu();
+  };
+
   return (
     <ListItem
+      onClick={handleOnClick}
       cursor="pointer"
       _hover={{
         opacity: 0.7,
-        background: mobile ? 'primary.dark' : 'unset',
+        background: mobile ? 'blackAlpha.500' : 'unset',
       }}
       p={mobile ? '0.5rem' : 0}
       borderRadius={4}
@@ -32,7 +47,7 @@ const NavLink = ({ link, linkText, mobile, icon = undefined }: INavLinkProps) =>
             {icon}
           </Box>
         )}
-        <RouterLink to={link}>{linkText}</RouterLink>
+        <Text>{linkText}</Text>
       </Flex>
       {mobile && (
         <Box>
