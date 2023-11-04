@@ -101,14 +101,6 @@ const ExplorerRoute = () => {
   return (
     <Box color="#fff" minH="100vh">
       <Box className="explorer-container" mx="auto" mt="3rem">
-        {isLoading && (
-          <Flex justify="center" my="3rem">
-            <BasicSpinner
-              color="text.secondary"
-              message="Loading Teachers. Please Wait."
-            />
-          </Flex>
-        )}
         <Flex justify="flex-start" align="center" m="1.5rem">
           <RateFilter rate={rate} setRate={setRate} resetRateFilter={resetFilter} />
           <DistanceFilter
@@ -124,6 +116,14 @@ const ExplorerRoute = () => {
           {pagination.totalElements} teachers available
         </Box>
         <Teachers teachers={teachers} />
+        {isLoading && (
+          <Flex justify="center" my="3rem">
+            <BasicSpinner
+              color="text.secondary"
+              message="Loading Teachers. Please Wait."
+            />
+          </Flex>
+        )}
         {pagination.page < pagination.totalPages - 1 && (
           <Flex my="3rem" justify="center">
             <Button onClick={() => retrieveTeachers(true)} colorScheme="blackAlpha">

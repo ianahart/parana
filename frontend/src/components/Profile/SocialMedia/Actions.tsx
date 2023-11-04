@@ -71,8 +71,7 @@ const Actions = ({
     }
     setIsCommentBoxShowing(false);
     createComment(user.id, postId, text)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setText('');
         refreshComments();
       })

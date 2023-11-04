@@ -71,7 +71,7 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
           <NavLink
             closeUserMenu={closeUserMenu}
             icon={<IoSettingsOutline />}
-            link="/settings"
+            link="/settings/notifications"
             linkText="Settings"
             mobile={true}
           />
