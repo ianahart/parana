@@ -37,6 +37,20 @@ const Post = ({
   const [comments, setComments] = useState<IComment[]>([]);
   const [pagination, setPagination] = useState(commentPaginationState);
 
+  const updateReplyToComment = (commentId: number, exists: boolean) => {
+    console.log(commentId);
+    const updatedComments = comments.map((comment) => {
+      console.log(comment.id, 'foo');
+      if (comment.id === commentId) {
+        console.log('FOO');
+        return { ...comment, replyCommentsExist: exists };
+      }
+      return comment;
+    });
+    console.log(updatedComments);
+    setComments(updatedComments);
+  };
+
   const handleOptions = () => {
     if (user.id === ownerProfileId || user.id === post.authorId) {
       setOptionsOpen(true);
@@ -285,6 +299,7 @@ const Post = ({
           </Box>
           <Box my="0.5rem">
             <Comment
+              updateReplyToComment={updateReplyToComment}
               unlikeComment={unlikeComment}
               likeComment={likeComment}
               deleteComment={deleteComment}
@@ -298,6 +313,7 @@ const Post = ({
         {comments.map((comment) => {
           return (
             <Comment
+              updateReplyToComment={updateReplyToComment}
               unlikeComment={unlikeComment}
               likeComment={likeComment}
               deleteComment={deleteComment}

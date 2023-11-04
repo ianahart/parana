@@ -66,6 +66,10 @@ public class RecommendationService {
         User author = this.userService.getUserById(request.getAuthorId());
         User teacher = this.userService.getUserById(request.getTeacherId());
 
+        if (author.getId() == teacher.getId()) {
+            throw new BadRequestException("You cannot recommend yourself");
+        }
+
         if (!canCreateRecommendation(author)) {
             throw new ForbiddenException("You have to be a teacher to recommend");
         }

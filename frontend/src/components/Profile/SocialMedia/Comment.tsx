@@ -36,6 +36,7 @@ interface ICommentProps {
   deleteComment: (commentId: number, ownerId: number) => void;
   likeComment: (commentId: number, userId: number) => void;
   unlikeComment: (commentId: number, userId: number) => void;
+  updateReplyToComment: (commentId: number, exists: boolean) => void;
 }
 
 const Comment = ({
@@ -44,6 +45,7 @@ const Comment = ({
   deleteComment,
   likeComment,
   unlikeComment,
+  updateReplyToComment,
 }: ICommentProps) => {
   const REPLY_CHAR_LIMIT = 300;
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -123,8 +125,8 @@ const Comment = ({
       ]);
       return;
     }
-
     createReplyComment(user.id, comment.id, text, ownerId);
+    updateReplyToComment(comment.id, true);
   };
 
   const getReplyComments = () => {
