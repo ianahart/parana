@@ -154,6 +154,11 @@ const Post = ({
             <Text fontSize="0.75rem" color="text.primary">
               {post.readableDate}
             </Text>
+            {post.isEdited && (
+              <Text fontSize="0.7rem" color="text.primary">
+                (edited)
+              </Text>
+            )}
           </Box>
         </Flex>
         <Box cursor="pointer" position="relative" onClick={handleOptions}>
@@ -256,7 +261,7 @@ const Post = ({
           </Flex>
         </Box>
         <Box>
-          <Text>{post.commentCount > 0 ? post.commentCount : ''} comments</Text>
+          <Text>{post.commentCount > 0 ? `${post.commentCount} comments` : ''}</Text>
         </Box>
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />

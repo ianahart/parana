@@ -34,3 +34,15 @@ export const abbreviate = (fullName: string) => {
 export const capitalize = (value: string) => {
   return value.slice(0, 1).toUpperCase() + value.slice(1).toLowerCase();
 };
+
+export const populateYears = (currentYear: number) => {
+  const years: { id: number; name: number; value: number }[] = [];
+  const earliestYear = 2000;
+  let maxId = currentYear - earliestYear;
+  while (currentYear >= earliestYear) {
+    years.push({ id: maxId, name: currentYear, value: currentYear });
+    currentYear -= 1;
+    maxId -= 1;
+  }
+  return years;
+};

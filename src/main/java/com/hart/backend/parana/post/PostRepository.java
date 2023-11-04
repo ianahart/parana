@@ -1,6 +1,7 @@
 package com.hart.backend.parana.post;
 
 import java.util.List;
+import java.sql.Timestamp;
 
 import com.hart.backend.parana.post.dto.EditPostDto;
 import com.hart.backend.parana.post.dto.PostDto;
@@ -16,6 +17,25 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findTop5ByAuthorIdAndOwnerIdOrderByIdDesc(Long authorId, Long ownerId);
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.post.dto.PostDto(
+            p.id AS id, o.id AS ownerId, p.text AS text, p.gif AS gif,
+            p.fileUrl AS fileUrl, p.createdAt AS createdAt, p.isEdited AS isEdited,
+            a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl,
+            a.id AS authorId
+            ) FROM Post p
+            INNER JOIN p.owner o
+            INNER JOIN p.author a
+            INNER JOIN p.author.profile ap
+            WHERE o.id = :ownerId
+            AND (p.createdAt BETWEEN :startTimestamp AND :endTimestamp)
+            """)
+    Page<PostDto> getFilteredPosts(
+            @Param("ownerId") Long ownerId,
+            @Param("startTimestamp") Timestamp startTimestamp,
+            @Param("endTimestamp") Timestamp endTimestamp,
+            @Param("pageable") Pageable pageable);
 
     @Query(value = """
             SELECT new com.hart.backend.parana.post.dto.PostDto(

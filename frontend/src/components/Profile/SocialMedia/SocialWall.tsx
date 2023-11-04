@@ -2,7 +2,7 @@ import { Box, Flex, Button } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { Client } from '../../../util/client';
 import WritePost from './WritePost';
-import { postPaginationState } from '../../../state/initialState';
+import { postPaginationState, yearState, monthState } from '../../../state/initialState';
 import { IPost } from '../../../interfaces';
 import ManagePosts from './ManagePosts';
 import Posts from './Posts';
@@ -18,9 +18,11 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
   const [pagination, setPagination] = useState(postPaginationState);
   const [posts, setPosts] = useState<IPost[]>([]);
   const [postView, setPostView] = useState('list');
-
+  const [filtersApplied, setFiltersApplied] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);
   const [createPostError, setCreatePostError] = useState('');
+  const [year, setYear] = useState(yearState[0].value);
+  const [month, setMonth] = useState(monthState[0].value);
 
   const getPosts = (paginate: boolean) => {
     const pageNum = paginate ? pagination.page : -1;
@@ -106,6 +108,12 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
     }
   }, [shouldRun.current]);
 
+  const resetState = () => {
+    setPosts([]);
+    setPagination(postPaginationState);
+    getPosts(false);
+  };
+
   const createPost = (
     ownerId: number,
     authorId: number,
@@ -117,9 +125,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
     setCreatePostLoading(true);
     Client.createPost(ownerId, authorId, postText, file, gif)
       .then(() => {
-        setPosts([]);
-        setPagination(postPaginationState);
-        getPosts(false);
+        resetState();
         setCreatePostLoading(false);
       })
       .catch((err) => {
@@ -132,9 +138,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
   const removePost = (postId: number) => {
     Client.removePost(postId)
       .then(() => {
-        setPosts([]);
-        setPagination(postPaginationState);
-        getPosts(false);
+        resetState();
       })
       .catch((err) => {
         throw new Error(err);
@@ -149,13 +153,49 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
   ) => {
     Client.updatePost(postId, postText, file, gif)
       .then(() => {
-        setPosts([]);
-        setPagination(postPaginationState);
-        getPosts(false);
+        resetState();
       })
       .catch((err) => {
         throw new Error(err);
       });
+  };
+
+  const getFilteredPosts = (paginate: boolean, year: number, month: number) => {
+    if (!paginate) {
+      setPagination(postPaginationState);
+      setPosts([]);
+    }
+    const pageNum = paginate ? pagination.page : -1;
+    Client.getFilteredPosts(
+      ownerId,
+      year,
+      month,
+      pageNum,
+      pagination.pageSize,
+      pagination.direction
+    )
+      .then((res) => {
+        const { direction, page, pageSize, posts, totalElements, totalPages } =
+          res.data.data;
+        setPagination((prevState) => ({
+          ...prevState,
+          direction,
+          page,
+          pageSize,
+          totalElements,
+          totalPages,
+        }));
+
+        setPosts((prevState) => [...prevState, ...posts]);
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new Error(err);
+      });
+  };
+
+  const handlePagination = () => {
+    filtersApplied ? getFilteredPosts(true, year, month) : getPosts(true);
   };
 
   return (
@@ -170,7 +210,18 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         postError={createPostError}
         method="post"
       />
-      <ManagePosts postView={postView} setPostView={setPostView} />
+      <ManagePosts
+        postView={postView}
+        setPostView={setPostView}
+        getFilteredPosts={getFilteredPosts}
+        resetState={resetState}
+        setFiltersApplied={setFiltersApplied}
+        filtersApplied={filtersApplied}
+        setYear={setYear}
+        setMonth={setMonth}
+        year={year}
+        month={month}
+      />
       <Posts
         ownerId={ownerId}
         ownerFirstName={ownerFirstName}
@@ -184,7 +235,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
       />
       {pagination.page < pagination.totalPages - 1 && (
         <Flex justify="center">
-          <Button onClick={() => getPosts(true)} colorScheme="blackAlpha">
+          <Button onClick={handlePagination} colorScheme="blackAlpha">
             See more posts
           </Button>
         </Flex>
