@@ -61,13 +61,15 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
             mobile={true}
           />
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
-          <NavLink
-            closeUserMenu={closeUserMenu}
-            icon={<MdOutlineFeed />}
-            link="/feed"
-            linkText="Feed"
-            mobile={true}
-          />
+          {user.role === 'USER' && (
+            <NavLink
+              closeUserMenu={closeUserMenu}
+              icon={<MdOutlineFeed />}
+              link="/feed"
+              linkText="Feed"
+              mobile={true}
+            />
+          )}
           <NavLink
             closeUserMenu={closeUserMenu}
             icon={<HiOutlineUsers />}
