@@ -3,7 +3,6 @@ import { useContext, useRef } from 'react';
 import UserMenuHeader from './UserMenuHeader';
 import NavLink from './NavLink';
 import { AiOutlineEdit, AiOutlineUser } from 'react-icons/ai';
-import { MdOutlineFeed } from 'react-icons/md';
 import { HiOutlineUsers } from 'react-icons/hi';
 import { IoSettingsOutline } from 'react-icons/io5';
 import LogoutButton from '../Auth/LogoutButton';
@@ -61,15 +60,6 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
             mobile={true}
           />
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
-          {user.role === 'USER' && (
-            <NavLink
-              closeUserMenu={closeUserMenu}
-              icon={<MdOutlineFeed />}
-              link="/feed"
-              linkText="Feed"
-              mobile={true}
-            />
-          )}
           <NavLink
             closeUserMenu={closeUserMenu}
             icon={<HiOutlineUsers />}
