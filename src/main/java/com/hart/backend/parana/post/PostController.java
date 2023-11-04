@@ -72,4 +72,17 @@ public class PostController {
         this.postService.updatePost(postId, request);
         return ResponseEntity.status(HttpStatus.OK).body(new UpdatePostResponse("success"));
     }
+
+    @GetMapping("/filtered")
+    public ResponseEntity<GetPostResponse> getFilteredPosts(
+            @RequestParam("ownerId") Long ownerId,
+            @RequestParam("year") int year,
+            @RequestParam("month") int month,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(new GetPostResponse("success",
+                this.postService.getFilteredPosts(ownerId, year, month, page, pageSize, direction)));
+    }
 }

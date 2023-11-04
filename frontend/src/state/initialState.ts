@@ -1,3 +1,5 @@
+import { populateYears } from '../util';
+
 export const userState = {
   abbreviation: '',
   email: '',
@@ -52,7 +54,7 @@ export const connectionPaginationState = {
 
 export const postPaginationState = {
   page: 0,
-  pageSize: 2,
+  pageSize: 4,
   totalPages: 0,
   direction: 'next',
   totalElements: 0,
@@ -223,4 +225,21 @@ export const reccomendationWordState = [
   { id: 16, word: 'Reliable' },
   { id: 17, word: 'Upbeat' },
   { id: 18, word: 'Well-read' },
+];
+
+export const yearState = populateYears(new Date().getFullYear());
+
+export const monthState = [
+  { id: 1, name: 'Jan', value: 0 },
+  { id: 2, name: 'Feb', value: 1 },
+  { id: 3, name: 'Mar', value: 2 },
+  { id: 4, name: 'Apr', value: 3 },
+  { id: 5, name: 'May', value: 4 },
+  { id: 6, name: 'Jun', value: 5 },
+  { id: 7, name: 'Jul', value: 6 },
+  { id: 8, name: 'Aug', value: 7 },
+  { id: 9, name: 'Sep', value: 8 },
+  { id: 10, name: 'Oct', value: 9 },
+  { id: 11, name: 'Nov', value: 10 },
+  { id: 12, name: 'Dec', value: 11 },
 ];

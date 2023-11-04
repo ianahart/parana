@@ -17,7 +17,9 @@ import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -135,9 +137,20 @@ public class PostService {
 
     }
 
-    private Page<PostDto> paginatePosts(Long ownerId, int page, int pageSize, String direction) {
+    private Page<PostDto> paginatePosts(Long ownerId, int page, int pageSize, String direction, Boolean filtered,
+            int year, int month) {
         int currentPage = MyUtil.paginate(page, direction);
         Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+
+        if (filtered) {
+            LocalDateTime StartDate = LocalDateTime.of(year, month + 1, 1, 23, 59, 59, 0);
+            LocalDateTime endDate = LocalDateTime.of(year, month + 1, 30, 23, 59, 59, 0);
+
+            Timestamp startTimestamp = Timestamp.valueOf(StartDate);
+            Timestamp endTimestamp = Timestamp.valueOf(endDate);
+
+            return this.postRepository.getFilteredPosts(ownerId, startTimestamp, endTimestamp, pageable);
+        }
 
         return this.postRepository.getPosts(ownerId, pageable);
     }
@@ -160,9 +173,22 @@ public class PostService {
         }
     }
 
+    public PostPaginationDto<PostDto> getFilteredPosts(Long ownerId, int year, int month, int page, int pageSize,
+            String direction) {
+
+        Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction, true, year, month);
+
+        addDatesToPosts(result.getContent());
+        addNonConstructorFields(result.getContent());
+
+        return new PostPaginationDto<PostDto>(result.getContent(), page + 1, pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
+    }
+
     public PostPaginationDto<PostDto> getPosts(Long ownerId, int page, int pageSize, String direction) {
 
-        Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction);
+        Page<PostDto> result = paginatePosts(ownerId, page, pageSize, direction, false, 0, 0);
 
         addDatesToPosts(result.getContent());
         addNonConstructorFields(result.getContent());
@@ -211,7 +237,7 @@ public class PostService {
             throw new ForbiddenException("Cannot edit another user's post");
         }
 
-        post.setIsEdited(false);
+        post.setIsEdited(true);
         post.setText(Jsoup.clean(request.getText(), Safelist.none()));
         post.setGif(request.getGif());
 

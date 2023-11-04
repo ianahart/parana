@@ -6,6 +6,19 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getFilteredPosts(
+    ownerId: number,
+    year: number,
+    month: number,
+    page: number,
+    pageSize: number,
+    direction: string
+  ) {
+    return http.get(
+      `/posts/filtered?ownerId=${ownerId}&year=${year}&month=${month}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   getMessages(userId: number, connectionUserId: number) {
     return http.get(`/messages?userId=${userId}&connectionUserId=${connectionUserId}`);
   },
