@@ -31,6 +31,11 @@ import Suggestions from './components/Connection/Suggestions';
 import { BsChatDots } from 'react-icons/bs';
 import MessagesConnectionList from './components/Messages/MessagesConnectionList';
 import { AiOutlineClose } from 'react-icons/ai';
+import SettingsRoute from './routes/SettingsRoute';
+import General from './components/Settings/General';
+import Security from './components/Settings/Security';
+import Privacy from './components/Settings/Privacy';
+import Notifications from './components/Settings/Notifications';
 
 function App() {
   const shouldRun = useRef(true);
@@ -183,7 +188,47 @@ function App() {
                   }
                 />
               </Route>
-
+              <Route
+                path="/settings"
+                element={
+                  <RequireAuth>
+                    <SettingsRoute />
+                  </RequireAuth>
+                }
+              >
+                <Route
+                  path="general"
+                  element={
+                    <RequireAuth>
+                      <General />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="security"
+                  element={
+                    <RequireAuth>
+                      <Security />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="privacy"
+                  element={
+                    <RequireAuth>
+                      <Privacy />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="notifications"
+                  element={
+                    <RequireAuth>
+                      <Notifications />
+                    </RequireAuth>
+                  }
+                />
+              </Route>
               <Route
                 path="/profiles/:id/edit"
                 element={

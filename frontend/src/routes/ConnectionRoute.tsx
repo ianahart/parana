@@ -13,6 +13,8 @@ const ConnectionRoute = () => {
           border="1px solid"
           borderLeft="none"
           borderColor="border.primary"
+          borderTopRightRadius={8}
+          borderBottomRadius={8}
         >
           <Sidebar />
         </Box>

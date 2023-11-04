@@ -78,6 +78,10 @@ const ChatWindow = ({ currentConnection, closeChatWindow }: IChatWindowProps) =>
     }
   };
 
+  useEffect(() => {
+    return () => stompClient.disconnect();
+  }, []);
+
   return (
     <Box
       borderRadius={8}
