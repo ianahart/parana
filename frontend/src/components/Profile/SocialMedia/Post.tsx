@@ -38,16 +38,12 @@ const Post = ({
   const [pagination, setPagination] = useState(commentPaginationState);
 
   const updateReplyToComment = (commentId: number, exists: boolean) => {
-    console.log(commentId);
     const updatedComments = comments.map((comment) => {
-      console.log(comment.id, 'foo');
       if (comment.id === commentId) {
-        console.log('FOO');
         return { ...comment, replyCommentsExist: exists };
       }
       return comment;
     });
-    console.log(updatedComments);
     setComments(updatedComments);
   };
 
