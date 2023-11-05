@@ -8,6 +8,7 @@ import com.hart.backend.parana.config.JwtService;
 import com.hart.backend.parana.profile.ProfileService;
 import com.hart.backend.parana.refreshtoken.RefreshToken;
 import com.hart.backend.parana.refreshtoken.RefreshTokenService;
+import com.hart.backend.parana.setting.SettingService;
 import com.hart.backend.parana.token.Token;
 import com.hart.backend.parana.token.TokenRepository;
 import com.hart.backend.parana.token.TokenService;
@@ -41,6 +42,7 @@ public class AuthenticationService {
     private final RefreshTokenService refreshTokenService;
     private final TokenService tokenService;
     private final UserService userService;
+    private final SettingService settingService;
 
     @Autowired
     public AuthenticationService(
@@ -52,7 +54,8 @@ public class AuthenticationService {
             TokenRepository tokenRepository,
             RefreshTokenService refreshTokenService,
             TokenService tokenService,
-            UserService userService) {
+            UserService userService,
+            SettingService settingService) {
         this.passwordEncoder = passwordEncoder;
         this.profileService = profileService;
         this.userRepository = userRepository;
@@ -62,6 +65,7 @@ public class AuthenticationService {
         this.refreshTokenService = refreshTokenService;
         this.tokenService = tokenService;
         this.userService = userService;
+        this.settingService = settingService;
     }
 
     private void validateRegistration(RegisterRequest request) {
@@ -93,7 +97,8 @@ public class AuthenticationService {
                 request.getRole().equals("USER") ? Role.USER : Role.TEACHER,
                 false,
                 this.profileService.createProfile(),
-                this.passwordEncoder.encode(request.getPassword()));
+                this.passwordEncoder.encode(request.getPassword()),
+                this.settingService.createSetting());
         this.userRepository.save(user);
         return new RegisterResponse("User created");
     }
@@ -121,7 +126,8 @@ public class AuthenticationService {
                 user.getLoggedIn(),
                 user.getProfile().getId(),
                 user.getProfile().getAvatarUrl(),
-                user.getFullName());
+                user.getFullName(),
+                user.getSetting().getId());
 
     }
 

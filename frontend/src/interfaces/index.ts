@@ -232,6 +232,7 @@ export interface IUser {
   profileId: number;
   avatarUrl: string;
   fullName: string;
+  settingId: number;
 }
 
 export interface ITokens {

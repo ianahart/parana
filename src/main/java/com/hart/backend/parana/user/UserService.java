@@ -117,7 +117,8 @@ public class UserService {
                 user.getLoggedIn(),
                 user.getProfile().getId(),
                 user.getProfile().getAvatarUrl(),
-                user.getFullName());
+                user.getFullName(),
+                user.getSetting().getId());
 
     }
 

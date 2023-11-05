@@ -1,8 +1,32 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/Settings/Sidebar';
+import { useContext, useEffect, useRef } from 'react';
+import { UserContext } from '../context/user';
+import { IUserContext } from '../interfaces';
+import { Client } from '../util/client';
 
 const SettingsRoute = () => {
+  const shouldRun = useRef(true);
+  const { user } = useContext(UserContext) as IUserContext;
+
+  const updateSettings = () => {
+    Client.updateSettings(user.settingId, false, false, false, false)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  };
+
+  useEffect(() => {
+    if (shouldRun.current && user.id !== 0) {
+      shouldRun.current = false;
+      updateSettings();
+    }
+  }, [shouldRun.current, user.id]);
+
   return (
     <Box minH="100vh">
       <Box minH="100vh" className="settings-container">
