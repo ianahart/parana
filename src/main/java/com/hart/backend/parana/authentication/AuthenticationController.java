@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -60,8 +61,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Valid RegisterRequest request) {
-        this.authenticationService.register(request);
+    public ResponseEntity<RegisterResponse> register(HttpServletRequest servletRequest,
+            @RequestBody @Valid RegisterRequest request) {
+        this.authenticationService.register(servletRequest, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new RegisterResponse("success"));
     }
 

@@ -30,6 +30,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class AuthenticationService {
 
@@ -84,7 +86,7 @@ public class AuthenticationService {
         }
     }
 
-    public RegisterResponse register(RegisterRequest request) {
+    public RegisterResponse register(HttpServletRequest servletRequest, RegisterRequest request) {
         validateRegistration(request);
 
         String firstName = MyUtil.capitalize(request.getFirstName());
@@ -98,7 +100,7 @@ public class AuthenticationService {
                 false,
                 this.profileService.createProfile(),
                 this.passwordEncoder.encode(request.getPassword()),
-                this.settingService.createSetting());
+                this.settingService.createSetting(servletRequest));
         this.userRepository.save(user);
         return new RegisterResponse("User created");
     }

@@ -4,15 +4,20 @@ import com.hart.backend.parana.recentsearch.RecentSearchService;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
+import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
 import com.hart.backend.parana.user.response.SyncUserResponse;
+import com.hart.backend.parana.user.response.UpdateUserPasswordResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +35,15 @@ public class UserController {
     public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
         this.recentSearchService = recentSearchService;
+    }
+
+    @PatchMapping("/{userId}/change-password")
+    public ResponseEntity<UpdateUserPasswordResponse> updatePassword(@PathVariable("userId") Long userId,
+            @RequestBody UpdateUserPasswordRequest request) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UpdateUserPasswordResponse("success", this.userService.updatePassword(userId, request)));
     }
 
     @GetMapping("/suggestions")

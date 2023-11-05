@@ -4,10 +4,21 @@ import { AiOutlineLock } from 'react-icons/ai';
 import { BsShieldLock } from 'react-icons/bs';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import SettingLink from './SettingLink';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
-  const [selected, setSelected] = useState('notifications');
+  const shouldRun = useRef(true);
+  const [selected, setSelected] = useState('/settings/notifications');
+  const location = useLocation();
+
+  useEffect(() => {
+    if (shouldRun.current) {
+      shouldRun.current = false;
+      setSelected(location.pathname);
+    }
+  }, [shouldRun.current, location.pathname]);
+
   return (
     <Box m="1rem">
       <Flex mb="2rem">
@@ -21,7 +32,7 @@ const Sidebar = () => {
             setSelected={setSelected}
             path="general"
             text="General"
-            value="general"
+            value="/settings/general"
             selected={selected}
             icon={<IoSettingsOutline />}
           />
@@ -29,7 +40,7 @@ const Sidebar = () => {
             setSelected={setSelected}
             path="security"
             text="Security & Login"
-            value="security"
+            value="/settings/security"
             selected={selected}
             icon={<AiOutlineLock />}
           />
@@ -37,7 +48,7 @@ const Sidebar = () => {
             setSelected={setSelected}
             path="privacy"
             text="User Privacy"
-            value="security"
+            value="/settings/privacy"
             selected={selected}
             icon={<BsShieldLock />}
           />
@@ -45,7 +56,7 @@ const Sidebar = () => {
             setSelected={setSelected}
             path="notifications"
             text="Notifications"
-            value="notifications"
+            value="/settings/notifications"
             selected={selected}
             icon={<IoMdNotificationsOutline />}
           />

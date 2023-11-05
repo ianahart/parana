@@ -6,6 +6,22 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getSettings(settingId: number) {
+    return http.get(`/settings/${settingId}`);
+  },
+  changePassword(
+    userId: number,
+    oldPassword: string,
+    password: string,
+    confirmPassword: string
+  ) {
+    return http.patch(`users/${userId}/change-password`, {
+      oldPassword,
+      password,
+      confirmPassword,
+    });
+  },
+
   updateSettings(
     settingId: number,
     rememberMe: boolean,

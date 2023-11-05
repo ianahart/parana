@@ -1,65 +1,26 @@
-package com.hart.backend.parana.setting;
+package com.hart.backend.parana.setting.dto;
 
 import java.sql.Timestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hart.backend.parana.user.User;
-
-import org.hibernate.annotations.CreationTimestamp;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
-
-@Entity()
-@Table(name = "setting")
-public class Setting {
-
-    @Id
-    @SequenceGenerator(name = "setting_sequence", sequenceName = "setting_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "setting_sequence")
-    @Column(name = "id")
+public class SettingDto {
     private Long id;
-
-    @CreationTimestamp()
-    @Column(name = "created_at")
+    private Long userId;
     private Timestamp createdAt;
-
-    @Column(name = "remember_me")
     private Boolean rememberMe;
-
-    @Column(name = "block_messages")
     private Boolean blockMessages;
-
-    @Column(name = "block_comments")
     private Boolean blockComments;
-
-    @Column(name = "block_posts")
     private Boolean blockPosts;
-
-    @Column(name = "ip_address")
     private String ipAddress;
+    Timestamp passwordUpdatedOn;
+    String updatedFormattedDate;
 
-    @Column(name = "password_updated_on")
-    private Timestamp passwordUpdatedOn;
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "setting")
-    private User user;
-
-    public Setting() {
+    public SettingDto() {
 
     }
 
-    public Setting(
+    public SettingDto(
             Long id,
+            Long userId,
             Timestamp createdAt,
             Boolean rememberMe,
             Boolean blockMessages,
@@ -68,6 +29,7 @@ public class Setting {
             String ipAddress,
             Timestamp passwordUpdatedOn) {
         this.id = id;
+        this.userId = userId;
         this.createdAt = createdAt;
         this.rememberMe = rememberMe;
         this.blockMessages = blockMessages;
@@ -77,25 +39,12 @@ public class Setting {
         this.passwordUpdatedOn = passwordUpdatedOn;
     }
 
-    public Setting(
-            Boolean rememberMe,
-            Boolean blockMessages,
-            Boolean blockComments,
-            Boolean blockPosts,
-            String ipAddress) {
-        this.rememberMe = rememberMe;
-        this.blockMessages = blockMessages;
-        this.blockComments = blockComments;
-        this.blockPosts = blockPosts;
-        this.ipAddress = ipAddress;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
     public Timestamp getCreatedAt() {
@@ -106,32 +55,36 @@ public class Setting {
         return ipAddress;
     }
 
-    public Boolean getRememberMe() {
-        return rememberMe;
-    }
-
     public Boolean getBlockPosts() {
         return blockPosts;
+    }
+
+    public Boolean getRememberMe() {
+        return rememberMe;
     }
 
     public Boolean getBlockComments() {
         return blockComments;
     }
 
+    public Timestamp getPasswordUpdatedOn() {
+        return passwordUpdatedOn;
+    }
+
     public Boolean getBlockMessages() {
         return blockMessages;
     }
 
-    public Timestamp getPasswordUpdatedOn() {
-        return passwordUpdatedOn;
+    public String getUpdatedFormattedDate() {
+        return updatedFormattedDate;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public void setCreatedAt(Timestamp createdAt) {
@@ -162,4 +115,7 @@ public class Setting {
         this.passwordUpdatedOn = passwordUpdatedOn;
     }
 
+    public void setUpdatedFormattedDate(String updatedFormattedDate) {
+        this.updatedFormattedDate = updatedFormattedDate;
+    }
 }
