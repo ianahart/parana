@@ -6,6 +6,21 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updateSettings(
+    settingId: number,
+    rememberMe: boolean,
+    blockMessages: boolean,
+    blockComments: boolean,
+    blockPosts: boolean
+  ) {
+    return http.patch(`/settings/${settingId}`, {
+      rememberMe,
+      blockMessages,
+      blockComments,
+      blockPosts,
+    });
+  },
+
   getFilteredPosts(
     ownerId: number,
     year: number,

@@ -11,6 +11,7 @@ export const userState = {
   profileId: 0,
   avatarUrl: '',
   fullName: '',
+  settingId: 0,
 };
 
 export interface IConnectionRequest {

@@ -27,6 +27,7 @@ import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
 import com.hart.backend.parana.replycomment.ReplyComment;
 import com.hart.backend.parana.review.Review;
+import com.hart.backend.parana.setting.Setting;
 import com.hart.backend.parana.token.Token;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -88,6 +89,10 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "setting_id", referencedColumnName = "id")
+    private Setting setting;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;
@@ -186,7 +191,8 @@ public class User implements UserDetails {
             Role role,
             Boolean loggedIn,
             Profile profile,
-            String password) {
+            String password,
+            Setting setting) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -195,6 +201,7 @@ public class User implements UserDetails {
         this.loggedIn = loggedIn;
         this.profile = profile;
         this.password = password;
+        this.setting = setting;
     }
 
     public String getAbbreviation() {
@@ -316,6 +323,10 @@ public class User implements UserDetails {
 
     public String getFirstName() {
         return firstName;
+    }
+
+    public Setting getSetting() {
+        return setting;
     }
 
     public Timestamp getUpdatedAt() {
@@ -440,6 +451,10 @@ public class User implements UserDetails {
 
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
+    }
+
+    public void setSetting(Setting setting) {
+        this.setting = setting;
     }
 
     public void setUserReplyComments(List<ReplyComment> userReplyComments) {

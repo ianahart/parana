@@ -13,13 +13,14 @@ public class FullUserDto {
     private Long profileId;
     private String avatarUrl;
     private String fullName;
+    private Long settingId;
 
     public FullUserDto() {
 
     }
 
     public FullUserDto(Long id, String email, String firstName, String lastName, Role role, String abbreviation,
-            Boolean loggedIn, Long profileId, String avatarUrl, String fullName) {
+            Boolean loggedIn, Long profileId, String avatarUrl, String fullName, Long settingId) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -30,6 +31,11 @@ public class FullUserDto {
         this.profileId = profileId;
         this.avatarUrl = avatarUrl;
         this.fullName = fullName;
+        this.settingId = settingId;
+    }
+
+    public Long getSettingId() {
+        return settingId;
     }
 
     public Long getId() {
@@ -74,6 +80,10 @@ public class FullUserDto {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setSettingId(Long settingId) {
+        this.settingId = settingId;
     }
 
     public void setProfileId(Long profileId) {
