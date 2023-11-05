@@ -56,7 +56,7 @@ const Form = () => {
       passCode.join(''),
       searchParams.get('token') as string
     )
-      .then((res) => {
+      .then(() => {
         navigate('/login');
         setIsLoading(false);
       })

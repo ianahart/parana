@@ -1,9 +1,14 @@
 package com.hart.backend.parana.setting;
 
-import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
+import com.hart.backend.parana.util.MyUtil;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.setting.dto.SettingDto;
 import com.hart.backend.parana.setting.request.UpdateSettingRequest;
 
 import org.slf4j.Logger;
@@ -43,13 +48,19 @@ public class SettingService {
         return remoteAddr;
     }
 
-    public Setting createSetting() {
-        Setting setting = new Setting();
+    public Setting createSetting(HttpServletRequest request) {
+
+        Setting setting = new Setting(
+                false,
+                false,
+                false,
+                false,
+                getClientIp(request));
         this.settingRepository.save(setting);
         return setting;
     }
 
-    private Setting getSettingById(Long settingId) {
+    public Setting getSettingById(Long settingId) {
         return this.settingRepository.findById(settingId).orElseThrow(() -> {
             String error = String.format("Setting with the id %d was not found");
             logger.info(error);
@@ -70,4 +81,23 @@ public class SettingService {
 
     }
 
+    public String updatePasswordDate(Long settingId) {
+        Setting setting = this.getSettingById(settingId);
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        setting.setPasswordUpdatedOn(timestamp);
+
+        this.settingRepository.save(setting);
+
+        return MyUtil.createDate(timestamp);
+    }
+
+    public SettingDto getSettings(Long settingId) {
+        SettingDto setting = this.settingRepository.getSettings(settingId);
+
+        if (setting.getPasswordUpdatedOn() != null) {
+             setting.setUpdatedFormattedDate(MyUtil.createDate(setting.getPasswordUpdatedOn()));
+        }
+        return setting;
+    }
 }

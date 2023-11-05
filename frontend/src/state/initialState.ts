@@ -95,6 +95,12 @@ export const passwordResetState = {
   confirmPassword: { name: 'confirmPassword', error: '', value: '', type: 'password' },
 };
 
+export const changePasswordState = {
+  oldPassword: { name: 'oldPassword', error: '', value: '', type: 'password' },
+  password: { name: 'password', error: '', value: '', type: 'password' },
+  confirmPassword: { name: 'confirmPassword', error: '', value: '', type: 'password' },
+};
+
 export const editTeacherProfileFormState = {
   bio: { name: 'bio', error: '', value: '', type: 'text' },
   aboutLesson: { name: 'aboutLesson', error: '', value: '', type: 'text' },

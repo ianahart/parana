@@ -15,12 +15,14 @@ import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.user.dto.UserSuggestionDto;
+import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.connection.ConnectionService;
 import com.hart.backend.parana.favorite.FavoriteService;
 import com.hart.backend.parana.geocode.GeocodeService;
+import com.hart.backend.parana.setting.SettingService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -53,15 +56,21 @@ public class UserService {
     private final GeocodeService geocodeService;
     private final FavoriteService favoriteService;
     private final ConnectionService connectionService;
+    private final PasswordEncoder passwordEncoder;
+    private final SettingService settingService;
 
     @Autowired
     public UserService(UserRepository userRepository, GeocodeService geocodeService,
             @Lazy FavoriteService favoriteService,
-            @Lazy ConnectionService connectionService) {
+            @Lazy ConnectionService connectionService,
+            PasswordEncoder passwordEncoder,
+            @Lazy SettingService settingService) {
         this.userRepository = userRepository;
         this.geocodeService = geocodeService;
         this.favoriteService = favoriteService;
         this.connectionService = connectionService;
+        this.passwordEncoder = passwordEncoder;
+        this.settingService = settingService;
     }
 
     public boolean userExistsByEmail(String email) {
@@ -244,5 +253,45 @@ public class UserService {
         }
         nonConnectedUsers.removeIf(u -> u.getTerrainInCommon().size() <= 0);
         return nonConnectedUsers;
+    }
+
+    private boolean currentPasswordDifferent(String password, User user) {
+        return !(this.passwordEncoder.matches(password, user.getPassword()));
+    }
+
+    private void validatePasswords(String password, String confirmPassword) {
+
+        if (!MyUtil.validatePassword(password)) {
+            throw new BadRequestException("Password must include 1 lower, 1 upper, 1 special, and 1 digit char");
+        }
+
+        if (!password.equals(confirmPassword)) {
+            throw new BadRequestException("Passwords do not match");
+        }
+    }
+
+    private void checkPassword(String oldPassword, String hashedOldPassword) {
+        if (!this.passwordEncoder.matches(oldPassword, hashedOldPassword)) {
+            throw new BadRequestException("Your password is incorrect");
+        }
+    }
+
+    public String updatePassword(Long userId, UpdateUserPasswordRequest request) {
+        User user = getUserById(userId);
+
+        checkPassword(request.getOldPassword(), user.getPassword());
+
+        if (!currentPasswordDifferent(request.getPassword(), user)) {
+            throw new BadRequestException("Your new password cannot be the same as your old password");
+        }
+
+        validatePasswords(request.getPassword(), request.getConfirmPassword());
+
+        user.setPassword(this.passwordEncoder.encode(request.getPassword()));
+
+        this.userRepository.save(user);
+
+        return this.settingService.updatePasswordDate(user.getSetting().getId());
+
     }
 }

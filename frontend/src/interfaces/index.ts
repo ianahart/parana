@@ -208,6 +208,12 @@ export interface IPasswordResetForm {
   confirmPassword: IFormField;
 }
 
+export interface IChangePasswordForm {
+  oldPassword: IFormField;
+  password: IFormField;
+  confirmPassword: IFormField;
+}
+
 export interface IRegisterForm {
   firstName: IFormField;
   lastName: IFormField;
