@@ -143,10 +143,6 @@ public class AuthenticationService {
     public LoginResponse login(LoginRequest request) {
 
         try {
-            System.out.println("=========================================");
-            System.out.println(DEFAULT_TTL);
-            System.out.println(REMEMBER_ME_TTL);
-            System.out.println("=========================================");
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
