@@ -155,7 +155,7 @@ public class AuthenticationService {
         User user = this.userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("User not found by email."));
 
-        String jwtToken = this.jwtService.generateToken(user);
+        String jwtToken = this.jwtService.generateToken(user, DEFAULT_TTL);
 
         this.tokenService.revokeAllUserTokens(user);
         FullUserDto userDto = this.updateAuthUser(user, jwtToken);

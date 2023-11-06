@@ -21,6 +21,7 @@ import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,9 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping(path = "/api/v1/auth")
 public class AuthenticationController {
+
+    @Value("${DEFAULT_TTL}")
+    private Long DEFAULT_TTL;
 
     private final AuthenticationService authenticationService;
     private final RefreshTokenService refreshTokenService;
@@ -78,7 +82,7 @@ public class AuthenticationController {
         RefreshToken refreshToken = this.refreshTokenService.verifyRefreshToken(request.getRefreshToken());
 
         this.tokenService.revokeAllUserTokens(refreshToken.getUser());
-        String token = this.jwtService.generateToken(refreshToken.getUser());
+        String token = this.jwtService.generateToken(refreshToken.getUser(), DEFAULT_TTL);
         this.authenticationService.saveTokenWithUser(token, refreshToken.getUser());
 
         return ResponseEntity.status(200).body(

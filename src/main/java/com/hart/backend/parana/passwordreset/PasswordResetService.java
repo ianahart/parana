@@ -39,6 +39,9 @@ public class PasswordResetService {
     @Value("${secretkey}")
     private String secretKey;
 
+    @Value("${DEFAULT_TTL}")
+    private Long DEFAULT_TTL;
+
     private final JwtService jwtService;
     private final Configuration configuration;
     private final JavaMailSender javaMailSender;
@@ -97,7 +100,7 @@ public class PasswordResetService {
     }
 
     String getEmailContent(User user) throws IOException, TemplateException {
-        String token = this.jwtService.generateToken(user);
+        String token = this.jwtService.generateToken(user, DEFAULT_TTL);
         int min = 10000;
         int max = 20000;
         String code = String.valueOf(new Random().nextInt((max - min) + 1) + min);
