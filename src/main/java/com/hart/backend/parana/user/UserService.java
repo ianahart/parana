@@ -294,4 +294,23 @@ public class UserService {
         return this.settingService.updatePasswordDate(user.getSetting().getId());
 
     }
+
+    public void updateEmail(Long userId, String email, String password) {
+
+        Optional<User> exists = this.userRepository.findByEmail(email);
+
+        if (exists.isPresent()) {
+            throw new BadRequestException("A user with this email already exists");
+        }
+
+        User user = getUserById(userId);
+
+        checkPassword(password, user.getPassword());
+
+        user.setEmail(email);
+
+        this.userRepository.save(user);
+
+        this.settingService.updateEmailDate(user.getSetting().getId());
+    }
 }

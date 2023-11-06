@@ -4,11 +4,13 @@ import com.hart.backend.parana.recentsearch.RecentSearchService;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
+import com.hart.backend.parana.user.request.UpdateUserEmailRequest;
 import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
 import com.hart.backend.parana.user.response.SyncUserResponse;
+import com.hart.backend.parana.user.response.UpdateUserEmailResponse;
 import com.hart.backend.parana.user.response.UpdateUserPasswordResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,16 @@ public class UserController {
     public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
         this.recentSearchService = recentSearchService;
+    }
+
+    @PatchMapping("/{userId}/change-email")
+    public ResponseEntity<UpdateUserEmailResponse> updateEmail(@PathVariable("userId") Long userId,
+            @RequestBody UpdateUserEmailRequest request) {
+        this.userService.updateEmail(userId, request.getEmail(), request.getPassword());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new UpdateUserEmailResponse("success"));
     }
 
     @PatchMapping("/{userId}/change-password")

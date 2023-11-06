@@ -90,6 +90,11 @@ export const loginFormState = {
   password: { name: 'password', error: '', value: '', type: 'password' },
 };
 
+export const emailChangeState = {
+  email: { name: 'email', error: '', value: '', type: 'email' },
+  password: { name: 'password', error: '', value: '', type: 'password' },
+};
+
 export const passwordResetState = {
   password: { name: 'password', error: '', value: '', type: 'password' },
   confirmPassword: { name: 'confirmPassword', error: '', value: '', type: 'password' },
