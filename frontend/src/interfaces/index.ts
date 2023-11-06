@@ -227,6 +227,11 @@ export interface ILoginForm {
   password: IFormField;
 }
 
+export interface IEmailChangeForm {
+  email: IFormField;
+  password: IFormField;
+}
+
 export interface IUser {
   abbreviation: string;
   email: string;

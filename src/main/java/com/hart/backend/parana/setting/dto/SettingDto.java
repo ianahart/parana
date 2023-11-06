@@ -12,7 +12,9 @@ public class SettingDto {
     private Boolean blockPosts;
     private String ipAddress;
     Timestamp passwordUpdatedOn;
+    Timestamp emailUpdatedOn;
     String updatedFormattedDate;
+    String emailUpdatedFormattedDate;
 
     public SettingDto() {
 
@@ -27,7 +29,8 @@ public class SettingDto {
             Boolean blockComments,
             Boolean blockPosts,
             String ipAddress,
-            Timestamp passwordUpdatedOn) {
+            Timestamp passwordUpdatedOn,
+            Timestamp emailUpdatedOn) {
         this.id = id;
         this.userId = userId;
         this.createdAt = createdAt;
@@ -37,14 +40,23 @@ public class SettingDto {
         this.blockPosts = blockPosts;
         this.ipAddress = ipAddress;
         this.passwordUpdatedOn = passwordUpdatedOn;
+        this.emailUpdatedOn = emailUpdatedOn;
     }
 
     public Long getId() {
         return id;
     }
 
+    public Timestamp getEmailUpdatedOn() {
+        return emailUpdatedOn;
+    }
+
     public Long getUserId() {
         return userId;
+    }
+
+    public String getEmailUpdatedFormattedDate() {
+        return emailUpdatedFormattedDate;
     }
 
     public Timestamp getCreatedAt() {
@@ -81,6 +93,14 @@ public class SettingDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setEmailUpdatedOn(Timestamp emailUpdatedOn) {
+        this.emailUpdatedOn = emailUpdatedOn;
+    }
+
+    public void setEmailUpdatedFormattedDate(String emailUpdatedFormattedDate) {
+        this.emailUpdatedFormattedDate = emailUpdatedFormattedDate;
     }
 
     public void setUserId(Long userId) {

@@ -7,12 +7,10 @@ import com.hart.backend.parana.user.User;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -50,6 +48,9 @@ public class Setting {
     @Column(name = "password_updated_on")
     private Timestamp passwordUpdatedOn;
 
+    @Column(name = "email_updated_on")
+    private Timestamp emailUpdatedOn;
+
     @JsonIgnore
     @OneToOne(mappedBy = "setting")
     private User user;
@@ -66,7 +67,8 @@ public class Setting {
             Boolean blockComments,
             Boolean blockPosts,
             String ipAddress,
-            Timestamp passwordUpdatedOn) {
+            Timestamp passwordUpdatedOn,
+            Timestamp emailUpdatedOn) {
         this.id = id;
         this.createdAt = createdAt;
         this.rememberMe = rememberMe;
@@ -75,6 +77,7 @@ public class Setting {
         this.blockPosts = blockPosts;
         this.ipAddress = ipAddress;
         this.passwordUpdatedOn = passwordUpdatedOn;
+        this.emailUpdatedOn = emailUpdatedOn;
     }
 
     public Setting(
@@ -96,6 +99,14 @@ public class Setting {
 
     public User getUser() {
         return user;
+    }
+
+    public Timestamp getEmailUpdatedOn() {
+        return emailUpdatedOn;
+    }
+
+    public void setEmailUpdatedOn(Timestamp emailUpdatedOn) {
+        this.emailUpdatedOn = emailUpdatedOn;
     }
 
     public Timestamp getCreatedAt() {

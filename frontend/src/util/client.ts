@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  changeEmail(email: string, password: string, userId: number) {
+    return http.patch(`users/${userId}/change-email`, { email, password });
+  },
+
   getSettings(settingId: number) {
     return http.get(`/settings/${settingId}`);
   },

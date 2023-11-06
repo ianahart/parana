@@ -4,7 +4,6 @@ import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
@@ -96,8 +95,22 @@ public class SettingService {
         SettingDto setting = this.settingRepository.getSettings(settingId);
 
         if (setting.getPasswordUpdatedOn() != null) {
-             setting.setUpdatedFormattedDate(MyUtil.createDate(setting.getPasswordUpdatedOn()));
+            setting.setUpdatedFormattedDate(MyUtil.createDate(setting.getPasswordUpdatedOn()));
+        }
+
+        if (setting.getEmailUpdatedOn() != null) {
+            setting.setEmailUpdatedFormattedDate(MyUtil.createDate(setting.getEmailUpdatedOn()));
         }
         return setting;
+    }
+
+    public void updateEmailDate(Long settingId) {
+        Setting setting = this.getSettingById(settingId);
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        setting.setEmailUpdatedOn(timestamp);
+
+        this.settingRepository.save(setting);
+
     }
 }

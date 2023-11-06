@@ -2,40 +2,24 @@ import { Box, Button, Fade, Flex, Text, Tooltip, useDisclosure } from '@chakra-u
 import { AiOutlineCheck, AiOutlineClose, AiOutlineLock } from 'react-icons/ai';
 import { changePasswordState } from '../../state/initialState';
 import { IChangePasswordForm, IUserContext } from '../../interfaces';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import FormField from '../Shared/FormField';
 import BasicSpinner from '../Shared/BasicSpinner';
 import { Client } from '../../util/client';
 import { UserContext } from '../../context/user';
 import { useNavigate } from 'react-router-dom';
 
-const ChangePasswordForm = () => {
+interface IChangePasswordFormProps {
+  passwordLastUpdated: string;
+}
+
+const ChangePasswordForm = ({ passwordLastUpdated }: IChangePasswordFormProps) => {
   const navigate = useNavigate();
-  const shouldRun = useRef(true);
   const { user, tokens, logout } = useContext(UserContext) as IUserContext;
   const { isOpen, onToggle } = useDisclosure();
   const [form, setForm] = useState(changePasswordState);
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordLastUpdated, setPasswordLastUpdated] = useState('');
   const [error, setError] = useState('');
-
-  const getSettings = (settingId: number) => {
-    Client.getSettings(settingId)
-      .then((res) => {
-        const { updatedFormattedDate } = res.data.data;
-        setPasswordLastUpdated(updatedFormattedDate ? updatedFormattedDate : '');
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
-  };
-
-  useEffect(() => {
-    if (shouldRun.current && user.settingId !== 0) {
-      shouldRun.current = false;
-      getSettings(user.settingId);
-    }
-  }, [shouldRun.current, user.settingId]);
 
   const logoutUser = () => {
     Client.logout(tokens.refreshToken)
@@ -86,8 +70,7 @@ const ChangePasswordForm = () => {
       password.value,
       confirmPassword.value
     )
-      .then((res) => {
-        setPasswordLastUpdated(res.data);
+      .then(() => {
         setIsLoading(false);
         onToggle();
         logoutUser();
@@ -204,7 +187,7 @@ const ChangePasswordForm = () => {
                 error={form.password.error}
                 type={form.password.type}
                 label="New Password"
-                id="password"
+                id="newPassword"
                 errorField="New password"
                 icon={<AiOutlineLock />}
                 placeHolder="Enter your new password"
