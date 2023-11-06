@@ -24,6 +24,7 @@ import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +35,12 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthenticationService {
+
+    @Value("${DEFAULT_TTL}")
+    private Long DEFAULT_TTL;
+
+    @Value("${REMEMBER_ME_TTL}")
+    private String REMEMBER_ME_TTL;
 
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
@@ -136,6 +143,10 @@ public class AuthenticationService {
     public LoginResponse login(LoginRequest request) {
 
         try {
+            System.out.println("=========================================");
+            System.out.println(DEFAULT_TTL);
+            System.out.println(REMEMBER_ME_TTL);
+            System.out.println("=========================================");
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail(),
