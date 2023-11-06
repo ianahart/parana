@@ -17,6 +17,8 @@ public class PostDto {
     private String authorFullName;
     private String authorAvatarUrl;
     private Long authorId;
+    private Long ownerProfileId;
+    private String ownerFullName;
     private Boolean currentUserHasLikedPost;
     private Long likesCount;
     private CommentDto comment;
@@ -36,7 +38,9 @@ public class PostDto {
             Boolean isEdited,
             String authorFullName,
             String authorAvatarUrl,
-            Long authorId) {
+            Long authorId,
+            Long ownerProfileId,
+             String ownerFullName) {
         this.id = id;
         this.ownerId = ownerId;
         this.text = text;
@@ -47,10 +51,20 @@ public class PostDto {
         this.authorFullName = authorFullName;
         this.authorAvatarUrl = authorAvatarUrl;
         this.authorId = authorId;
+        this.ownerProfileId = ownerProfileId;
+        this.ownerFullName = ownerFullName;
     }
 
     public String getAuthorAvatarUrl() {
         return authorAvatarUrl;
+    }
+
+    public String getOwnerFullName() {
+        return ownerFullName;
+    }
+
+    public Long getOwnerProfileId() {
+        return ownerProfileId;
     }
 
     public CommentDto getComment() {
@@ -167,5 +181,13 @@ public class PostDto {
 
     public void setCommentCount(Long commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public void setOwnerProfileId(Long ownerProfileId) {
+        this.ownerProfileId = ownerProfileId;
+    }
+
+    public void setOwnerFullName(String ownerFullName) {
+        this.ownerFullName = ownerFullName;
     }
 }

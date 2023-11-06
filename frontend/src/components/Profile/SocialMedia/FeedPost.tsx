@@ -1,11 +1,8 @@
 import { Box, Divider, Flex, Image, Text } from '@chakra-ui/react';
-import { IComment, IPost, IUserContext } from '../../../interfaces';
+import { IComment, IPost } from '../../../interfaces';
 import UserAvatar from '../../Shared/UserAvatar';
-import { BsHandThumbsUpFill, BsThreeDots, BsTrash } from 'react-icons/bs';
-import { useContext, useState } from 'react';
-import { UserContext } from '../../../context/user';
-import WritePost from './WritePost';
-import { AiOutlineClose } from 'react-icons/ai';
+import { BsArrowRight, BsHandThumbsUpFill } from 'react-icons/bs';
+import { useState } from 'react';
 import Actions from './Actions';
 import { Client } from '../../../util/client';
 import Comment from './Comment';
@@ -13,28 +10,17 @@ import { commentPaginationState } from '../../../state/initialState';
 
 interface IPostProps {
   post: IPost;
-  ownerProfileId: number;
-  removePost: (postId: number) => void;
   ownerId: number;
-  ownerFirstName: string;
-  updatePost: (postId: number, postText: string, file: File | null, gif: string) => void;
   handleLikePost: (userId: number, postId: number, action: string) => void;
   updateLatestCommentLike: (postId: number, isLiked: boolean) => void;
 }
 
-const Post = ({
+const FeedPost = ({
   post,
-  ownerProfileId,
-  removePost,
   ownerId,
-  ownerFirstName,
-  updatePost,
   handleLikePost,
   updateLatestCommentLike,
 }: IPostProps) => {
-  console.log(post);
-  const { user } = useContext(UserContext) as IUserContext;
-  const [optionsOpen, setOptionsOpen] = useState(false);
   const [comments, setComments] = useState<IComment[]>([]);
   const [pagination, setPagination] = useState(commentPaginationState);
 
@@ -46,18 +32,6 @@ const Post = ({
       return comment;
     });
     setComments(updatedComments);
-  };
-
-  const handleOptions = () => {
-    if (user.id === ownerProfileId || user.id === post.authorId) {
-      setOptionsOpen(true);
-    }
-  };
-
-  const handleRemovePost = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setOptionsOpen(false);
-    removePost(post.id);
   };
 
   const createComment = (userId: number, postId: number, text: string) => {
@@ -161,7 +135,17 @@ const Post = ({
             fullName={post.authorFullName}
           />
           <Box ml="0.5rem">
-            <Text fontWeight="bold"> {post.authorFullName}</Text>
+            <Flex align="center">
+              <Text fontWeight="bold">{post.authorFullName}</Text>
+              {post.authorFullName !== post.ownerFullName && (
+                <>
+                  <Box mx="1rem">
+                    <BsArrowRight />
+                  </Box>
+                  <Text fontWeight="bold">{post.ownerFullName}</Text>
+                </>
+              )}
+            </Flex>
             <Text fontSize="0.75rem" color="text.primary">
               {post.readableDate}
             </Text>
@@ -172,63 +156,6 @@ const Post = ({
             )}
           </Box>
         </Flex>
-        <Box cursor="pointer" position="relative" onClick={handleOptions}>
-          <BsThreeDots />
-          {optionsOpen && (
-            <Box
-              p="0.5rem"
-              className="fade-in"
-              zIndex={5}
-              borderRadius={8}
-              top="15px"
-              right="0"
-              pos="absolute"
-              bg="blackAlpha.900"
-              width="180px"
-              minH="240px"
-            >
-              <Flex
-                m="0.25rem"
-                justify="flex-end"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOptionsOpen(false);
-                }}
-              >
-                <Box>
-                  <AiOutlineClose />
-                </Box>
-              </Flex>
-              <Flex
-                onClick={handleRemovePost}
-                _hover={{ bg: 'black.tertiary' }}
-                borderRadius={8}
-                p="0.25rem"
-                align="center"
-              >
-                <Box mr="0.25rem">
-                  <BsTrash />
-                </Box>
-                <Box>
-                  <Text fontSize="0.85rem">Delete</Text>
-                </Box>
-              </Flex>
-              <Divider my="0.25rem" borderColor="border.primary" />
-              {user.id === post.authorId && (
-                <WritePost
-                  postId={post.id}
-                  method="update"
-                  ownerId={ownerId}
-                  ownerFirstName={ownerFirstName}
-                  ownerProfileId={ownerProfileId}
-                  updatePost={updatePost}
-                  isLoading={false}
-                  postError=""
-                />
-              )}
-            </Box>
-          )}
-        </Box>
       </Flex>
       <Box>
         <Text lineHeight="1.8" m="0.5rem">
@@ -339,4 +266,4 @@ const Post = ({
   );
 };
 
-export default Post;
+export default FeedPost;

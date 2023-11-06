@@ -1,6 +1,9 @@
 package com.hart.backend.parana.connection;
 
+import java.util.List;
+
 import com.hart.backend.parana.connection.dto.ConnectionDto;
+import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +14,19 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
+
+    @Query(value = """
+                SELECT new com.hart.backend.parana.connection.dto.MinimalConnectionDto(
+            r.id AS userId
+                ) FROM Connection c
+                INNER JOIN c.sender s
+                INNER JOIN c.receiver r
+                WHERE s.id = :userId
+                AND accepted = :accepted
+                    """)
+    List<MinimalConnectionDto> getAllUserConnections(
+            @Param("userId") Long userId,
+            @Param("accepted") Boolean accepted);
 
     @Query(value = """
             SELECT EXISTS(SELECT 1 FROM Connection c

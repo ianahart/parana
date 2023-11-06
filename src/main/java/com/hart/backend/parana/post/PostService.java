@@ -1,6 +1,7 @@
 package com.hart.backend.parana.post;
 
 import com.hart.backend.parana.connection.ConnectionService;
+import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
 import com.hart.backend.parana.post.dto.EditPostDto;
 import com.hart.backend.parana.post.dto.PostDto;
 import com.hart.backend.parana.post.dto.PostPaginationDto;
@@ -71,6 +72,22 @@ public class PostService {
         this.amazonService = amazonService;
         this.postLikeService = postLikeService;
         this.commentService = commentService;
+    }
+
+    public PostPaginationDto<PostDto> getPostsFeed(Long userId, int page, int pageSize, String direction) {
+        List<Long> connectionIds = this.connectionService.getAllUserConnections(userId);
+        int currentPage = MyUtil.paginate(page, direction);
+
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<PostDto> result = this.postRepository.getPostsFeed(pageable, connectionIds);
+
+        addDatesToPosts(result.getContent());
+        addNonConstructorFields(result.getContent());
+
+        return new PostPaginationDto<PostDto>(result.getContent(), currentPage, pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
+
     }
 
     private boolean canCreatePost(User author, User owner) {

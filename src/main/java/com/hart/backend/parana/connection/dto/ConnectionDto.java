@@ -13,6 +13,10 @@ public class ConnectionDto {
     private String readableDate;
     private Long profileId;
 
+    public ConnectionDto() {
+
+    }
+
     public ConnectionDto(Boolean loggedIn, String fullName, String avatarUrl, Timestamp createdAt,
             Long userId, Long id, Long profileId) {
         this.loggedIn = loggedIn;

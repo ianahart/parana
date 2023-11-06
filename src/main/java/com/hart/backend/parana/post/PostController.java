@@ -4,6 +4,7 @@ import com.hart.backend.parana.post.request.CreatePostRequest;
 import com.hart.backend.parana.post.request.UpdatePostRequest;
 import com.hart.backend.parana.post.response.CreatePostResponse;
 import com.hart.backend.parana.post.response.DeletePostResponse;
+import com.hart.backend.parana.post.response.GetPostFeedResponse;
 import com.hart.backend.parana.post.response.GetPostResponse;
 import com.hart.backend.parana.post.response.GetSinglePostResponse;
 import com.hart.backend.parana.post.response.UpdatePostResponse;
@@ -29,6 +30,17 @@ public class PostController {
     @Autowired
     public PostController(PostService postService) {
         this.postService = postService;
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<GetPostResponse> getPostsFeed(
+            @RequestParam("userId") Long userId,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new GetPostResponse("success", this.postService.getPostsFeed(userId, page, pageSize, direction)));
     }
 
     @GetMapping("")

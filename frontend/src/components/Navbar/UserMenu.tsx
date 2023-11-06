@@ -8,6 +8,7 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import LogoutButton from '../Auth/LogoutButton';
 import { UserContext } from '../../context/user';
 import { IUserContext } from '../../interfaces';
+import { MdOutlineFeed } from 'react-icons/md';
 
 interface IUserMenuProps {
   closeUserMenu: () => void;
@@ -67,6 +68,16 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
             linkText="Connections"
             mobile={true}
           />
+          {user.role === 'USER' && (
+            <NavLink
+              closeUserMenu={closeUserMenu}
+              icon={<MdOutlineFeed />}
+              link="/feed"
+              linkText="Feed"
+              mobile={true}
+            />
+          )}
+
           <Box my="1rem" borderBottom="1px solid" borderColor="border.primary"></Box>
           <NavLink
             closeUserMenu={closeUserMenu}

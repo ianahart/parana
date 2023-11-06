@@ -36,6 +36,7 @@ import General from './components/Settings/General';
 import Security from './components/Settings/Security';
 import Privacy from './components/Settings/Privacy';
 import Notifications from './components/Settings/Notifications';
+import FeedRoute from './routes/FeedRoute';
 
 function App() {
   const shouldRun = useRef(true);
@@ -143,6 +144,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <ExplorerRoute />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/feed"
+                element={
+                  <RequireAuth>
+                    <FeedRoute />
                   </RequireAuth>
                 }
               />

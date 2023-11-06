@@ -45,6 +45,8 @@ export interface IPost {
   authorFullName: string;
   authorAvatarUrl: string;
   authorId: number;
+  ownerProfileId: number;
+  ownerFullName: string;
   currentUserHasLikedPost: boolean;
   likesCount: number;
   comment: IComment;

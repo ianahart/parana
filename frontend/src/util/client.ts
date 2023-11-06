@@ -6,6 +6,12 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getFeedPosts(userId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/posts/feed?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   changeEmail(email: string, password: string, userId: number) {
     return http.patch(`users/${userId}/change-email`, { email, password });
   },

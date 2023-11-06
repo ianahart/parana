@@ -23,11 +23,28 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.id AS id, o.id AS ownerId, p.text AS text, p.gif AS gif,
             p.fileUrl AS fileUrl, p.createdAt AS createdAt, p.isEdited AS isEdited,
             a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl,
-            a.id AS authorId
+            a.id AS authorId, op.id AS ownerProfileId, o.fullName AS ownerFullName
             ) FROM Post p
             INNER JOIN p.owner o
             INNER JOIN p.author a
             INNER JOIN p.author.profile ap
+            INNER JOIN p.owner.profile op
+            WHERE a.id IN (:connectionIds)
+            """)
+    Page<PostDto> getPostsFeed(@Param("pageable") Pageable pageable,
+            List<Long> connectionIds);
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.post.dto.PostDto(
+            p.id AS id, o.id AS ownerId, p.text AS text, p.gif AS gif,
+            p.fileUrl AS fileUrl, p.createdAt AS createdAt, p.isEdited AS isEdited,
+            a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl,
+            a.id AS authorId, op.id AS ownerProfileId, o.fullName AS ownerFullName
+            ) FROM Post p
+            INNER JOIN p.owner o
+            INNER JOIN p.author a
+            INNER JOIN p.author.profile ap
+            INNER JOIN p.owner.profile op
             WHERE o.id = :ownerId
             AND (p.createdAt BETWEEN :startTimestamp AND :endTimestamp)
             """)
@@ -42,11 +59,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.id AS id, o.id AS ownerId, p.text AS text, p.gif AS gif,
             p.fileUrl AS fileUrl, p.createdAt AS createdAt, p.isEdited AS isEdited,
             a.fullName AS authorFullName, ap.avatarUrl AS authorAvatarUrl,
-            a.id AS authorId
+            a.id AS authorId, op.id AS ownerProfileId, o.fullName AS ownerFullName
             ) FROM Post p
             INNER JOIN p.owner o
             INNER JOIN p.author a
             INNER JOIN p.author.profile ap
+            INNER JOIN p.owner.profile op
             WHERE o.id = :ownerId
             """)
     Page<PostDto> getPosts(@Param("ownerId") Long ownerId, @Param("pageable") Pageable pageable);

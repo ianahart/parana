@@ -13,6 +13,7 @@ import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
 import com.hart.backend.parana.connection.dto.ConnectionStatusDto;
+import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,4 +201,11 @@ public class ConnectionService {
         return this.connectionRepository.isPending(senderId, receiverId);
     }
 
+    public List<Long> getAllUserConnections(Long userId) {
+        List<Long> connections = this.connectionRepository.getAllUserConnections(userId, true)
+                .stream()
+                .map(v -> v.getUserId()).toList();
+
+        return connections;
+    }
 }
