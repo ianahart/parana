@@ -7,6 +7,7 @@ import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.user.request.UpdateUserEmailRequest;
 import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.user.response.DeleteUserResponse;
+import com.hart.backend.parana.user.response.GetNonBlockedUserResponse;
 import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
@@ -41,6 +42,21 @@ public class UserController {
         this.recentSearchService = recentSearchService;
     }
 
+    @GetMapping("/non-blocked")
+    public ResponseEntity<GetNonBlockedUserResponse> getNonBlockedUsers(
+            @RequestParam("userId") Long userId,
+            @RequestParam("blockType") String blockType,
+            @RequestParam("fullName") String fullName,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new GetNonBlockedUserResponse("success",
+                        this.userService.getNonBlockedUsers(userId, blockType, fullName, page, pageSize, direction)));
+
+    }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<DeleteUserResponse> deletUser(@PathVariable("userId") Long userId) {

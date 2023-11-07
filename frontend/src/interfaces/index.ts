@@ -1,3 +1,15 @@
+export interface IBlock {
+  messages: boolean;
+  posts: boolean;
+  comments: boolean;
+}
+
+export interface IMinimalUser {
+  userId: number;
+  fullName: string;
+  avatarUrl: string;
+}
+
 export interface IComment {
   id: number;
   userId: number;
