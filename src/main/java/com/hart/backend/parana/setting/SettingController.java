@@ -1,7 +1,9 @@
 package com.hart.backend.parana.setting;
 
+import com.hart.backend.parana.setting.request.UpdateRememberMeRequest;
 import com.hart.backend.parana.setting.request.UpdateSettingRequest;
 import com.hart.backend.parana.setting.response.GetSettingResponse;
+import com.hart.backend.parana.setting.response.UpdateRememberMeResponse;
 import com.hart.backend.parana.setting.response.UpdateSettingResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,14 @@ public class SettingController {
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 new GetSettingResponse("success", this.settingService.getSettings(settingId)));
+    }
+
+    @PatchMapping("/{settingId}/remember-me")
+    public ResponseEntity<UpdateRememberMeResponse> updateRememberMe(@PathVariable("settingId") Long settingId,
+            @RequestBody UpdateRememberMeRequest request) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(new UpdateRememberMeResponse("success",
+                this.settingService.updateRememberMe(settingId, request.getRememberMe())));
     }
 
     @PatchMapping("/{settingId}")

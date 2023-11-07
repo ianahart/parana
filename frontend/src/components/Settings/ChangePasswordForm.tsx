@@ -94,7 +94,6 @@ const ChangePasswordForm = ({ passwordLastUpdated }: IChangePasswordFormProps) =
   return (
     <Flex
       flexDir={['column', 'column', 'row']}
-      mt="5rem"
       align="flex-start"
       justify="space-between"
     >

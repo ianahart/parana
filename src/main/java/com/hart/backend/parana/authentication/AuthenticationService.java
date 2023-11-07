@@ -40,7 +40,7 @@ public class AuthenticationService {
     private Long DEFAULT_TTL;
 
     @Value("${REMEMBER_ME_TTL}")
-    private String REMEMBER_ME_TTL;
+    private Long REMEMBER_ME_TTL;
 
     private final PasswordEncoder passwordEncoder;
     private final ProfileService profileService;
@@ -155,7 +155,10 @@ public class AuthenticationService {
         User user = this.userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new NotFoundException("User not found by email."));
 
-        String jwtToken = this.jwtService.generateToken(user, DEFAULT_TTL);
+        Long TTL = request.getRememberMe() ? REMEMBER_ME_TTL : DEFAULT_TTL;
+
+        this.settingService.updateRememberMe(user.getSetting().getId(), request.getRememberMe());
+        String jwtToken = this.jwtService.generateToken(user, TTL);
 
         this.tokenService.revokeAllUserTokens(user);
         FullUserDto userDto = this.updateAuthUser(user, jwtToken);
