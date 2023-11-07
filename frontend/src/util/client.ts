@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  deleteAccount(userId: number) {
+    return http.delete(`/users/${userId}`);
+  },
+
   updateRememberMe(settingId: number, rememberMe: boolean) {
     return http.patch(`/settings/${settingId}/remember-me`, { rememberMe });
   },

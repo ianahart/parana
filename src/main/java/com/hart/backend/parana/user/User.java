@@ -25,6 +25,7 @@ import com.hart.backend.parana.postlike.PostLike;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
+import com.hart.backend.parana.refreshtoken.RefreshToken;
 import com.hart.backend.parana.replycomment.ReplyComment;
 import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.setting.Setting;
@@ -97,8 +98,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Token> refreshTokens;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RefreshToken> refreshTokens;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PasswordReset> passwordResets;
@@ -285,7 +286,7 @@ public class User implements UserDetails {
         return passwordResets;
     }
 
-    public List<Token> getRefreshTokens() {
+    public List<RefreshToken> getRefreshTokens() {
         return refreshTokens;
     }
 
@@ -377,7 +378,7 @@ public class User implements UserDetails {
         this.passwordResets = passwordResets;
     }
 
-    public void setRefreshTokens(List<Token> refreshTokens) {
+    public void setRefreshTokens(List<RefreshToken> refreshTokens) {
         this.refreshTokens = refreshTokens;
     }
 

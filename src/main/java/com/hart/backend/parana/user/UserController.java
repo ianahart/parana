@@ -6,6 +6,7 @@ import com.hart.backend.parana.user.dto.UserDto;
 import com.hart.backend.parana.user.dto.UserPaginationDto;
 import com.hart.backend.parana.user.request.UpdateUserEmailRequest;
 import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
+import com.hart.backend.parana.user.response.DeleteUserResponse;
 import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
@@ -16,6 +17,7 @@ import com.hart.backend.parana.user.response.UpdateUserPasswordResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +39,13 @@ public class UserController {
     public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
         this.recentSearchService = recentSearchService;
+    }
+
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<DeleteUserResponse> deletUser(@PathVariable("userId") Long userId) {
+        this.userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new DeleteUserResponse("success"));
     }
 
     @PatchMapping("/{userId}/change-email")

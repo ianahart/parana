@@ -19,6 +19,7 @@ import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.util.MyUtil;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.connection.ConnectionService;
 import com.hart.backend.parana.favorite.FavoriteService;
 import com.hart.backend.parana.geocode.GeocodeService;
@@ -71,6 +72,15 @@ public class UserService {
         this.connectionService = connectionService;
         this.passwordEncoder = passwordEncoder;
         this.settingService = settingService;
+    }
+
+    public void deleteUser(Long userId) {
+        User user = getCurrentlyLoggedInUser();
+
+        if (user.getId() != userId) {
+            throw new ForbiddenException("Cannot delete another user");
+        }
+        this.userRepository.deleteById(userId);
     }
 
     public boolean userExistsByEmail(String email) {
