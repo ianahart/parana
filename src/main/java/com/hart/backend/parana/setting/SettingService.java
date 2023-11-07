@@ -1,18 +1,21 @@
 package com.hart.backend.parana.setting;
 
+import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
 
 import java.sql.Timestamp;
 
-import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
+import com.hart.backend.parana.config.JwtService;
 import com.hart.backend.parana.setting.dto.SettingDto;
 import com.hart.backend.parana.setting.request.UpdateSettingRequest;
+import com.hart.backend.parana.token.TokenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,18 +23,29 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class SettingService {
 
+    @Value("${REMEMBER_ME_TTL}")
+    private Long REMEMBER_ME_TTL;
+
     Logger logger = LoggerFactory.getLogger(SettingService.class);
 
     private final SettingRepository settingRepository;
 
     private final UserService userService;
 
+    private final TokenService tokenService;
+
+    private final JwtService jwtService;
+
     @Autowired
     public SettingService(
             SettingRepository settingRepository,
-            UserService userService) {
+            UserService userService,
+            TokenService tokenService,
+            JwtService jwtService) {
         this.settingRepository = settingRepository;
         this.userService = userService;
+        this.tokenService = tokenService;
+        this.jwtService = jwtService;
     }
 
     private String getClientIp(HttpServletRequest request) {
@@ -111,6 +125,22 @@ public class SettingService {
         setting.setEmailUpdatedOn(timestamp);
 
         this.settingRepository.save(setting);
+
+    }
+
+    public String updateRememberMe(Long settingId, Boolean rememberMe) {
+        Setting setting = getSettingById(settingId);
+        setting.setRememberMe(rememberMe);
+
+        this.settingRepository.save(setting);
+        if (setting.getRememberMe()) {
+            User user = setting.getUser();
+            this.tokenService.revokeAllUserTokens(user);
+            String token = this.jwtService.generateToken(user, REMEMBER_ME_TTL);
+            this.tokenService.saveTokenWithUser(token, user);
+            return token;
+        }
+        return "";
 
     }
 }

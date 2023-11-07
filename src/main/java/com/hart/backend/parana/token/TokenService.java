@@ -17,6 +17,12 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
+    public void saveTokenWithUser(String token, User user) {
+        Token tokenToSave = new Token(token, TokenType.BEARER, false, false, user);
+        this.tokenRepository.save(tokenToSave);
+
+    }
+
     public void revokeAllUserTokens(User user) {
         List<Token> tokens = this.tokenRepository.findAllValidTokens(user.getId());
 

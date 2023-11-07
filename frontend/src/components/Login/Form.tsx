@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Text, Flex } from '@chakra-ui/react';
+import { Box, Button, Heading, Text, Flex, Checkbox } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import { useContext, useState } from 'react';
@@ -17,6 +17,7 @@ const Form = () => {
   const [form, setForm] = useState<ILoginForm>(loginFormState);
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const skipConfirmPassword = (name: string, attribute: string) => {
     return name === 'confirmPassword' && attribute === 'type';
@@ -52,7 +53,7 @@ const Form = () => {
 
   const login = (form: ILoginForm) => {
     setIsLoading(true);
-    Client.login(form)
+    Client.login(form, rememberMe)
       .then((res) => {
         const { refreshToken, token, user } = res.data;
         updateUser(user);
@@ -131,8 +132,17 @@ const Form = () => {
             icon={<AiOutlineLock />}
             placeHolder="Enter your password"
           />
-          <Flex my="2rem" justify="flex-end" fontSize="0.85rem" color="purple.300">
-            <RouterLink to="/forgot-password">Recovery Password</RouterLink>
+          <Flex align="center" justify="space-between">
+            <Checkbox
+              onChange={(e) => setRememberMe(e.target.checked)}
+              isChecked={rememberMe}
+              colorScheme="purple"
+            >
+              <Text fontSize="0.85rem">Remember me</Text>
+            </Checkbox>
+            <Flex my="2rem" justify="flex-end" fontSize="0.85rem" color="purple.300">
+              <RouterLink to="/forgot-password">Recovery Password</RouterLink>
+            </Flex>
           </Flex>
           {isLoading && (
             <Box>

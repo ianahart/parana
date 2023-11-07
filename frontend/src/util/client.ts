@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updateRememberMe(settingId: number, rememberMe: boolean) {
+    return http.patch(`/settings/${settingId}/remember-me`, { rememberMe });
+  },
+
   getFeedPosts(userId: number, page: number, pageSize: number, direction: string) {
     return http.get(
       `/posts/feed?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
@@ -336,10 +340,11 @@ export const Client = {
     return http.post('/auth/logout', { refreshToken });
   },
 
-  login(form: ILoginForm) {
+  login(form: ILoginForm, rememberMe: boolean) {
     return http.post('/auth/login', {
       email: form.email.value,
       password: form.password.value,
+      rememberMe,
     });
   },
 
