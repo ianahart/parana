@@ -3,6 +3,7 @@ package com.hart.backend.parana.user;
 import java.util.List;
 import java.util.Optional;
 
+import com.hart.backend.parana.user.dto.MinimalUserDto;
 import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
@@ -34,6 +35,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
              WHERE u.role = 'TEACHER'
             """)
     List<UserSuggestionDto> getUserSuggestions();
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.user.dto.MinimalUserDto(
+             u.id AS userId, u.fullName AS fullName, p.avatarUrl AS avatarUrl
+            ) FROM User u
+            INNER JOIN u.profile p
+            WHERE LOWER(u.fullName) LIKE %:fullName%
+            AND u.id != :userId
+            """)
+    Page<MinimalUserDto> getNonBlockedUsers(@Param("fullName") String fullName, @Param("userId") Long userId,
+            @Param("paging") Pageable paging);
 
     @Query(value = """
             SELECT new com.hart.backend.parana.user.dto.SearchTeacherDto(

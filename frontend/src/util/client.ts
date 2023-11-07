@@ -1,11 +1,28 @@
 import axios from 'axios';
-import { IRegisterForm, ILoginForm } from '../interfaces';
+import { IRegisterForm, ILoginForm, IBlock } from '../interfaces';
 
 export const http = axios.create({
   baseURL: 'http://localhost:5173/api/v1',
 });
 
 export const Client = {
+  blockUser(blockedByUserId: number, blockedUserId: number, block: IBlock) {
+    return http.post('/privacies', { blockedByUserId, blockedUserId, block });
+  },
+
+  getNonBlockedUsers(
+    userId: number,
+    blockType: string,
+    fullName: string,
+    page: number,
+    pageSize: number,
+    direction: string
+  ) {
+    return http.get(
+      `/users/non-blocked?userId=${userId}&blockType=${blockType}&page=${page}&pageSize=${pageSize}&direction=${direction}&fullName=${fullName}`
+    );
+  },
+
   deleteAccount(userId: number) {
     return http.delete(`/users/${userId}`);
   },

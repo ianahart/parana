@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.hart.backend.parana.user.dto.FullUserDto;
+import com.hart.backend.parana.user.dto.MinimalUserDto;
 import com.hart.backend.parana.user.dto.SearchTeacherDto;
 import com.hart.backend.parana.user.dto.TeacherDto;
 import com.hart.backend.parana.user.dto.UserDto;
@@ -323,4 +324,39 @@ public class UserService {
 
         this.settingService.updateEmailDate(user.getSetting().getId());
     }
+
+    private List<MinimalUserDto> blockUsers(List<MinimalUserDto> users, String blockType) {
+        User currentUser = getCurrentlyLoggedInUser();
+        List<Long> blockedUserIds = currentUser.getBlockedByUserPrivacies().stream().filter(v -> {
+            if (blockType.equals("messages") && v.getMessages()) {
+                return v.getMessages();
+            }
+            if (blockType.equals("posts") && v.getPosts()) {
+                return v.getPosts();
+            }
+            if (blockType.equals("comments") && v.getComments()) {
+                return v.getComments();
+            }
+            return false;
+        }).map(v -> v.getBlockedUser().getId()).toList();
+
+        return users.stream().filter(user -> !blockedUserIds.contains(user.getUserId())).toList();
+    }
+
+    public UserPaginationDto<MinimalUserDto> getNonBlockedUsers(Long userId, String blockType, String fullName,
+            int page, int pageSize,
+            String direction) {
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        Page<MinimalUserDto> result = this.userRepository.getNonBlockedUsers(fullName.toLowerCase(), userId, paging);
+
+        return new UserPaginationDto<MinimalUserDto>(
+                blockUsers(result.getContent(), blockType),
+                currentPage,
+                pageSize,
+                result.getTotalPages(),
+                direction, result.getTotalElements());
+
+    }
+
 }

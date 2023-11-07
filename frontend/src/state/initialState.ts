@@ -14,6 +14,12 @@ export const userState = {
   settingId: 0,
 };
 
+export const blockState = {
+  posts: false,
+  messages: false,
+  comments: false,
+};
+
 export interface IConnectionRequest {
   avatarUrl: string;
   createdAt: Date;
@@ -62,6 +68,14 @@ export const postPaginationState = {
 };
 
 export const commentPaginationState = {
+  page: 0,
+  pageSize: 2,
+  totalPages: 0,
+  direction: 'next',
+  totalElements: 0,
+};
+
+export const blockPaginationState = {
   page: 0,
   pageSize: 2,
   totalPages: 0,

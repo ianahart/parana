@@ -22,6 +22,7 @@ import com.hart.backend.parana.message.Message;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.postlike.PostLike;
+import com.hart.backend.parana.privacy.Privacy;
 import com.hart.backend.parana.profile.Profile;
 import com.hart.backend.parana.recentsearch.RecentSearch;
 import com.hart.backend.parana.recommendation.Recommendation;
@@ -155,6 +156,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> receiverMessages;
 
+    @OneToMany(mappedBy = "blockedByUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Privacy> blockedByUserPrivacies;
+
+    @OneToMany(mappedBy = "blockedUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Privacy> blockedUserPrivacies;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -207,6 +214,14 @@ public class User implements UserDetails {
 
     public String getAbbreviation() {
         return firstName.substring(0, 1).toUpperCase() + lastName.substring(0, 1).toUpperCase();
+    }
+
+    public List<Privacy> getBlockedUserPrivacies() {
+        return blockedUserPrivacies;
+    }
+
+    public List<Privacy> getBlockedByUserPrivacies() {
+        return blockedByUserPrivacies;
     }
 
     public List<CommentLike> getUserCommentLikes() {
@@ -348,6 +363,14 @@ public class User implements UserDetails {
 
     public void setSenderMessages(List<Message> senderMessages) {
         this.senderMessages = senderMessages;
+    }
+
+    public void setBlockedUserPrivacies(List<Privacy> blockedUserPrivacies) {
+        this.blockedUserPrivacies = blockedUserPrivacies;
+    }
+
+    public void setBlockedByUserPrivacies(List<Privacy> blockedByUserPrivacies) {
+        this.blockedByUserPrivacies = blockedByUserPrivacies;
     }
 
     public void setReceiverMessages(List<Message> receiverMessages) {
