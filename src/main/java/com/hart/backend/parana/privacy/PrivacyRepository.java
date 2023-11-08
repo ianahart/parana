@@ -1,5 +1,9 @@
 package com.hart.backend.parana.privacy;
 
+import com.hart.backend.parana.privacy.dto.PrivacyDto;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +22,16 @@ public interface PrivacyRepository extends JpaRepository<Privacy, Long> {
     Privacy getExistingPrivacy(@Param("blockedUserId") Long blockedUserId,
             @Param("blockedByUserId") Long blockedByUserId);
 
+    @Query(value = """
+            SELECT new com.hart.backend.parana.privacy.dto.PrivacyDto(
+            p.id AS id, bu.id AS blockedUserId, bup.avatarUrl AS avatarUrl,
+            bu.fullName AS fullName, p.messages AS messages, p.posts AS posts,
+            p.comments AS comments, p.updatedAt AS updatedAt
+            ) FROM Privacy p
+            INNER JOIN p.blockedByUser bbu
+            INNER JOIN p.blockedUser bu
+            INNER JOIN p.blockedUser.profile bup
+            WHERE bbu.id = :userId
+                """)
+    Page<PrivacyDto> getPrivacies(@Param("userId") Long userId, @Param("pageable") Pageable pageable);
 }

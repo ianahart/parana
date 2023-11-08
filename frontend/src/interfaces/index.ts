@@ -1,3 +1,15 @@
+export interface IPrivacy {
+  id: number;
+  blockedUserId: number;
+  avatarUrl: string;
+  fullName: string;
+  messages: boolean;
+  posts: boolean;
+  comments: boolean;
+  updatedAt: Date;
+  readableDate: string;
+}
+
 export interface IBlock {
   messages: boolean;
   posts: boolean;

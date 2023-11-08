@@ -97,7 +97,7 @@ const Block = ({ heading, text, blockType, block }: IBlockProps) => {
         console.log(res);
         setPagination(blockPaginationState);
         setUsers([]);
-        setName("");
+        setName('');
       })
       .catch((err) => {
         console.log(err);

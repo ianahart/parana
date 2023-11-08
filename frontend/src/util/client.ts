@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updateBlockedUser(block: string, isChecked: boolean, privacyId: number) {
+    return http.patch(`/privacies/${privacyId}`, { block, isChecked });
+  },
+
+  getBlockedUsers(userId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/privacies?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   blockUser(blockedByUserId: number, blockedUserId: number, block: IBlock) {
     return http.post('/privacies', { blockedByUserId, blockedUserId, block });
   },
