@@ -32,7 +32,6 @@ const Post = ({
   handleLikePost,
   updateLatestCommentLike,
 }: IPostProps) => {
-  console.log(post);
   const { user } = useContext(UserContext) as IUserContext;
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [comments, setComments] = useState<IComment[]>([]);

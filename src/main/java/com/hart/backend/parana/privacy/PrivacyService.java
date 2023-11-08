@@ -4,6 +4,9 @@ import com.hart.backend.parana.privacy.dto.PrivacyDto;
 import com.hart.backend.parana.privacy.dto.PrivacyPaginationDto;
 import com.hart.backend.parana.privacy.request.CreatePrivacyRequest;
 import com.hart.backend.parana.privacy.request.UpdatePrivacyRequest;
+
+import java.util.List;
+
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
@@ -122,5 +125,28 @@ public class PrivacyService {
             this.privacyRepository.save(privacy);
         }
 
-     }
+    }
+
+    public boolean blockedFromCreatingPosts(Long authorId, Long ownerId) {
+        return this.privacyRepository.blockedFromCreatingPosts(authorId, ownerId);
+
+    }
+
+    public boolean blockedFromCreatingComments(Long authorId, Long ownerId) {
+        return this.privacyRepository.blockedFromCreatingComments(authorId, ownerId);
+
+    }
+
+    public List<Long> getBlockedUserPrivaciesMessages(User currentUser) {
+        return currentUser.getBlockedUserPrivacies().stream()
+                .filter(privacy -> privacy.getMessages())
+                .map(privacy -> privacy.getBlockedByUser().getId()).toList();
+    }
+
+    public List<Long> getBlockedByUserPrivaciesMessages(User currentUser) {
+        return currentUser.getBlockedByUserPrivacies().stream()
+                .filter(privacy -> privacy.getMessages())
+                .map(privacy -> privacy.getBlockedUser().getId()).toList();
+    }
+
 }

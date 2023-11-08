@@ -3,6 +3,7 @@ package com.hart.backend.parana.replycomment;
 import com.hart.backend.parana.comment.Comment;
 import com.hart.backend.parana.comment.CommentService;
 import com.hart.backend.parana.connection.ConnectionService;
+import com.hart.backend.parana.privacy.PrivacyService;
 import com.hart.backend.parana.replycomment.dto.ReplyCommentDto;
 import com.hart.backend.parana.replycomment.dto.ReplyCommentPaginationDto;
 import com.hart.backend.parana.replycomment.request.CreateReplyCommentRequest;
@@ -38,16 +39,20 @@ public class ReplyCommentService {
 
     private final ReplyCommentRepository replyCommentRepository;
 
+    private final PrivacyService privacyService;
+
     @Autowired
     public ReplyCommentService(
             UserService userService,
             CommentService commentService,
             ReplyCommentRepository replyCommentRepository,
-            ConnectionService connectionService) {
+            ConnectionService connectionService,
+            PrivacyService privacyService) {
         this.userService = userService;
         this.commentService = commentService;
         this.replyCommentRepository = replyCommentRepository;
         this.connectionService = connectionService;
+        this.privacyService = privacyService;
     }
 
     public ReplyComment getReplyCommentById(Long replyCommentId) {
@@ -67,6 +72,10 @@ public class ReplyCommentService {
 
         User user = this.userService.getUserById(request.getUserId());
         Comment comment = this.commentService.getCommentById(request.getCommentId());
+
+        if (this.privacyService.blockedFromCreatingComments(request.getUserId(), request.getOwnerId())) {
+            throw new ForbiddenException("You are blocked from replying to comments this teacher");
+        }
 
         if (!canCreateReplyComment(user, request.getOwnerId())) {
             throw new ForbiddenException("You do not have necessary privileges to reply to a comment");
