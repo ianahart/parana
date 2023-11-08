@@ -15,6 +15,7 @@ import com.hart.backend.parana.advice.NotFoundException;
 
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.post.PostService;
+import com.hart.backend.parana.privacy.PrivacyService;
 import com.hart.backend.parana.replycomment.ReplyCommentService;
 import com.hart.backend.parana.user.Role;
 import com.hart.backend.parana.user.User;
@@ -52,6 +53,8 @@ public class CommentService {
 
     private final ReplyCommentService replyCommentService;
 
+    private final PrivacyService privacyService;
+
     @Autowired
     public CommentService(
             CommentRepository commentRepository,
@@ -59,13 +62,15 @@ public class CommentService {
             PostService postService,
             ConnectionService connectionService,
             @Lazy CommentLikeService commentLikeService,
-            @Lazy ReplyCommentService replyCommentService) {
+            @Lazy ReplyCommentService replyCommentService,
+            PrivacyService privacyService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;
         this.connectionService = connectionService;
         this.commentLikeService = commentLikeService;
         this.replyCommentService = replyCommentService;
+        this.privacyService = privacyService;
     }
 
     public Page<CommentDto> getComments(Long postId, int page, int pageSize, String direction) {
@@ -134,6 +139,10 @@ public class CommentService {
     public void createComment(CreateCommentRequest request) {
         User user = this.userService.getUserById(request.getUserId());
         Post post = this.postService.getPostById(request.getPostId());
+
+        if (this.privacyService.blockedFromCreatingComments(request.getUserId(), post.getOwner().getId())) {
+            throw new ForbiddenException("You are blocked from commenting on posts for this teacher");
+        }
 
         if (!enforceCommentLimit(user, post)) {
             throw new BadRequestException("You have exceed the comment limit per 5 minutes");

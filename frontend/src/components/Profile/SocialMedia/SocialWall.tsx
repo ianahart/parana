@@ -156,6 +156,7 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         resetState();
       })
       .catch((err) => {
+        setCreatePostError(err.response.data.message);
         throw new Error(err);
       });
   };
@@ -189,7 +190,6 @@ const SocialWall = ({ ownerId, ownerFirstName, ownerProfileId }: ISocialWallProp
         setPosts((prevState) => [...prevState, ...posts]);
       })
       .catch((err) => {
-        console.log(err);
         throw new Error(err);
       });
   };

@@ -8,6 +8,7 @@ import com.hart.backend.parana.post.dto.PostPaginationDto;
 import com.hart.backend.parana.post.request.CreatePostRequest;
 import com.hart.backend.parana.post.request.UpdatePostRequest;
 import com.hart.backend.parana.postlike.PostLikeService;
+import com.hart.backend.parana.privacy.PrivacyService;
 import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
@@ -59,19 +60,23 @@ public class PostService {
 
     private final CommentService commentService;
 
+    private final PrivacyService privacyService;
+
     @Autowired
     public PostService(UserService userService,
             PostRepository postRepository,
             ConnectionService connectionService,
             AmazonService amazonService,
             @Lazy PostLikeService postLikeService,
-            @Lazy CommentService commentService) {
+            @Lazy CommentService commentService,
+            PrivacyService privacyService) {
         this.userService = userService;
         this.postRepository = postRepository;
         this.connectionService = connectionService;
         this.amazonService = amazonService;
         this.postLikeService = postLikeService;
         this.commentService = commentService;
+        this.privacyService = privacyService;
     }
 
     public PostPaginationDto<PostDto> getPostsFeed(Long userId, int page, int pageSize, String direction) {
@@ -121,6 +126,10 @@ public class PostService {
     public void createPost(CreatePostRequest request) {
         User author = this.userService.getUserById(request.getAuthorId());
         User owner = this.userService.getUserById(request.getOwnerId());
+
+        if (this.privacyService.blockedFromCreatingPosts(author.getId(), owner.getId())) {
+            throw new ForbiddenException("You are blocked from creating posts for this teacher");
+        }
 
         if (!canCreatePost(author, owner)) {
             throw new ForbiddenException("Do not have necessary privileges. Try connecting.");
@@ -249,6 +258,10 @@ public class PostService {
     public void updatePost(Long postId, UpdatePostRequest request) {
         Post post = getPostById(postId);
         User currentUser = this.userService.getCurrentlyLoggedInUser();
+
+        if (this.privacyService.blockedFromCreatingPosts(post.getAuthor().getId(), post.getOwner().getId())) {
+            throw new ForbiddenException("You are blocked from editing posts for this teacher");
+        }
 
         if (currentUser.getId() != post.getAuthor().getId()) {
             throw new ForbiddenException("Cannot edit another user's post");

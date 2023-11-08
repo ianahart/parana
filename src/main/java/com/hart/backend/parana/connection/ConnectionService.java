@@ -6,6 +6,7 @@ import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
@@ -13,7 +14,8 @@ import com.hart.backend.parana.advice.ForbiddenException;
 import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
 import com.hart.backend.parana.connection.dto.ConnectionStatusDto;
-import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
+import com.hart.backend.parana.privacy.Privacy;
+import com.hart.backend.parana.privacy.PrivacyService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,16 @@ public class ConnectionService {
 
     private final UserService userService;
     private final ConnectionRepository connectionRepository;
+    private final PrivacyService privacyService;
 
     @Autowired
     public ConnectionService(
             ConnectionRepository connectionRepository,
-            UserService userService) {
+            UserService userService,
+            PrivacyService privacyService) {
         this.connectionRepository = connectionRepository;
         this.userService = userService;
+        this.privacyService = privacyService;
     }
 
     public void checkUsersArePresent(Long senderId, Long receiverId) {
@@ -163,6 +168,10 @@ public class ConnectionService {
         }
     }
 
+    private List<ConnectionDto> filterOutBlockedConnections(List<ConnectionDto> connections, List<Long> ids) {
+        return connections.stream().filter(connection -> !ids.contains(connection.getUserId())).toList();
+    }
+
     public ConnectionPaginationDto<ConnectionDto> getConnections(Long userId, int page, int pageSize,
             String direction, String searchTerm) {
         User currentUser = this.userService.getUserById(userId);
@@ -176,8 +185,18 @@ public class ConnectionService {
                 ? this.connectionRepository.getUserConnections(userId, true, query, paging)
                 : this.connectionRepository.getTeacherConnections(userId, true, query, paging);
 
+        List<ConnectionDto> connections = new ArrayList<>();
+        if (Role.USER == currentUser.getRole()) {
+            List<Long> ids = this.privacyService.getBlockedUserPrivaciesMessages(currentUser);
+            connections = filterOutBlockedConnections(result.getContent(), ids);
+
+        } else {
+            List<Long> ids = this.privacyService.getBlockedByUserPrivaciesMessages(currentUser);
+            connections = filterOutBlockedConnections(result.getContent(), ids);
+        }
+
         return new ConnectionPaginationDto<ConnectionDto>(
-                result.getContent(),
+                connections,
                 currentPage,
                 pageSize,
                 result.getTotalPages(),

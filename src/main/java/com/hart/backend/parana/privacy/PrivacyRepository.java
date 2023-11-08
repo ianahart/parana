@@ -13,6 +13,30 @@ import org.springframework.stereotype.Repository;
 public interface PrivacyRepository extends JpaRepository<Privacy, Long> {
 
     @Query(value = """
+            SELECT EXISTS(
+            SELECT 1 FROM Privacy p
+            INNER JOIN p.blockedUser bu
+            INNER JOIN p.blockedByUser bbu
+            WHERE p.comments = true
+            AND bu.id = :authorId
+            AND bbu.id = :ownerId
+            )
+            """)
+    boolean blockedFromCreatingComments(@Param("authorId") Long authorId, @Param("ownerId") Long ownerId);
+
+    @Query(value = """
+            SELECT EXISTS(
+            SELECT 1 FROM Privacy p
+            INNER JOIN p.blockedUser bu
+            INNER JOIN p.blockedByUser bbu
+            WHERE p.posts = true
+            AND bu.id = :authorId
+            AND bbu.id = :ownerId
+            )
+            """)
+    boolean blockedFromCreatingPosts(@Param("authorId") Long authorId, @Param("ownerId") Long ownerId);
+
+    @Query(value = """
             SELECT p FROM Privacy p
             INNER JOIN p.blockedUser bu
             INNER JOIN p.blockedByUser bbu
