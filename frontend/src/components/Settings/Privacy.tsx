@@ -11,7 +11,11 @@ const Privacy = () => {
   return (
     <Box color="text.secondary">
       <Header heading="User Privacy" icon={<BsShieldLock />} />
-      {user.role === 'TEACHER' && <BlockUsers />}
+      {user.role === 'TEACHER' && (
+        <Box pt="3rem">
+          <BlockUsers />
+        </Box>
+      )}
     </Box>
   );
 };

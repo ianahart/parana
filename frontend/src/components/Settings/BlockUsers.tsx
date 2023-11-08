@@ -1,10 +1,14 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import Block from './Block';
+import BlockList from './BlockList';
 
 const BlockUsers = () => {
   return (
     <Box>
-      <Box border="1px solid blue">
+      <Flex justify="flex-end">
+        <BlockList />
+      </Flex>
+      <Box>
         <Block
           heading="Block Messages"
           text="When you block a particular user from sending messages to you, you will not be able to send messages to them. They will not see you in their messages and you will not see them in your messages."
