@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  removeNotification(notificationId: number) {
+    return http.delete(`/notifications/${notificationId}`);
+  },
+
+  getNotifications(userId: number, page: number, pageSize: number, direction: string) {
+    return http.get(
+      `/notifications?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
   updateBlockedUser(block: string, isChecked: boolean, privacyId: number) {
     return http.patch(`/privacies/${privacyId}`, { block, isChecked });
   },

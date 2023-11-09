@@ -19,6 +19,7 @@ import com.hart.backend.parana.commentlike.CommentLike;
 import com.hart.backend.parana.connection.Connection;
 import com.hart.backend.parana.favorite.Favorite;
 import com.hart.backend.parana.message.Message;
+import com.hart.backend.parana.notification.Notification;
 import com.hart.backend.parana.passwordreset.PasswordReset;
 import com.hart.backend.parana.post.Post;
 import com.hart.backend.parana.postlike.PostLike;
@@ -162,6 +163,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "blockedUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Privacy> blockedUserPrivacies;
 
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> receiverNotifications;
+
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> senderNotifications;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -218,6 +225,14 @@ public class User implements UserDetails {
 
     public List<Privacy> getBlockedUserPrivacies() {
         return blockedUserPrivacies;
+    }
+
+    public List<Notification> getSenderNotifications() {
+        return senderNotifications;
+    }
+
+    public List<Notification> getReceiverNotifications() {
+        return receiverNotifications;
     }
 
     public List<Privacy> getBlockedByUserPrivacies() {
@@ -463,6 +478,14 @@ public class User implements UserDetails {
 
     public void setTeacherRecommendations(List<Recommendation> teacherRecommendations) {
         this.teacherRecommendations = teacherRecommendations;
+    }
+
+    public void setSenderNotifications(List<Notification> senderNotifications) {
+        this.senderNotifications = senderNotifications;
+    }
+
+    public void setReceiverNotifications(List<Notification> receiverNotifications) {
+        this.receiverNotifications = receiverNotifications;
     }
 
     public void setOwnerPosts(List<Post> ownerPosts) {

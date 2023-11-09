@@ -1,3 +1,13 @@
+export interface INotification {
+  id: number;
+  receiverId: number;
+  senderId: number;
+  text: string;
+  fullName: string;
+  avatarUrl: string;
+  createdAt: Date;
+}
+
 export interface IPrivacy {
   id: number;
   blockedUserId: number;

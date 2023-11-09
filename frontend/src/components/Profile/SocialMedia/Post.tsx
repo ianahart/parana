@@ -276,6 +276,7 @@ const Post = ({
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />
       <Actions
+        ownerId={ownerId}
         refreshComments={refreshComments}
         createComment={createComment}
         currentUserHasLikedPost={post.currentUserHasLikedPost}

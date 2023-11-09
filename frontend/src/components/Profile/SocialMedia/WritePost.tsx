@@ -29,6 +29,10 @@ import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { Grid } from '@giphy/react-components';
 import { GiphyFetch } from '@giphy/js-fetch-api';
 import { Client } from '../../../util/client';
+import { over } from 'stompjs';
+import SockJS from 'sockjs-client';
+
+let stompClient: any = null;
 
 interface IWritePostProps {
   postId?: number;
@@ -84,6 +88,28 @@ const WritePost = ({
       });
   };
 
+  const connect = () => {
+    let Sock = new SockJS('http://localhost:8080/ws');
+    stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  const sendNotification = (receiverId: number, senderId: number) => {
+    console.log(receiverId, senderId);
+    if (stompClient) {
+      stompClient.send(
+        '/api/v1/private-notifications',
+        {},
+        JSON.stringify({ receiverId, senderId, type: 'posts' })
+      );
+    }
+  };
+
+  const onConnected = () => {
+    console.log('connected');
+  };
+  const onError = () => {};
+
   useEffect(() => {
     if (shouldRun.current && postId !== undefined) {
       getPost(postId);
@@ -109,6 +135,9 @@ const WritePost = ({
     setDataURL('');
     setPostText('');
     setGifURL('');
+    if (stompClient && method === 'post') {
+      stompClient.disconnect();
+    }
   };
 
   const handlePostAction = () => {
@@ -120,6 +149,7 @@ const WritePost = ({
 
     if (createPost !== undefined && method === 'post') {
       createPost(ownerId, user.id, postText, file, gifURL);
+      sendNotification(ownerId, user.id);
 
       if (postError == undefined || postError.length > 0) {
         return;
@@ -183,6 +213,11 @@ const WritePost = ({
     setEmojiPickerOpen(false);
   };
 
+  const handleOnOpen = () => {
+    connect();
+    onOpen();
+  };
+
   return (
     <Box
       p={method === 'update' ? '0' : '1rem'}
@@ -201,7 +236,7 @@ const WritePost = ({
               fullName={user.fullName}
             />
             <Box
-              onClick={onOpen}
+              onClick={handleOnOpen}
               cursor="pointer"
               flexGrow={2}
               p="0.5rem"

@@ -1,5 +1,5 @@
 import { Box, Flex, Text, Textarea, Tooltip, ScaleFade } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AiOutlineComment, AiOutlineSend } from 'react-icons/ai';
 import { BsEmojiSmile, BsHandThumbsUp } from 'react-icons/bs';
 import { UserContext } from '../../../context/user';
@@ -9,7 +9,13 @@ import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react';
 import { nanoid } from 'nanoid';
 import { AxiosResponse } from 'axios';
 
+import { over } from 'stompjs';
+import SockJS from 'sockjs-client';
+
+let stompClient: any = null;
+
 interface IActionsProps {
+  ownerId: number;
   handleLikePost: (userId: number, postId: number, action: string) => void;
   postId: number;
   currentUserHasLikedPost: boolean;
@@ -26,6 +32,7 @@ interface IError {
 }
 
 const Actions = ({
+  ownerId,
   handleLikePost,
   postId,
   currentUserHasLikedPost,
@@ -38,6 +45,39 @@ const Actions = ({
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [text, setText] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
+
+  useEffect(() => {});
+
+  const connect = () => {
+    let Sock = new SockJS('http://localhost:8080/ws');
+    stompClient = over(Sock);
+    stompClient.connect({}, onConnected, onError);
+  };
+
+  useEffect(() => {
+    if (isCommentBoxShowing) {
+      connect();
+    } else {
+      if (stompClient !== null) {
+        stompClient.disconnect();
+      }
+    }
+  }, [isCommentBoxShowing]);
+
+  const sendNotification = (receiverId: number, senderId: number) => {
+    if (stompClient) {
+      stompClient.send(
+        '/api/v1/private-notifications',
+        {},
+        JSON.stringify({ receiverId, senderId, type: 'comments' })
+      );
+    }
+  };
+
+  const onConnected = () => {
+    console.log('connected');
+  };
+  const onError = () => {};
 
   const handleOnClick = (e: React.MouseEvent<HTMLDivElement>, action: string) => {
     e.stopPropagation();
@@ -69,11 +109,13 @@ const Actions = ({
       ]);
       return;
     }
-    setIsCommentBoxShowing(false);
     createComment(user.id, postId, text)
       .then(() => {
         setText('');
         refreshComments();
+        console.log('RUN');
+        sendNotification(ownerId, user.id);
+        setIsCommentBoxShowing(false);
       })
       .catch((err) => {
         applyErrors(err.response.data);
