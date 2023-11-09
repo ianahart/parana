@@ -1,9 +1,11 @@
 package com.hart.backend.parana.setting;
 
 import com.hart.backend.parana.setting.request.UpdateRememberMeRequest;
+import com.hart.backend.parana.setting.request.UpdateSettingNotificationRequest;
 import com.hart.backend.parana.setting.request.UpdateSettingRequest;
 import com.hart.backend.parana.setting.response.GetSettingResponse;
 import com.hart.backend.parana.setting.response.UpdateRememberMeResponse;
+import com.hart.backend.parana.setting.response.UpdateSettingNotificationResponse;
 import com.hart.backend.parana.setting.response.UpdateSettingResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,13 @@ public class SettingController {
     @Autowired()
     public SettingController(SettingService settingService) {
         this.settingService = settingService;
+    }
+
+    @PatchMapping("/{settingId}/notifications")
+    public ResponseEntity<UpdateSettingNotificationResponse> updateNotifications(
+            @PathVariable("settingId") Long settingId, @RequestBody UpdateSettingNotificationRequest request) {
+        this.settingService.updateNotifications(settingId, request.getNotifications());
+        return ResponseEntity.status(HttpStatus.OK).body(new UpdateSettingNotificationResponse("success"));
     }
 
     @GetMapping("/{settingId}")

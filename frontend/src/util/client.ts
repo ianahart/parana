@@ -6,6 +6,10 @@ export const http = axios.create({
 });
 
 export const Client = {
+  updateNotificationSetting(notifications: boolean, settingId: number) {
+    return http.patch(`/settings/${settingId}/notifications`, { notifications });
+  },
+
   removeNotification(notificationId: number) {
     return http.delete(`/notifications/${notificationId}`);
   },

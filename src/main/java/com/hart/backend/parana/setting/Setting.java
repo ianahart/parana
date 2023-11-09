@@ -51,6 +51,9 @@ public class Setting {
     @Column(name = "email_updated_on")
     private Timestamp emailUpdatedOn;
 
+    @Column(name = "notifications")
+    private Boolean notifications;
+
     @JsonIgnore
     @OneToOne(mappedBy = "setting")
     private User user;
@@ -68,7 +71,8 @@ public class Setting {
             Boolean blockPosts,
             String ipAddress,
             Timestamp passwordUpdatedOn,
-            Timestamp emailUpdatedOn) {
+            Timestamp emailUpdatedOn,
+            Boolean notifications) {
         this.id = id;
         this.createdAt = createdAt;
         this.rememberMe = rememberMe;
@@ -78,6 +82,7 @@ public class Setting {
         this.ipAddress = ipAddress;
         this.passwordUpdatedOn = passwordUpdatedOn;
         this.emailUpdatedOn = emailUpdatedOn;
+        this.notifications = notifications;
     }
 
     public Setting(
@@ -85,16 +90,22 @@ public class Setting {
             Boolean blockMessages,
             Boolean blockComments,
             Boolean blockPosts,
-            String ipAddress) {
+            String ipAddress,
+            Boolean notifications) {
         this.rememberMe = rememberMe;
         this.blockMessages = blockMessages;
         this.blockComments = blockComments;
         this.blockPosts = blockPosts;
         this.ipAddress = ipAddress;
+        this.notifications = notifications;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Boolean getNotifications() {
+        return notifications;
     }
 
     public User getUser() {
@@ -171,6 +182,10 @@ public class Setting {
 
     public void setPasswordUpdatedOn(Timestamp passwordUpdatedOn) {
         this.passwordUpdatedOn = passwordUpdatedOn;
+    }
+
+    public void setNotifications(Boolean notifications) {
+        this.notifications = notifications;
     }
 
 }
