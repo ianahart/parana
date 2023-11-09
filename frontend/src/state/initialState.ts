@@ -59,6 +59,14 @@ export const connectionPaginationState = {
   totalElements: 0,
 };
 
+export const notificationPaginationState = {
+  page: 0,
+  pageSize: 4,
+  totalPages: 0,
+  direction: 'next',
+  totalElements: 0,
+};
+
 export const postPaginationState = {
   page: 0,
   pageSize: 4,

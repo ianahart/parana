@@ -6,6 +6,7 @@ import { UserContext } from '../../context/user';
 import { IUserContext } from '../../interfaces';
 import UserAvatar from '../Shared/UserAvatar';
 import UserMenu from './UserMenu';
+import Notifications from './Notifications';
 
 const AuthNavbar = () => {
   const { user } = useContext(UserContext) as IUserContext;
@@ -35,6 +36,7 @@ const AuthNavbar = () => {
               <RouterLink to="/explore">Explore</RouterLink>
             </ListItem>
           </UnorderedList>
+          <Notifications />
           <Box onClick={openUserMenu} cursor="pointer">
             <UserAvatar
               avatarUrl={user.avatarUrl}
