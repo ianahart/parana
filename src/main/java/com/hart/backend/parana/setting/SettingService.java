@@ -68,7 +68,8 @@ public class SettingService {
                 false,
                 false,
                 false,
-                getClientIp(request));
+                getClientIp(request),
+                true);
         this.settingRepository.save(setting);
         return setting;
     }
@@ -142,5 +143,13 @@ public class SettingService {
         }
         return "";
 
+    }
+
+    public void updateNotifications(Long settingId, Boolean notifications) {
+        Setting setting = getSettingById(settingId);
+
+        setting.setNotifications(notifications);
+
+        this.settingRepository.save(setting);
     }
 }

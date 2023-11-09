@@ -13,6 +13,7 @@ public class SettingDto {
     private String ipAddress;
     Timestamp passwordUpdatedOn;
     Timestamp emailUpdatedOn;
+    Boolean notifications;
     String updatedFormattedDate;
     String emailUpdatedFormattedDate;
 
@@ -30,7 +31,8 @@ public class SettingDto {
             Boolean blockPosts,
             String ipAddress,
             Timestamp passwordUpdatedOn,
-            Timestamp emailUpdatedOn) {
+            Timestamp emailUpdatedOn,
+            Boolean notifications) {
         this.id = id;
         this.userId = userId;
         this.createdAt = createdAt;
@@ -41,10 +43,19 @@ public class SettingDto {
         this.ipAddress = ipAddress;
         this.passwordUpdatedOn = passwordUpdatedOn;
         this.emailUpdatedOn = emailUpdatedOn;
+        this.notifications = notifications;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Boolean getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Boolean notifications) {
+        this.notifications = notifications;
     }
 
     public Timestamp getEmailUpdatedOn() {

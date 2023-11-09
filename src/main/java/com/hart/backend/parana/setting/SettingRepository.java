@@ -16,7 +16,7 @@ public interface SettingRepository extends JpaRepository<Setting, Long> {
              s.rememberMe AS rememberMe, s.blockMessages AS blockMessages,
             s.blockComments AS blockComments, s.blockPosts AS blockPosts,
             s.ipAddress AS ipAddress, s.passwordUpdatedOn AS passwordUpdatedOn,
-            s.emailUpdatedOn AS emailUpdatedOn
+            s.emailUpdatedOn AS emailUpdatedOn, s.notifications AS notifications
             ) FROM Setting s
             INNER JOIN s.user u
             WHERE s.id = :settingId

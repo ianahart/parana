@@ -1,4 +1,4 @@
-import { Box, useSteps } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import Header from './Header';
 import { AiOutlineLock } from 'react-icons/ai';
 import ChangePasswordForm from './ChangePasswordForm';

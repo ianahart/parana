@@ -3,6 +3,8 @@ package com.hart.backend.parana.notification;
 import com.hart.backend.parana.notification.dto.CreateNotificationDto;
 import com.hart.backend.parana.notification.dto.NotificationDto;
 import com.hart.backend.parana.notification.request.CreateNotificationRequest;
+import com.hart.backend.parana.user.User;
+import com.hart.backend.parana.user.UserService;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -16,15 +18,25 @@ public class NotificationWebSocketController {
 
     private final NotificationService notificationService;
 
+    private final UserService userService;
+
     public NotificationWebSocketController(
             SimpMessagingTemplate simpMessagingTemplate,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            UserService userService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @MessageMapping("private-notifications")
     public void receiveNotification(@Payload CreateNotificationRequest request) {
+
+        User receiverUser = this.userService.getUserById(request.getReceiverId());
+
+        if (!receiverUser.getSetting().getNotifications()) {
+            return;
+        }
 
         CreateNotificationDto notification = this.notificationService.createNotification(request);
 
