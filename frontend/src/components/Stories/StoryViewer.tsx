@@ -7,9 +7,10 @@ import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 
 interface IStoryViewerProps {
   connectionStory: IConnectionStory;
+  closeStoryViewer: () => void;
 }
 
-const StoryViewer = ({ connectionStory }: IStoryViewerProps) => {
+const StoryViewer = ({ connectionStory, closeStoryViewer }: IStoryViewerProps) => {
   const { avatarUrl, fullName, stories } = connectionStory;
   const [activeIndex, setActiveIndex] = useState(0);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
@@ -19,7 +20,7 @@ const StoryViewer = ({ connectionStory }: IStoryViewerProps) => {
     if (activeIndex > 0) {
       setActiveIndex((prevState) => prevState - 1);
     } else {
-      setActiveIndex(stories.length - 1);
+            closeStoryViewer()
     }
   };
 
@@ -28,7 +29,7 @@ const StoryViewer = ({ connectionStory }: IStoryViewerProps) => {
     if (activeIndex < stories.length - 1) {
       setActiveIndex((prevState) => prevState + 1);
     } else {
-      setActiveIndex(0);
+      closeStoryViewer();
     }
   };
 
