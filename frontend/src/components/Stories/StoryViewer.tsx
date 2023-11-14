@@ -20,7 +20,7 @@ const StoryViewer = ({ connectionStory, closeStoryViewer }: IStoryViewerProps) =
     if (activeIndex > 0) {
       setActiveIndex((prevState) => prevState - 1);
     } else {
-            closeStoryViewer()
+      closeStoryViewer();
     }
   };
 

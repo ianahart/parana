@@ -256,7 +256,15 @@ public class ConnectionService {
     }
 
     private List<ConnectionStoryDto> packageConnectionStories(List<ConnectionDto> connections) {
+        User currentUser = this.userService.getCurrentlyLoggedInUser();
         List<ConnectionStoryDto> connectionStories = new ArrayList<>();
+
+        List<StoryDto> currentUserStories = this.storyService.getStories(currentUser.getId());
+        if (currentUserStories.size() > 0) {
+        connectionStories.add(new ConnectionStoryDto(currentUserStories,
+                currentUser.getId(), currentUser.getFullName(), currentUser.getProfile().getAvatarUrl()));
+
+        }
 
         for (ConnectionDto c : connections) {
             List<StoryDto> stories = this.storyService.getStories(c.getUserId());
