@@ -52,11 +52,19 @@ const Navbar = () => {
               <Logo width="35px" height="35px" />
             </Box>
           )}
-          <NavLink mobile={mobile} link="/" linkText="Home" />
-          <NavLink mobile={mobile} link="/login" linkText="Login" />
-          <NavLink mobile={mobile} link="/register" linkText="Create Account" />
-          <NavLink mobile={mobile} link="/Reviews" linkText="Reviews" />
-          <NavLink mobile={mobile} link="/About" linkText="About" />
+          <NavLink closeUserMenu={undefined} mobile={mobile} link="/" linkText="Home" />
+          <NavLink
+            closeUserMenu={undefined}
+            mobile={mobile}
+            link="/login"
+            linkText="Login"
+          />
+          <NavLink
+            closeUserMenu={undefined}
+            mobile={mobile}
+            link="/register"
+            linkText="Create Account"
+          />
         </UnorderedList>
         <Box
           display={['flex', 'flex', 'none']}

@@ -1,16 +1,13 @@
 import { ListItem, Box, Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { BsChevronRight } from 'react-icons/bs';
-import { useContext } from 'react';
-import { UserContext } from '../../context/user';
-import { IUserContext } from '../../interfaces';
 
 export interface INavLinkProps {
   link: string;
   linkText: string;
   mobile: boolean;
   icon?: React.ReactNode;
-  closeUserMenu: () => void;
+  closeUserMenu?: () => void;
 }
 
 const NavLink = ({
@@ -21,11 +18,12 @@ const NavLink = ({
   closeUserMenu,
 }: INavLinkProps) => {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext) as IUserContext;
 
   const handleOnClick = () => {
     navigate(link);
-    closeUserMenu();
+    if (closeUserMenu !== undefined) {
+      closeUserMenu();
+    }
   };
 
   return (
