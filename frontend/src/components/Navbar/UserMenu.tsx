@@ -9,6 +9,7 @@ import LogoutButton from '../Auth/LogoutButton';
 import { UserContext } from '../../context/user';
 import { IUserContext } from '../../interfaces';
 import { MdOutlineFeed } from 'react-icons/md';
+import { BsBook } from 'react-icons/bs';
 
 interface IUserMenuProps {
   closeUserMenu: () => void;
@@ -66,6 +67,13 @@ const UserMenu = ({ closeUserMenu }: IUserMenuProps) => {
             icon={<HiOutlineUsers />}
             link="/connections/all"
             linkText="Connections"
+            mobile={true}
+          />
+          <NavLink
+            closeUserMenu={closeUserMenu}
+            icon={<BsBook />}
+            link="/stories/all"
+            linkText="Stories"
             mobile={true}
           />
           {user.role === 'USER' && (

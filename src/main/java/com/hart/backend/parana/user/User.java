@@ -31,6 +31,7 @@ import com.hart.backend.parana.refreshtoken.RefreshToken;
 import com.hart.backend.parana.replycomment.ReplyComment;
 import com.hart.backend.parana.review.Review;
 import com.hart.backend.parana.setting.Setting;
+import com.hart.backend.parana.story.Story;
 import com.hart.backend.parana.token.Token;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -169,6 +170,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> senderNotifications;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Story> userStories;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -217,6 +221,10 @@ public class User implements UserDetails {
         this.profile = profile;
         this.password = password;
         this.setting = setting;
+    }
+
+    public List<Story> getUserStories() {
+        return userStories;
     }
 
     public String getAbbreviation() {
@@ -374,6 +382,10 @@ public class User implements UserDetails {
 
     public void setUserReviews(List<Review> userReviews) {
         this.userReviews = userReviews;
+    }
+
+    public void setUserStories(List<Story> userStories) {
+        this.userStories = userStories;
     }
 
     public void setSenderMessages(List<Message> senderMessages) {

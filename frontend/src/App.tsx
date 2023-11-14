@@ -37,6 +37,9 @@ import Security from './components/Settings/Security';
 import Privacy from './components/Settings/Privacy';
 import Notifications from './components/Settings/Notifications';
 import FeedRoute from './routes/FeedRoute';
+import StoriesRoute from './routes/StoriesRoute';
+import CreateStory from './components/Stories/CreateStory';
+import Stories from './components/Stories/Stories';
 
 function App() {
   const shouldRun = useRef(true);
@@ -147,6 +150,31 @@ function App() {
                   </RequireAuth>
                 }
               />
+              <Route
+                path="/stories"
+                element={
+                  <RequireAuth>
+                    <StoriesRoute />
+                  </RequireAuth>
+                }
+              >
+                <Route
+                  path="create"
+                  element={
+                    <RequireAuth>
+                      <CreateStory />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="all"
+                  element={
+                    <RequireAuth>
+                      <Stories />
+                    </RequireAuth>
+                  }
+                />
+              </Route>
               <Route
                 path="/feed"
                 element={

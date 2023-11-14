@@ -7,6 +7,7 @@ import com.hart.backend.parana.connection.response.DeleteConnectionResponse;
 import com.hart.backend.parana.connection.response.GetConnectionRequestResponse;
 import com.hart.backend.parana.connection.response.GetConnectionResponse;
 import com.hart.backend.parana.connection.response.GetConnectionStatusResponse;
+import com.hart.backend.parana.connection.response.GetConnectionStoryResponse;
 import com.hart.backend.parana.connection.response.UpdateConnectionResponse;
 import com.hart.backend.parana.user.Role;
 
@@ -87,5 +88,18 @@ public class ConnectionController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new GetConnectionResponse("success",
                 this.connectionService.getConnections(userId, page, pageSize, direction, searchTerm)));
+    }
+
+    @GetMapping("/stories")
+    public ResponseEntity<GetConnectionStoryResponse> getConnectionStories(
+            @RequestParam("userId") Long userId,
+            @RequestParam("page") int page,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("direction") String direction
+
+    ) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(new GetConnectionStoryResponse("success",
+                this.connectionService.getConnectionStories(userId, page, pageSize, direction)));
     }
 }

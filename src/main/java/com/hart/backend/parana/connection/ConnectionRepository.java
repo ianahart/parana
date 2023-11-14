@@ -2,6 +2,7 @@ package com.hart.backend.parana.connection;
 
 import java.util.List;
 
+import com.hart.backend.parana.connection.dto.ActiveConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
 
@@ -14,6 +15,34 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
+
+    @Query(value = """
+                SELECT new com.hart.backend.parana.connection.dto.ActiveConnectionDto(
+            r.id AS userId, r.loggedIn AS loggedIn
+                ) FROM Connection c
+                INNER JOIN c.sender s
+                INNER JOIN c.receiver r
+                WHERE s.id = :userId
+                AND accepted = :accepted
+                AND r.loggedIn = true
+                    """)
+    List<ActiveConnectionDto> getActiveUserConnections(
+            @Param("userId") Long userId,
+            @Param("accepted") Boolean accepted);
+
+    @Query(value = """
+                SELECT new com.hart.backend.parana.connection.dto.ActiveConnectionDto(
+            s.id AS userId, s.loggedIn AS loggedIn
+                ) FROM Connection c
+                INNER JOIN c.sender s
+                INNER JOIN c.receiver r
+                WHERE r.id = :userId
+                AND accepted = :accepted
+                AND s.loggedIn = true
+                    """)
+    List<ActiveConnectionDto> getActiveTeacherConnections(
+            @Param("userId") Long userId,
+            @Param("accepted") Boolean accepted);
 
     @Query(value = """
                 SELECT new com.hart.backend.parana.connection.dto.MinimalConnectionDto(
