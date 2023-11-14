@@ -13,6 +13,10 @@ const Story = ({ connectionStory }: IStoryProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [storyViewerOpen, setStoryViewerOpen] = useState(false);
 
+  const closeStoryViewer = () => {
+    setStoryViewerOpen(false);
+  };
+
   return (
     <Box minH="100vh">
       <Flex
@@ -67,7 +71,10 @@ const Story = ({ connectionStory }: IStoryProps) => {
               </Tooltip>
             </Flex>
             <Flex justify="center" minH="100vh">
-              <StoryViewer connectionStory={connectionStory} />
+              <StoryViewer
+                closeStoryViewer={closeStoryViewer}
+                connectionStory={connectionStory}
+              />
             </Flex>
           </Box>
         </Box>
