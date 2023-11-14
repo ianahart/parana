@@ -1,3 +1,38 @@
+type TFile = File | null;
+
+export interface IStory {
+  alignment: string;
+  avatarUrl: string;
+  background: string;
+  color: string;
+  duration: string;
+  expiresIn: number;
+  fontSize: string;
+  fullName: string;
+  id: number;
+  photoUrl: string;
+  text: string;
+  userId: number;
+  createdAt: Date;
+}
+
+export interface IConnectionStory {
+  userId: number;
+  fullName: string;
+  avatarUrl: string;
+  stories: IStory[];
+}
+
+export interface IStoryForm {
+  color: IFormField;
+  file: { name: string; error: string; value: TFile; type: string };
+  text: IFormField;
+  duration: IFormField;
+  background: IFormField;
+  fontSize: IFormField;
+  alignment: IFormField;
+}
+
 export interface INotification {
   id: number;
   receiverId: number;

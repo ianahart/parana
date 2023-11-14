@@ -46,3 +46,22 @@ export const populateYears = (currentYear: number) => {
   }
   return years;
 };
+
+const generateHexString = (limit: number) => {
+  const hexValues = '0123456789abcdef';
+  let hexString = '';
+  for (let i = 0; i < limit; i++) {
+    hexString += hexValues.charAt(Math.floor(Math.random() * hexValues.length));
+  }
+  return `#${hexString}`;
+};
+
+const generateDegree = (maxDegree: number) => {
+  return Math.floor(Math.random() * maxDegree);
+};
+
+export const createGradient = () => {
+  return `linear-gradient(${generateDegree(360)}deg, ${generateHexString(
+    6
+  )}, ${generateHexString(6)});`;
+};

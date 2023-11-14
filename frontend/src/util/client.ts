@@ -6,6 +6,21 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getConnectionStories(
+    userId: number,
+    page: number,
+    pageSize: number,
+    direction: string
+  ) {
+    return http.get(
+      `/connections/stories?userId=${userId}&page=${page}&pageSize=${pageSize}&direction=${direction}`
+    );
+  },
+
+  createStory(formData: any) {
+    return http.post('/stories', formData);
+  },
+
   updateNotificationSetting(notifications: boolean, settingId: number) {
     return http.patch(`/settings/${settingId}/notifications`, { notifications });
   },

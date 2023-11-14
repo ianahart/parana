@@ -48,7 +48,7 @@ const Notifications = () => {
   return (
     <Box color="text.secondary">
       <Header heading="Notifications" icon={<IoMdNotificationsOutline />} />
-      <Box my="3rem" border="1px solid blue">
+      <Box my="3rem">
         <Flex align="center" justify="space-between">
           <Box>
             <Text fontSize="1.2rem" fontWeight="bold">

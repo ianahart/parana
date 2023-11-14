@@ -1,4 +1,19 @@
-import { populateYears } from '../util';
+import { createGradient, populateYears } from '../util';
+
+export const storyFormState = {
+  color: { name: 'color', error: '', value: 'white', type: 'text' },
+  file: { name: 'file', error: '', value: null, type: 'text' },
+  text: { name: 'text', error: '', value: '', type: 'text' },
+  duration: { name: 'duration', error: '', value: '10000', type: 'text' },
+  background: {
+    name: 'background',
+    error: '',
+    value: 'radial-gradient(circle, rgba(128,90,213,1) 29%, rgba(213,63,140,1) 100%)',
+    type: 'text',
+  },
+  fontSize: { name: 'fontSize', error: '', value: '18px', type: 'text' },
+  alignment: { name: 'alignment', error: '', value: 'center', type: 'text' },
+};
 
 export const userState = {
   abbreviation: '',
@@ -54,6 +69,14 @@ export const tokenState = {
 export const connectionPaginationState = {
   page: 0,
   pageSize: 2,
+  totalPages: 0,
+  direction: 'next',
+  totalElements: 0,
+};
+
+export const storyPaginationState = {
+  page: 0,
+  pageSize: 4,
   totalPages: 0,
   direction: 'next',
   totalElements: 0,
@@ -277,3 +300,32 @@ export const monthState = [
   { id: 11, name: 'Nov', value: 10 },
   { id: 12, name: 'Dec', value: 11 },
 ];
+
+export const textColors = [
+  { id: 1, value: 'black' },
+  { id: 2, value: 'white' },
+  { id: 3, value: 'pink' },
+  { id: 4, value: 'yellow' },
+  { id: 5, value: 'red' },
+  { id: 6, value: 'green' },
+  { id: 7, value: 'blue' },
+  { id: 8, value: 'orange' },
+  { id: 9, value: 'purple' },
+];
+
+const createBackgroundColors = (size: number) => {
+  const backgroundColors = [];
+  for (let i = 0; i < size; i++) {
+    backgroundColors.push(createGradient());
+  }
+  return backgroundColors;
+};
+
+export const backgroundColors = createBackgroundColors(8);
+
+export const connectionStoryState = {
+  avatarUrl: '',
+  fullName: '',
+  userId: 0,
+  stories: [],
+};

@@ -11,11 +11,17 @@ import java.util.ArrayList;
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.advice.ForbiddenException;
+import com.hart.backend.parana.connection.dto.ActiveConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionDto;
 import com.hart.backend.parana.connection.dto.ConnectionPaginationDto;
 import com.hart.backend.parana.connection.dto.ConnectionStatusDto;
+import com.hart.backend.parana.connection.dto.ConnectionStoryDto;
+import com.hart.backend.parana.connection.dto.MinimalConnectionDto;
 import com.hart.backend.parana.privacy.Privacy;
 import com.hart.backend.parana.privacy.PrivacyService;
+import com.hart.backend.parana.story.Story;
+import com.hart.backend.parana.story.StoryService;
+import com.hart.backend.parana.story.dto.StoryDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +40,18 @@ public class ConnectionService {
     private final UserService userService;
     private final ConnectionRepository connectionRepository;
     private final PrivacyService privacyService;
+    private final StoryService storyService;
 
     @Autowired
     public ConnectionService(
             ConnectionRepository connectionRepository,
             UserService userService,
-            PrivacyService privacyService) {
+            PrivacyService privacyService,
+            StoryService storyService) {
         this.connectionRepository = connectionRepository;
         this.userService = userService;
         this.privacyService = privacyService;
+        this.storyService = storyService;
     }
 
     public void checkUsersArePresent(Long senderId, Long receiverId) {
@@ -226,5 +235,56 @@ public class ConnectionService {
                 .map(v -> v.getUserId()).toList();
 
         return connections;
+    }
+
+    public List<ActiveConnectionDto> getActiveTeacherConnections(Long userId) {
+        return this.connectionRepository.getActiveTeacherConnections(userId, true);
+    }
+
+    public List<ActiveConnectionDto> getActiveUserConnections(Long userId) {
+        return this.connectionRepository.getActiveUserConnections(userId, true);
+    }
+
+    private Page<ConnectionDto> paginateConnections(Long userId, int page, int pageSize, String direction) {
+        User user = this.userService.getUserById(userId);
+        int currentPage = MyUtil.paginate(page, direction);
+        Pageable pageable = PageRequest.of(currentPage, pageSize, Sort.by("id").descending());
+        return Role.USER == user.getRole()
+                ? this.connectionRepository.getUserConnections(userId, true, null, pageable)
+                : this.connectionRepository.getTeacherConnections(userId, true, null, pageable);
+
+    }
+
+    private List<ConnectionStoryDto> packageConnectionStories(List<ConnectionDto> connections) {
+        List<ConnectionStoryDto> connectionStories = new ArrayList<>();
+
+        for (ConnectionDto c : connections) {
+            List<StoryDto> stories = this.storyService.getStories(c.getUserId());
+            this.storyService.deleteExpiredStories(stories);
+
+            if (stories.size() > 0) {
+                connectionStories
+                        .add(new ConnectionStoryDto(stories, c.getUserId(), c.getFullName(),
+                                c.getAvatarUrl()));
+            }
+        }
+
+        return connectionStories;
+    }
+
+    public ConnectionPaginationDto<ConnectionStoryDto> getConnectionStories(Long userId, int page, int pageSize,
+            String direction) {
+        Page<ConnectionDto> result = paginateConnections(userId, page, pageSize, direction);
+
+        List<ConnectionStoryDto> connectionStories = packageConnectionStories(result.getContent());
+
+        return new ConnectionPaginationDto<ConnectionStoryDto>(
+                connectionStories,
+                result.getNumber(),
+                pageSize,
+                result.getTotalPages(),
+                direction,
+                result.getTotalElements());
+
     }
 }
