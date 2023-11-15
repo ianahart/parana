@@ -211,4 +211,95 @@ public class Story {
         this.photoFileName = photoFileName;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+        result = prime * result + ((expiresIn == null) ? 0 : expiresIn.hashCode());
+        result = prime * result + ((photoUrl == null) ? 0 : photoUrl.hashCode());
+        result = prime * result + ((photoFileName == null) ? 0 : photoFileName.hashCode());
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((fontSize == null) ? 0 : fontSize.hashCode());
+        result = prime * result + ((duration == null) ? 0 : duration.hashCode());
+        result = prime * result + ((color == null) ? 0 : color.hashCode());
+        result = prime * result + ((background == null) ? 0 : background.hashCode());
+        result = prime * result + ((alignment == null) ? 0 : alignment.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Story other = (Story) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
+            return false;
+        if (expiresIn == null) {
+            if (other.expiresIn != null)
+                return false;
+        } else if (!expiresIn.equals(other.expiresIn))
+            return false;
+        if (photoUrl == null) {
+            if (other.photoUrl != null)
+                return false;
+        } else if (!photoUrl.equals(other.photoUrl))
+            return false;
+        if (photoFileName == null) {
+            if (other.photoFileName != null)
+                return false;
+        } else if (!photoFileName.equals(other.photoFileName))
+            return false;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        if (fontSize == null) {
+            if (other.fontSize != null)
+                return false;
+        } else if (!fontSize.equals(other.fontSize))
+            return false;
+        if (duration == null) {
+            if (other.duration != null)
+                return false;
+        } else if (!duration.equals(other.duration))
+            return false;
+        if (color == null) {
+            if (other.color != null)
+                return false;
+        } else if (!color.equals(other.color))
+            return false;
+        if (background == null) {
+            if (other.background != null)
+                return false;
+        } else if (!background.equals(other.background))
+            return false;
+        if (alignment == null) {
+            if (other.alignment != null)
+                return false;
+        } else if (!alignment.equals(other.alignment))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
+
 }

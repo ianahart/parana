@@ -207,4 +207,96 @@ public class Post {
     public void setPostComments(List<Comment> postComments) {
         this.postComments = postComments;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+        result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+        result = prime * result + ((isEdited == null) ? 0 : isEdited.hashCode());
+        result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((gif == null) ? 0 : gif.hashCode());
+        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
+        result = prime * result + ((fileUrl == null) ? 0 : fileUrl.hashCode());
+        result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+        result = prime * result + ((author == null) ? 0 : author.hashCode());
+        result = prime * result + ((postPostLikes == null) ? 0 : postPostLikes.hashCode());
+        result = prime * result + ((postComments == null) ? 0 : postComments.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Post other = (Post) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
+            return false;
+        if (updatedAt == null) {
+            if (other.updatedAt != null)
+                return false;
+        } else if (!updatedAt.equals(other.updatedAt))
+            return false;
+        if (isEdited == null) {
+            if (other.isEdited != null)
+                return false;
+        } else if (!isEdited.equals(other.isEdited))
+            return false;
+        if (text == null) {
+            if (other.text != null)
+                return false;
+        } else if (!text.equals(other.text))
+            return false;
+        if (gif == null) {
+            if (other.gif != null)
+                return false;
+        } else if (!gif.equals(other.gif))
+            return false;
+        if (filename == null) {
+            if (other.filename != null)
+                return false;
+        } else if (!filename.equals(other.filename))
+            return false;
+        if (fileUrl == null) {
+            if (other.fileUrl != null)
+                return false;
+        } else if (!fileUrl.equals(other.fileUrl))
+            return false;
+        if (owner == null) {
+            if (other.owner != null)
+                return false;
+        } else if (!owner.equals(other.owner))
+            return false;
+        if (author == null) {
+            if (other.author != null)
+                return false;
+        } else if (!author.equals(other.author))
+            return false;
+        if (postPostLikes == null) {
+            if (other.postPostLikes != null)
+                return false;
+        } else if (!postPostLikes.equals(other.postPostLikes))
+            return false;
+        if (postComments == null) {
+            if (other.postComments != null)
+                return false;
+        } else if (!postComments.equals(other.postComments))
+            return false;
+        return true;
+    }
+
 }

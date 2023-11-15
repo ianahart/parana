@@ -134,4 +134,66 @@ public class Recommendation {
     public void setRecommendation(String recommendation) {
         this.recommendation = recommendation;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+        result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+        result = prime * result + ((words == null) ? 0 : words.hashCode());
+        result = prime * result + ((recommendation == null) ? 0 : recommendation.hashCode());
+        result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
+        result = prime * result + ((author == null) ? 0 : author.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Recommendation other = (Recommendation) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
+            return false;
+        if (updatedAt == null) {
+            if (other.updatedAt != null)
+                return false;
+        } else if (!updatedAt.equals(other.updatedAt))
+            return false;
+        if (words == null) {
+            if (other.words != null)
+                return false;
+        } else if (!words.equals(other.words))
+            return false;
+        if (recommendation == null) {
+            if (other.recommendation != null)
+                return false;
+        } else if (!recommendation.equals(other.recommendation))
+            return false;
+        if (teacher == null) {
+            if (other.teacher != null)
+                return false;
+        } else if (!teacher.equals(other.teacher))
+            return false;
+        if (author == null) {
+            if (other.author != null)
+                return false;
+        } else if (!author.equals(other.author))
+            return false;
+        return true;
+    }
+
 }

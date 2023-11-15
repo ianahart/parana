@@ -188,4 +188,89 @@ public class Setting {
         this.notifications = notifications;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+        result = prime * result + ((rememberMe == null) ? 0 : rememberMe.hashCode());
+        result = prime * result + ((blockMessages == null) ? 0 : blockMessages.hashCode());
+        result = prime * result + ((blockComments == null) ? 0 : blockComments.hashCode());
+        result = prime * result + ((blockPosts == null) ? 0 : blockPosts.hashCode());
+        result = prime * result + ((ipAddress == null) ? 0 : ipAddress.hashCode());
+        result = prime * result + ((passwordUpdatedOn == null) ? 0 : passwordUpdatedOn.hashCode());
+        result = prime * result + ((emailUpdatedOn == null) ? 0 : emailUpdatedOn.hashCode());
+        result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Setting other = (Setting) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
+            return false;
+        if (rememberMe == null) {
+            if (other.rememberMe != null)
+                return false;
+        } else if (!rememberMe.equals(other.rememberMe))
+            return false;
+        if (blockMessages == null) {
+            if (other.blockMessages != null)
+                return false;
+        } else if (!blockMessages.equals(other.blockMessages))
+            return false;
+        if (blockComments == null) {
+            if (other.blockComments != null)
+                return false;
+        } else if (!blockComments.equals(other.blockComments))
+            return false;
+        if (blockPosts == null) {
+            if (other.blockPosts != null)
+                return false;
+        } else if (!blockPosts.equals(other.blockPosts))
+            return false;
+        if (ipAddress == null) {
+            if (other.ipAddress != null)
+                return false;
+        } else if (!ipAddress.equals(other.ipAddress))
+            return false;
+        if (passwordUpdatedOn == null) {
+            if (other.passwordUpdatedOn != null)
+                return false;
+        } else if (!passwordUpdatedOn.equals(other.passwordUpdatedOn))
+            return false;
+        if (emailUpdatedOn == null) {
+            if (other.emailUpdatedOn != null)
+                return false;
+        } else if (!emailUpdatedOn.equals(other.emailUpdatedOn))
+            return false;
+        if (notifications == null) {
+            if (other.notifications != null)
+                return false;
+        } else if (!notifications.equals(other.notifications))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
+
 }

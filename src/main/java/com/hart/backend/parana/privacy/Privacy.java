@@ -150,4 +150,72 @@ public class Privacy {
     public void setBlockedByUser(User blockedByUser) {
         this.blockedByUser = blockedByUser;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+        result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+        result = prime * result + ((messages == null) ? 0 : messages.hashCode());
+        result = prime * result + ((posts == null) ? 0 : posts.hashCode());
+        result = prime * result + ((comments == null) ? 0 : comments.hashCode());
+        result = prime * result + ((blockedUser == null) ? 0 : blockedUser.hashCode());
+        result = prime * result + ((blockedByUser == null) ? 0 : blockedByUser.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Privacy other = (Privacy) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
+            return false;
+        if (updatedAt == null) {
+            if (other.updatedAt != null)
+                return false;
+        } else if (!updatedAt.equals(other.updatedAt))
+            return false;
+        if (messages == null) {
+            if (other.messages != null)
+                return false;
+        } else if (!messages.equals(other.messages))
+            return false;
+        if (posts == null) {
+            if (other.posts != null)
+                return false;
+        } else if (!posts.equals(other.posts))
+            return false;
+        if (comments == null) {
+            if (other.comments != null)
+                return false;
+        } else if (!comments.equals(other.comments))
+            return false;
+        if (blockedUser == null) {
+            if (other.blockedUser != null)
+                return false;
+        } else if (!blockedUser.equals(other.blockedUser))
+            return false;
+        if (blockedByUser == null) {
+            if (other.blockedByUser != null)
+                return false;
+        } else if (!blockedByUser.equals(other.blockedByUser))
+            return false;
+        return true;
+    }
+
 }
