@@ -1,4 +1,7 @@
 import { createGradient, populateYears } from '../util';
+import searchIconImage from '../assets/search-icon.png';
+import calendarIconImage from '../assets/calendar.png';
+import chatIconImage from '../assets/chat_message.png';
 
 export const storyFormState = {
   color: { name: 'color', error: '', value: 'white', type: 'text' },
@@ -329,3 +332,24 @@ export const connectionStoryState = {
   userId: 0,
   stories: [],
 };
+
+export const steps = [
+  {
+    id: 1,
+    name: 'Search',
+    image: searchIconImage,
+    text: 'View teacher profiles and contact a teacher according to your criteria including rates, terrain in common, and reviews.',
+  },
+  {
+    id: 2,
+    name: 'Reach out',
+    image: chatIconImage,
+    text: 'It is quick and easy, teachers will get back to you within hours.',
+  },
+  {
+    id: 3,
+    name: 'Organize',
+    image: calendarIconImage,
+    text: 'Easily communicate and schedule your lessons from your private messages with your teacher.',
+  },
+];

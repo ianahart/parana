@@ -18,6 +18,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query(value = """
+            SELECT COUNT(*) FROM User u
+            WHERE u.role = 'USER'
+            """)
+    Long getUserStat();
+
     @Modifying()
     @Query(value = """
             update User u set u.loggedIn = :loggedIn WHERE u.id = :userId

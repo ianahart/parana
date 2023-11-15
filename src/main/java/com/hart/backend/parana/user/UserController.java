@@ -8,6 +8,7 @@ import com.hart.backend.parana.user.request.UpdateUserEmailRequest;
 import com.hart.backend.parana.user.request.UpdateUserPasswordRequest;
 import com.hart.backend.parana.user.response.DeleteUserResponse;
 import com.hart.backend.parana.user.response.GetNonBlockedUserResponse;
+import com.hart.backend.parana.user.response.GetUserStatResponse;
 import com.hart.backend.parana.user.response.GetUserSuggestionResponse;
 import com.hart.backend.parana.user.response.GetUsersResponse;
 import com.hart.backend.parana.user.response.SearchTeacherResponse;
@@ -40,6 +41,12 @@ public class UserController {
     public UserController(UserService userService, RecentSearchService recentSearchService) {
         this.userService = userService;
         this.recentSearchService = recentSearchService;
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<GetUserStatResponse> getUserStat() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new GetUserStatResponse("success", this.userService.getUserStat()));
     }
 
     @GetMapping("/non-blocked")

@@ -1,7 +1,9 @@
 package com.hart.backend.parana.review;
 
+import com.hart.backend.parana.review.dto.LatestReviewDto;
 import com.hart.backend.parana.review.dto.PartialReviewDto;
 import com.hart.backend.parana.review.dto.ReviewDto;
+import com.hart.backend.parana.review.dto.TopReviewDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,34 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+
+    @Query(value = """
+            SELECT COUNT(*) FROM Review r
+            WHERE r.rating = 5
+            """)
+    Long getFiveStarReviews();
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.review.dto.TopReviewDto(
+            t.id AS userId, t.firstName AS fullName, p.avatarUrl AS avatarUrl,
+            AVG(r.rating) AS averageRating, COUNT(t.id) AS numReviews
+            ) FROM Review r
+            INNER JOIN r.teacher t
+            INNER JOIN r.teacher.profile p
+            GROUP BY t.id, t.fullName, p.avatarUrl
+            ORDER BY COUNT(t.id) DESC
+            """)
+    Page<TopReviewDto> getTopReviews(@Param("pageable") Pageable pageable);
+
+    @Query(value = """
+            SELECT new com.hart.backend.parana.review.dto.LatestReviewDto(
+            r.id AS id, u.id AS userId, u.firstName AS fullName, p.avatarUrl AS avatarUrl,
+            r.review AS review, r.rating AS rating
+            ) FROM Review r
+            INNER JOIN r.user u
+            INNER JOIN r.user.profile p
+            """)
+    Page<LatestReviewDto> getLatestReviews(@Param("pageable") Pageable pageable);
 
     @Query(value = """
             SELECT new com.hart.backend.parana.review.dto.PartialReviewDto(

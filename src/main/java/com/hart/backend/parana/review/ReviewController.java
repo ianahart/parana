@@ -6,6 +6,7 @@ import com.hart.backend.parana.review.response.CreateReviewResponse;
 import com.hart.backend.parana.review.response.DeleteReviewResponse;
 import com.hart.backend.parana.review.response.GetPartialReviewResponse;
 import com.hart.backend.parana.review.response.GetReviewResponse;
+import com.hart.backend.parana.review.response.GetReviewStatsResponse;
 import com.hart.backend.parana.review.response.UpdateReviewResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,17 @@ public class ReviewController {
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<GetReviewStatsResponse> getReviewStats(
+            @RequestParam("topReviewSize") int topReviewSize,
+            @RequestParam("reviewSize") int reviewSize) {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new GetReviewStatsResponse("success",
+                        this.reviewService.getReviewStats(topReviewSize, reviewSize)));
     }
 
     @PostMapping("")
