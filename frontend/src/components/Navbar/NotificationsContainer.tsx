@@ -1,4 +1,4 @@
-import { Box, useDisclosure } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { IoNotificationsOutline } from 'react-icons/io5';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -12,7 +12,7 @@ const NotificationsContainer = () => {
   const shouldRun = useRef(true);
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const { user } = useContext(UserContext) as IUserContext;
-
+console.log(notifications)
   const connect = () => {
     let Sock = new SockJS('https://parana-hart-6c0dd51d52f9.herokuapp.com/wss');
     stompClient = over(Sock);

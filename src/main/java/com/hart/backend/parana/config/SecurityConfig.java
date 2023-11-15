@@ -18,40 +18,46 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthenticationProvider authenticationProvider;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final LogoutHandler logoutHandler;
+        private final AuthenticationProvider authenticationProvider;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final LogoutHandler logoutHandler;
 
-    @Autowired
-    public SecurityConfig(AuthenticationProvider authenticationProvider,
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            LogoutHandler logoutHandler) {
-        this.authenticationProvider = authenticationProvider;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.logoutHandler = logoutHandler;
-    }
+        @Autowired
+        public SecurityConfig(AuthenticationProvider authenticationProvider,
+                        JwtAuthenticationFilter jwtAuthenticationFilter,
+                        LogoutHandler logoutHandler) {
+                this.authenticationProvider = authenticationProvider;
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+                this.logoutHandler = logoutHandler;
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.disable())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        req -> req
-                                .requestMatchers("/api/v1/auth/**", "ws/**", "wss/**", "/api/v1/reviews/stats/**",
-                                        "/api/v1/users/stats/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.cors(cors -> cors.disable())
+                                .csrf(AbstractHttpConfigurer::disable)
+                                .authorizeHttpRequests(
+                                                req -> req
+                                                                .requestMatchers("/api/v1/auth/**", "ws/**", "wss/**",
+                                                                                "/api/v1/reviews/stats/**",
+                                                                                "/api/v1/users/stats/**",
+                                                                                "https://parana-hart-6c0dd51d52f9.herokuapp.com/",
+                                                                                "https://parana.netlify.app/**")
+                                                                .permitAll()
+                                                                .anyRequest()
+                                                                .authenticated()
 
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(this.authenticationProvider)
-                .addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler(
-                                (request, response, authentication) -> SecurityContextHolder.clearContext()));
+                                )
+                                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                                .authenticationProvider(this.authenticationProvider)
+                                .addFilterBefore(this.jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class)
+                                .logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
+                                                .addLogoutHandler(logoutHandler)
+                                                .logoutSuccessHandler(
+                                                                (request, response,
+                                                                                authentication) -> SecurityContextHolder
+                                                                                                .clearContext()));
 
-        return http.build();
-    }
+                return http.build();
+        }
 }

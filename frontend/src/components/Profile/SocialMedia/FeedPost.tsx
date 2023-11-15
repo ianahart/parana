@@ -204,6 +204,7 @@ const FeedPost = ({
       </Flex>
       <Divider my="1rem" borderColor="border.primary" />
       <Actions
+        ownerId={0}
         refreshComments={refreshComments}
         createComment={createComment}
         currentUserHasLikedPost={post.currentUserHasLikedPost}
