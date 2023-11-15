@@ -1,5 +1,29 @@
 type TFile = File | null;
 
+export interface IStep {
+  id: number;
+  name: string;
+  image: string;
+  text: string;
+}
+
+export interface ITopReview {
+  avatarUrl: string;
+  averageRating: number;
+  fullName: string;
+  numReviews: number;
+  userId: number;
+}
+
+export interface ILatestReview {
+  id: number;
+  avatarUrl: string;
+  fullName: string;
+  rating: number;
+  review: string;
+  userId: number;
+}
+
 export interface IStory {
   alignment: string;
   avatarUrl: string;

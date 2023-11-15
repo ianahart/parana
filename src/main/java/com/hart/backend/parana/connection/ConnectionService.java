@@ -261,8 +261,8 @@ public class ConnectionService {
 
         List<StoryDto> currentUserStories = this.storyService.getStories(currentUser.getId());
         if (currentUserStories.size() > 0) {
-        connectionStories.add(new ConnectionStoryDto(currentUserStories,
-                currentUser.getId(), currentUser.getFullName(), currentUser.getProfile().getAvatarUrl()));
+            connectionStories.add(new ConnectionStoryDto(currentUserStories,
+                    currentUser.getId(), currentUser.getFullName(), currentUser.getProfile().getAvatarUrl()));
 
         }
 

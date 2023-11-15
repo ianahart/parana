@@ -35,10 +35,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.disable())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**", "ws/**", "wss/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                .authorizeHttpRequests(
+                        req -> req
+                                .requestMatchers("/api/v1/auth/**", "ws/**", "wss/**", "/api/v1/reviews/stats/**",
+                                        "/api/v1/users/stats/**")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
 
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

@@ -1,13 +1,19 @@
 package com.hart.backend.parana.review;
 
+import com.hart.backend.parana.review.dto.LatestReviewDto;
 import com.hart.backend.parana.review.dto.PartialReviewDto;
 import com.hart.backend.parana.review.dto.ReviewDto;
 import com.hart.backend.parana.review.dto.ReviewPaginationDto;
+import com.hart.backend.parana.review.dto.ReviewStatDto;
+import com.hart.backend.parana.review.dto.TopReviewDto;
 import com.hart.backend.parana.review.request.CreateReviewRequest;
 import com.hart.backend.parana.review.request.UpdateReviewRequest;
 import com.hart.backend.parana.user.User;
 import com.hart.backend.parana.user.UserService;
 import com.hart.backend.parana.util.MyUtil;
+
+import java.util.List;
+
 import com.hart.backend.parana.advice.BadRequestException;
 import com.hart.backend.parana.advice.NotFoundException;
 import com.hart.backend.parana.advice.ForbiddenException;
@@ -41,6 +47,33 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
         this.userService = userService;
         this.connectionService = connectionService;
+    }
+
+    private Pageable createReviewPageable(int size) {
+        int currentPage = MyUtil.paginate(-1, "next");
+        return PageRequest.of(currentPage, size);
+
+    }
+
+    private List<TopReviewDto> getTopReviews(int topReviewSize) {
+        Page<TopReviewDto> result = this.reviewRepository.getTopReviews(createReviewPageable(topReviewSize));
+        return result.getContent();
+    }
+
+    private List<LatestReviewDto> getLatestReviews(int reviewSize) {
+        Page<LatestReviewDto> result = this.reviewRepository.getLatestReviews(createReviewPageable(reviewSize));
+        return result.getContent();
+    }
+
+    private Long getFiveStarReviews() {
+        return this.reviewRepository.getFiveStarReviews();
+    }
+
+    public ReviewStatDto getReviewStats(int topReviewSize, int reviewSize) {
+        List<TopReviewDto> topReviews = getTopReviews(topReviewSize);
+        List<LatestReviewDto> latestReviews = getLatestReviews(reviewSize);
+        Long fiveStarReviews = getFiveStarReviews();
+        return new ReviewStatDto(topReviews, latestReviews, fiveStarReviews);
     }
 
     private boolean duplicateReview(Long userId, Long teacherId) {

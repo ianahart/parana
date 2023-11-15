@@ -359,4 +359,8 @@ public class UserService {
 
     }
 
+    public Long getUserStat() {
+        return this.userRepository.getUserStat();
+    }
+
 }

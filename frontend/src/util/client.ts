@@ -6,6 +6,16 @@ export const http = axios.create({
 });
 
 export const Client = {
+  getUserStats() {
+    return http.get('/users/stats');
+  },
+
+  getReviewStats(topReviewSize: number, reviewSize: number) {
+    return http.get(
+      `/reviews/stats?topReviewSize=${topReviewSize}&reviewSize=${reviewSize}`
+    );
+  },
+
   getConnectionStories(
     userId: number,
     page: number,
