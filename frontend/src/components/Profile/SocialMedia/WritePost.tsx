@@ -89,7 +89,7 @@ const WritePost = ({
   };
 
   const connect = () => {
-    let Sock = new SockJS('http://localhost:8080/ws');
+    let Sock = new SockJS('https://parana-hart-6c0dd51d52f9.herokuapp.com/wss');
     stompClient = over(Sock);
     stompClient.connect({}, onConnected, onError);
   };

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/v1/': 'http://localhost:8080',
+      '/api/v1/': ' https://parana-hart-6c0dd51d52f9.herokuapp.com',
     },
   },
 });

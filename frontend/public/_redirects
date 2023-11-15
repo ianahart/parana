@@ -1,0 +1,4 @@
+/api/*   https://parana-hart-6c0dd51d52f9.herokuapp.com/api/:splat  200
+
+
+/*    /index.html   200
