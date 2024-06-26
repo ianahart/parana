@@ -9,6 +9,10 @@
 Have you ever wanted to learn to snowboard, but can’t afford an instructor through the mountain resort? Do you question the abilities of the instructors at the mountain?
 Well look no further Parana is here. Get connected with snowboard teachers that have a passion for snowboarding. Search teachers around your area and read their bio and reviews to see if they’re a good fit for you. If they are, send them a connection request to get to know them more and to organize a potential lesson. I decided to build this app because when I first started snowboarding I had an instructor from the mountain who could barely turn on a snowboard. It ended up being a total disaster of a time and it was not worth the hundreds of dollars it costed my parents. Snowboard instructors at mountains can cost a few hundred dollars a day. Why not let someone on Parana teacher you for the fraction of the price?
 
+## Visuals
+<img width="1654" alt="parana" src="https://github.com/ianahart/parana/assets/29121238/0b394860-b892-44e4-840a-1c8064874068">
+
+
 ## Technologies used
 
 - [Chakra UI](https://chakra-ui.com/)
