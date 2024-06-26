@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 .env
+.vim
 
 .DS_Store
 
